@@ -10,8 +10,9 @@
 
 ## G0 — Phase 0 → Phase 1 (the harness is trustworthy)
 
-- **[G0.1a] Fraud-catch, negative control** — harness on planted overfit strategy (fit on full sample, ≥200 registered trials) reports PBO ≥ 60% AND DSR p ≥ 0.20 — harness report — AUTO
-- **[G0.1b] Fraud-catch, positive control** — harness on planted true edge (synthetic data with injected SR 1.0) reports DSR p < 0.05 at true trial count — harness report — AUTO
+- **[G0.1a] Fraud-catch, negative control** — harness on a planted overfit strategy (multi-family research campaign, ≥200 registered trials, fit on full sample) evaluated over the **pre-committed seed ensemble {0..19}** reports: **median PBO ≥ 0.60 AND PBO > 0.50 in ≥ 80% of seeds AND median DSR p ≥ 0.20** — harness report — AUTO
+- **[G0.1b] Fraud-catch, positive control** — harness on a planted true edge (synthetic data, injected information coefficient ≈ 0.04, target annualized SR ≈ 1.0) over the **pre-committed seed ensemble {0..19}** reports **DSR p < 0.05 in every one of the 20 seeds** at the true trial count — harness report — AUTO
+  > Both criteria are **distributional over a fixed, a-priori seed set**, never a single run. Single-run PBO has high sampling variance under correlated trials; a gate read off one seed would let the seed be chosen with knowledge of the outcome — the same sin as tuning a backtest, applied to the validator. The ensemble eliminates seed selection.
 - **[G0.2] PIT refusal** — test-fixture read with `available_at > decision_ts` is refused by the store AND caught by the nightly audit query — D6 look-ahead audit — AUTO
 - **[G0.3] Ingestion soak** — 5 consecutive nightly runs, zero unexplained row-count deviations (explained = logged vendor revision) — D6 freshness — AUTO
 - **[G0.4] Replay determinism** — one sampled day's derived tables rebuilt from raw archive byte-identical (hash match) — rebuild drill — AUTO
@@ -74,4 +75,5 @@ Every quarter, the Validation Report must show: look-ahead zero; reconciliation 
 
 ## Amendment Log
 | Date | Gate | Change | Rationale | Approved by |
-| (empty — amendments require P11, before evaluation, never during) |
+|---|---|---|---|---|
+| 2026-06-10 | G0.1a / G0.1b | Restated as distributional criteria over a pre-committed seed ensemble {0..19}: G0.1a → median PBO ≥ 0.60 AND PBO > 0.50 in ≥ 80% of seeds AND median DSR p ≥ 0.20; G0.1b → DSR p < 0.05 in every one of the 20 seeds. Negative control broadened to a multi-family research campaign. | Single-run PBO has high sampling variance under correlated trials; a single-seed gate would let the seed be selected with knowledge of the outcome (backtest tuning applied to the validator). Ensemble criterion eliminates seed selection. Amended before the gate test was run, never during. | User (project owner), 2026-06-10 |

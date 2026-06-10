@@ -108,10 +108,17 @@ class TrialRegistry:
         n, sharpes = registry.dsr_inputs(signal="momentum_12_1")
     """
 
-    def __init__(self, db_path: Path = Path("var/trial_registry.db")):
-        db_path.parent.mkdir(parents=True, exist_ok=True)
-        self.db_path = db_path
-        self.conn = sqlite3.connect(str(db_path), check_same_thread=False)
+    def __init__(self, db_path: Path | str = Path("var/trial_registry.db")):
+        # ":memory:" → ephemeral in-memory registry (tests, per-run ensembles where
+        # each run needs its own true trial count N without disk churn).
+        if str(db_path) == ":memory:":
+            self.db_path = ":memory:"
+            self.conn = sqlite3.connect(":memory:", check_same_thread=False)
+        else:
+            db_path = Path(db_path)
+            db_path.parent.mkdir(parents=True, exist_ok=True)
+            self.db_path = db_path
+            self.conn = sqlite3.connect(str(db_path), check_same_thread=False)
         self.conn.row_factory = sqlite3.Row
         self._init_schema()
 
