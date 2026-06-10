@@ -81,6 +81,47 @@ class PITAuditError(Exception):
         )
 
 
+def to_utc_iso(ts: str) -> str:
+    """Normalize any ISO-8601 timestamp string to canonical UTC form.
+
+    Returns a fixed-width string: 'YYYY-MM-DDTHH:MM:SS.ffffff+00:00'.
+
+    This is the keystone of the whole PIT store: every comparison it makes — the
+    read filter (`available_at <= as_known_at`) and the write guard
+    (`available_at > now()`) — is a *string* comparison on TEXT columns.  String
+    comparison equals chronological comparison ONLY if every timestamp is in one
+    canonical format and zone.  A row stamped '2026-06-10T15:00:00-04:00'
+    (= 19:00 UTC) would otherwise lexicographically sort *before*
+    '2026-06-10T18:46:30+00:00' and slip past both guards.  Normalizing at every
+    boundary makes lexicographic order == chronological order, always.
+
+    Handling:
+      - 'Z' suffix accepted (and Python 3.11+ fromisoformat handles it natively).
+      - Date-only strings ('2026-01-02') → midnight UTC.
+      - Naive timestamps (no offset) → assumed UTC, per the store's documented
+        contract that all timestamps are UTC (schema comment, configuration.md §10).
+        Ingestion adapters own supplying the correct knowledge-time.
+      - Offset-aware timestamps → converted to UTC.
+
+    Raises:
+        ValueError: if `ts` is not a parseable ISO-8601 string.
+    """
+    s = ts.strip()
+    if s.endswith("Z"):
+        s = s[:-1] + "+00:00"
+    dt = datetime.fromisoformat(s)
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    else:
+        dt = dt.astimezone(timezone.utc)
+    return dt.strftime("%Y-%m-%dT%H:%M:%S.%f+00:00")
+
+
+def _utc_now_iso() -> str:
+    """Canonical UTC 'now' in the same fixed-width form as to_utc_iso()."""
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f+00:00")
+
+
 class PITStore:
     """Point-in-time data store backed by DuckDB.
 
@@ -165,9 +206,9 @@ class PITStore:
         always a data bug (timezone error, vendor mislabel, parser mistake) — reject it
         at the door rather than letting it silently pollute the store.
         """
-        now = datetime.now(timezone.utc).isoformat()
+        now = _utc_now_iso()
         for r in rows:
-            aa = r.get("available_at", "")
+            aa = to_utc_iso(r["available_at"])
             if aa > now:
                 raise PITWriteError(
                     ticker=r.get(ticker_key, "?"),
@@ -207,11 +248,11 @@ class PITStore:
             WHERE ticker = ANY(?)
               AND available_at <= ?
         """
-        params: list[Any] = [tickers, as_known_at]
+        params: list[Any] = [tickers, to_utc_iso(as_known_at)]
 
         if start_date:
             query += " AND as_of >= ?"
-            params.append(start_date)
+            params.append(to_utc_iso(start_date))
         if source:
             query += " AND source = ?"
             params.append(source)
@@ -254,7 +295,7 @@ class PITStore:
               AND available_at <= ?
             ORDER BY ticker, available_at DESC
             """,
-            [tickers, indicator, dimension, as_known_at],
+            [tickers, indicator, dimension, to_utc_iso(as_known_at)],
         ).fetchall()
 
         cols = ["ticker", "dimension", "period", "as_of", "available_at",
@@ -273,6 +314,7 @@ class PITStore:
 
         Returns only tickers with available_at <= as_known_at.
         """
+        known_at = to_utc_iso(as_known_at)
         rows = self.conn.execute(
             """
             SELECT DISTINCT ON (ticker) ticker
@@ -281,7 +323,7 @@ class PITStore:
               AND available_at <= ?
             ORDER BY ticker, available_at DESC
             """,
-            [index_name, as_known_at],
+            [index_name, known_at],
         ).fetchall()
 
         # Keep only tickers where the latest known row has in_index = true
@@ -293,7 +335,7 @@ class PITStore:
                 WHERE index_name = ? AND ticker = ? AND available_at <= ?
                 ORDER BY available_at DESC LIMIT 1
                 """,
-                [index_name, ticker, as_known_at],
+                [index_name, ticker, known_at],
             ).fetchone()
             if row and row[0]:
                 result.append(ticker)
@@ -318,12 +360,20 @@ class PITStore:
             ValueError: if any row has available_at < as_of (impossible physics).
         """
         self._check_write_guard(rows)
+        values = []
         for r in rows:
-            if r["available_at"] < r["as_of"]:
+            as_of = to_utc_iso(r["as_of"])
+            available_at = to_utc_iso(r["available_at"])
+            if available_at < as_of:
                 raise ValueError(
-                    f"available_at ({r['available_at']}) < as_of ({r['as_of']}) "
+                    f"available_at ({available_at}) < as_of ({as_of}) "
                     f"for ticker {r['ticker']} — impossible: knowledge can't precede event."
                 )
+            values.append(
+                (r["ticker"], as_of, available_at, r.get("pit_grade", "ingestion-stamped"),
+                 r.get("open"), r.get("high"), r.get("low"), r.get("close"),
+                 r.get("volume"), r.get("source"))
+            )
 
         self.conn.executemany(
             """
@@ -331,12 +381,7 @@ class PITStore:
             (ticker, as_of, available_at, pit_grade, open, high, low, close, volume, source)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
-            [
-                (r["ticker"], r["as_of"], r["available_at"], r.get("pit_grade", "ingestion-stamped"),
-                 r.get("open"), r.get("high"), r.get("low"), r.get("close"),
-                 r.get("volume"), r.get("source"))
-                for r in rows
-            ],
+            values,
         )
         logger.info("price_bars_inserted", count=len(rows))
         return len(rows)
@@ -344,12 +389,20 @@ class PITStore:
     def insert_fundamentals(self, rows: list[dict[str, Any]]) -> int:
         """Upsert fundamental rows. Validates dual timestamps."""
         self._check_write_guard(rows)
+        values = []
         for r in rows:
-            if r["available_at"] < r["as_of"]:
+            as_of = to_utc_iso(r["as_of"])
+            available_at = to_utc_iso(r["available_at"])
+            if available_at < as_of:
                 raise ValueError(
-                    f"available_at ({r['available_at']}) < as_of ({r['as_of']}) "
+                    f"available_at ({available_at}) < as_of ({as_of}) "
                     f"for ticker {r['ticker']} — impossible."
                 )
+            values.append(
+                (r["ticker"], r["dimension"], r["period"],
+                 as_of, available_at, r.get("pit_grade", "native"),
+                 r["indicator"], r["value"])
+            )
 
         self.conn.executemany(
             """
@@ -357,12 +410,7 @@ class PITStore:
             (ticker, dimension, period, as_of, available_at, pit_grade, indicator, value)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
-            [
-                (r["ticker"], r["dimension"], r["period"],
-                 r["as_of"], r["available_at"], r.get("pit_grade", "native"),
-                 r["indicator"], r["value"])
-                for r in rows
-            ],
+            values,
         )
         logger.info("fundamentals_inserted", count=len(rows))
         return len(rows)
@@ -377,8 +425,8 @@ class PITStore:
             VALUES (?, ?, ?, ?, ?, ?)
             """,
             [
-                (r["index_name"], r["ticker"], r["as_of"],
-                 r["available_at"], r.get("pit_grade", "native"), r["in_index"])
+                (r["index_name"], r["ticker"], to_utc_iso(r["as_of"]),
+                 to_utc_iso(r["available_at"]), r.get("pit_grade", "native"), r["in_index"])
                 for r in rows
             ],
         )
@@ -454,7 +502,7 @@ class PITStore:
                     logger.error("pit_audit_violation", detail=str(v))
                 raise violations[0]   # halt ingestion pipeline
         """
-        now = datetime.now(timezone.utc).isoformat()
+        now = _utc_now_iso()
         tables = ["price_bars", "fundamentals", "universe_membership"]
         violations: list[PITAuditError] = []
 

@@ -22,7 +22,7 @@ from pathlib import Path
 
 import pytest
 
-from data.pit_store import PITStore, PITWriteError, PITAuditError
+from data.pit_store import PITStore, PITWriteError, PITAuditError, to_utc_iso
 
 
 @pytest.fixture
@@ -315,6 +315,74 @@ class TestAuditFutureData:
         affected_tables = {v.table for v in violations}
         assert "price_bars" in affected_tables
         assert "fundamentals" in affected_tables
+
+
+# ── Timezone normalization (regression guard for the mixed-offset bug) ────────
+
+class TestTimezoneNormalization:
+    """The store's read filter and write guard are STRING comparisons on TEXT
+    columns.  They are only correct if every timestamp is normalized to canonical
+    UTC.  A row stamped '2026-06-10T15:00:00-04:00' (= 19:00 UTC) would otherwise
+    lexicographically sort before '2026-06-10T18:00:00+00:00' and defeat both
+    guards.  These tests lock in to_utc_iso() so the bug cannot return silently.
+    """
+
+    def test_canonical_form_identical_across_offsets(self):
+        """Same instant in three representations → byte-identical canonical string."""
+        a = to_utc_iso("2026-06-10T19:00:00+00:00")
+        b = to_utc_iso("2026-06-10T15:00:00-04:00")   # = 19:00 UTC
+        c = to_utc_iso("2026-06-10T19:00:00Z")
+        assert a == b == c == "2026-06-10T19:00:00.000000+00:00"
+
+    def test_canonical_form_is_fixed_width(self):
+        """Microseconds always padded to 6 digits so lexicographic == chronological."""
+        no_micros = to_utc_iso("2026-06-10T19:00:00+00:00")
+        with_micros = to_utc_iso("2026-06-10T19:00:00.5+00:00")
+        assert no_micros == "2026-06-10T19:00:00.000000+00:00"
+        assert with_micros == "2026-06-10T19:00:00.500000+00:00"
+        assert with_micros > no_micros  # 19:00:00.5 is after 19:00:00.0
+
+    def test_date_only_becomes_midnight_utc(self):
+        assert to_utc_iso("2026-01-02") == "2026-01-02T00:00:00.000000+00:00"
+
+    def test_naive_assumed_utc(self):
+        assert to_utc_iso("2026-06-10T12:00:00") == "2026-06-10T12:00:00.000000+00:00"
+
+    def test_write_guard_catches_future_row_in_nonutc_offset(self, store):
+        """THE regression test: a future row in a -04:00 zone whose hour digits
+        sort BEFORE a UTC 'now' string.  Naive string comparison would miss it;
+        normalization catches it."""
+        future_utc = datetime.now(timezone.utc) + timedelta(hours=1)
+        et = timezone(timedelta(hours=-4))
+        future_in_et = future_utc.astimezone(et).isoformat()  # e.g. '...T..(-1h-4h)..-04:00'
+        with pytest.raises(PITWriteError):
+            store.insert_price_bars([_bar(available_at=future_in_et, as_of=_past(1))])
+
+    def test_write_guard_accepts_past_row_in_nonutc_offset(self, store):
+        """A genuinely-past row expressed in a non-UTC offset is accepted."""
+        past_utc = datetime.now(timezone.utc) - timedelta(hours=2)
+        et = timezone(timedelta(hours=-4))
+        past_in_et = past_utc.astimezone(et).isoformat()
+        count = store.insert_price_bars([_bar(available_at=past_in_et, as_of=_past(1))])
+        assert count == 1
+
+    def test_read_filter_compares_true_instant_across_offsets(self, store):
+        """Read filter must compare true instants, not raw strings, across offsets."""
+        aa_utc = datetime.now(timezone.utc) - timedelta(hours=2)  # past → passes guard
+        et = timezone(timedelta(hours=-4))
+        store.insert_price_bars([_bar(
+            available_at=aa_utc.isoformat(),
+            as_of=(aa_utc - timedelta(days=1)).isoformat(),
+            close=123.0,
+        )])
+        # Query 1 min BEFORE availability, expressed in ET → bar not yet knowable
+        before_et = (aa_utc - timedelta(minutes=1)).astimezone(et).isoformat()
+        assert store.get_price_bars(["AAPL"], as_known_at=before_et) == []
+        # Query 1 min AFTER availability, expressed in ET → bar visible
+        after_et = (aa_utc + timedelta(minutes=1)).astimezone(et).isoformat()
+        bars = store.get_price_bars(["AAPL"], as_known_at=after_et)
+        assert len(bars) == 1
+        assert bars[0]["close"] == 123.0
 
 
 if __name__ == "__main__":
