@@ -1,12 +1,26 @@
 """Point-in-time (PIT) data store — architecture.md L1, ADR-6.
 
-Every row has two timestamps:
+Every row carries two timestamps:
   as_of        — event time: when the fact became true in the world
   available_at — knowledge time: when we could first have known it
 
-All reads require an explicit `as_known_at` parameter.
-The store physically refuses to return rows with available_at > as_known_at.
-This single rule eliminates most look-ahead bias at the architecture level.
+Three-layer PIT discipline (architecture.md Principle 5):
+
+  Layer 1 — Read filter (every read):
+    All queries filter WHERE available_at <= as_known_at.  Future rows are
+    silently excluded from results — they are not knowable at decision time.
+    A 2018 backtest query against a store holding 2018-2023 data works correctly;
+    it simply cannot see the 2019-2023 rows.  No exception is raised.
+
+  Layer 2 — Write guard (every ingest):
+    Any row with available_at > now() is rejected at insert time.  A row that
+    claims to be knowable in the future is always a data bug (timezone error,
+    vendor mislabel, parser mistake) — caught at the door, never stored.
+
+  Layer 3 — Nightly audit (audit_future_data()):
+    Scans all tables for available_at > now().  Should be silent in steady
+    state; fires only if guard was bypassed or data predates the guard.
+    Called by the nightly job; returns violations for the caller to handle.
 
 Storage: DuckDB (in-process) backed by Parquet files on disk.
 Phase 1: single DuckDB database file in var/pit_store.duckdb.
@@ -24,23 +38,46 @@ import structlog
 
 logger = structlog.get_logger()
 
-_LOOK_AHEAD_MSG = (
-    "PIT violation: attempted to read data with available_at > as_known_at. "
-    "This is architecture.md Principle 5 — the look-ahead threshold is zero, forever."
+_FUTURE_STAMP_MSG = (
+    "PIT write guard: available_at is in the future of wall-clock. "
+    "This row claims to be knowable before it exists — architecture.md Principle 5. "
+    "This is always a data corruption or timezone bug at the ingestion source."
+)
+
+_AUDIT_VIOLATION_MSG = (
+    "PIT audit violation: store contains rows with available_at > now(). "
+    "Ingestion guard was bypassed or data predates the guard. "
+    "Inspect ingestion logs — do not run backtests until resolved."
 )
 
 
 @dataclass
-class PITViolation(Exception):
-    """Raised when a query would read data not yet available at decision time."""
-    as_known_at: str
-    earliest_available_at: str
+class PITWriteError(Exception):
+    """Raised when an ingestion row has available_at > now() (future-stamped)."""
+    ticker: str
+    available_at: str
+    now: str
 
     def __str__(self) -> str:
         return (
-            f"{_LOOK_AHEAD_MSG} "
-            f"as_known_at={self.as_known_at}, "
-            f"earliest_violation_available_at={self.earliest_available_at}"
+            f"{_FUTURE_STAMP_MSG} "
+            f"ticker={self.ticker}, available_at={self.available_at}, now={self.now}"
+        )
+
+
+@dataclass
+class PITAuditError(Exception):
+    """Raised by audit_future_data() when future-stamped rows are found in the store."""
+    table: str
+    earliest_future_available_at: str
+    row_count: int
+
+    def __str__(self) -> str:
+        return (
+            f"{_AUDIT_VIOLATION_MSG} "
+            f"table={self.table}, "
+            f"earliest_future_available_at={self.earliest_future_available_at}, "
+            f"rows_affected={self.row_count}"
         )
 
 
@@ -121,26 +158,22 @@ class PITStore:
             )
         """)
 
-    def _check_look_ahead(self, table: str, as_known_at: str) -> None:
-        """Raise PITViolation if any row would violate the look-ahead rule.
+    def _check_write_guard(self, rows: list[dict], ticker_key: str = "ticker") -> None:
+        """Raise PITWriteError if any row has available_at > now() (future-stamped).
 
-        Called before every query that returns data.  We check first, return later —
-        any violation aborts the query entirely (fail-closed).
+        Called before every insert.  A row claiming to be knowable in the future is
+        always a data bug (timezone error, vendor mislabel, parser mistake) — reject it
+        at the door rather than letting it silently pollute the store.
         """
-        result = self.conn.execute(
-            f"""
-            SELECT MIN(available_at) as earliest
-            FROM {table}
-            WHERE available_at > ?
-            """,
-            [as_known_at],
-        ).fetchone()
-
-        if result and result[0] is not None:
-            raise PITViolation(
-                as_known_at=as_known_at,
-                earliest_available_at=result[0],
-            )
+        now = datetime.now(timezone.utc).isoformat()
+        for r in rows:
+            aa = r.get("available_at", "")
+            if aa > now:
+                raise PITWriteError(
+                    ticker=r.get(ticker_key, "?"),
+                    available_at=aa,
+                    now=now,
+                )
 
     # ── Public read API ────────────────────────────────────────────────────
 
@@ -163,11 +196,10 @@ class PITStore:
         Returns:
             List of bar dicts ordered by (ticker, as_of).
 
-        Raises:
-            PITViolation: if any stored row for these tickers violates look-ahead.
+        Returns only rows with available_at <= as_known_at.  Future rows in the store
+        are silently excluded — they are not knowable at decision time and are not an
+        error; the nightly audit catches any that were incorrectly ingested.
         """
-        self._check_look_ahead("price_bars", as_known_at)
-
         query = """
             SELECT ticker, as_of, available_at, pit_grade,
                    open, high, low, close, volume, source
@@ -209,11 +241,8 @@ class PITStore:
         Returns:
             List of fundamental rows, one per (ticker, period, available_at).
 
-        Raises:
-            PITViolation: on look-ahead.
+        Returns only rows with available_at <= as_known_at.
         """
-        self._check_look_ahead("fundamentals", as_known_at)
-
         rows = self.conn.execute(
             """
             SELECT ticker, dimension, period, as_of, available_at,
@@ -242,11 +271,8 @@ class PITStore:
         Returns:
             List of ticker symbols that were in the index at as_known_at.
 
-        Raises:
-            PITViolation: on look-ahead.
+        Returns only tickers with available_at <= as_known_at.
         """
-        self._check_look_ahead("universe_membership", as_known_at)
-
         rows = self.conn.execute(
             """
             SELECT DISTINCT ON (ticker) ticker
@@ -288,8 +314,10 @@ class PITStore:
             Number of rows inserted/updated.
 
         Raises:
+            PITWriteError: if any row has available_at > now() (future-stamped).
             ValueError: if any row has available_at < as_of (impossible physics).
         """
+        self._check_write_guard(rows)
         for r in rows:
             if r["available_at"] < r["as_of"]:
                 raise ValueError(
@@ -315,6 +343,7 @@ class PITStore:
 
     def insert_fundamentals(self, rows: list[dict[str, Any]]) -> int:
         """Upsert fundamental rows. Validates dual timestamps."""
+        self._check_write_guard(rows)
         for r in rows:
             if r["available_at"] < r["as_of"]:
                 raise ValueError(
@@ -340,6 +369,7 @@ class PITStore:
 
     def insert_universe(self, rows: list[dict[str, Any]]) -> int:
         """Upsert universe membership rows."""
+        self._check_write_guard(rows, ticker_key="ticker")
         self.conn.executemany(
             """
             INSERT OR REPLACE INTO universe_membership
@@ -409,6 +439,52 @@ class PITStore:
             "age_hours": round(age_hours, 1),
             "is_stale": is_stale,
         }
+
+    def audit_future_data(self) -> list["PITAuditError"]:
+        """Scan all data tables for rows with available_at > now() (G0.2b nightly audit).
+
+        These rows were either ingested before the write guard existed, or bypassed it.
+        Returns a list of PITAuditError — one per affected table.  An empty list means
+        the store is clean.  Callers decide whether to raise, log, or alert.
+
+        Example (nightly cron):
+            violations = store.audit_future_data()
+            if violations:
+                for v in violations:
+                    logger.error("pit_audit_violation", detail=str(v))
+                raise violations[0]   # halt ingestion pipeline
+        """
+        now = datetime.now(timezone.utc).isoformat()
+        tables = ["price_bars", "fundamentals", "universe_membership"]
+        violations: list[PITAuditError] = []
+
+        for table in tables:
+            row = self.conn.execute(
+                f"""
+                SELECT MIN(available_at) as earliest, COUNT(*) as n
+                FROM {table}
+                WHERE available_at > ?
+                """,
+                [now],
+            ).fetchone()
+
+            if row and row[0] is not None:
+                violations.append(
+                    PITAuditError(
+                        table=table,
+                        earliest_future_available_at=row[0],
+                        row_count=int(row[1]),
+                    )
+                )
+
+        if not violations:
+            logger.info("pit_audit_clean", tables_checked=len(tables), now=now)
+        else:
+            for v in violations:
+                logger.error("pit_audit_violation", table=v.table,
+                             earliest=v.earliest_future_available_at,
+                             rows=v.row_count)
+        return violations
 
     def close(self) -> None:
         self.conn.close()

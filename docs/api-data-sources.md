@@ -10,7 +10,7 @@
 
 Hard requirements every data integration must satisfy before it touches L1:
 
-- **R1 — Dual timestamps.** Every record stored with `as_of` (event time) and `available_at` (when *we could have known it*). If a vendor doesn't supply knowledge-time, `available_at = our ingestion time` and the source is marked `pit_grade: ingestion-stamped` (usable live, weaker for backtests).
+- **R1 — Dual timestamps.** Every record stored with `as_of` (event time) and `available_at` (when *we could have known it*). If a vendor doesn't supply knowledge-time, `available_at = our ingestion time` and the source is marked `pit_grade: ingestion-stamped` (usable live, weaker for backtests). PIT correctness is enforced at three layers: (1) read filter silently excludes rows with `available_at > as_known_at` on every query; (2) write guard rejects any row with `available_at > now()` at ingest time; (3) nightly `audit_future_data()` scans for `available_at > now()` as an independent check. See architecture.md §L1 for the full rationale — the three layers must not be collapsed into one.
 - **R2 — Survivorship-free.** Historical universes must include delisted names, or the source is research-grade only.
 - **R3 — Corporate-action correctness.** Splits/dividends handled with both adjusted and unadjusted series retained; adjustment factors stored, never applied destructively.
 - **R4 — Replayability.** Raw payloads archived (cheap object storage) so any derived table can be rebuilt; vendor data revisions detectable via payload hashes.

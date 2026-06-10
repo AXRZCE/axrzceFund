@@ -59,7 +59,11 @@ Dependencies point downward only: agents read from L1–L2 and write proposals u
 
 ### L1 — Data Layer
 - **Sources:** market data (Polygon or Alpaca data API), fundamentals (point-in-time provider), news and SEC filings (EDGAR + news API), corporate actions, delisted-stock history.
-- **Point-in-time store:** a single canonical store (start: DuckDB/Parquet on disk; later: Postgres + object storage) where every row has `as_of` and `available_at`. All readers pass a `decision_ts`; the store refuses to serve rows with `available_at > decision_ts`.
+- **Point-in-time store:** a single canonical store (start: DuckDB/Parquet on disk; later: Postgres + object storage) where every row has `as_of` (event time) and `available_at` (knowledge time). PIT discipline is enforced through three independent layers:
+  1. **Read filter (every query):** `WHERE available_at <= as_known_at`. Future rows are silently excluded; a backtest query at a historical date works correctly even when the store holds years of newer data. No exception is raised on historical queries.
+  2. **Write guard (every ingest):** rows with `available_at > now()` are rejected at insert time. A row claiming to be knowable in the future is always a data bug (timezone error, vendor mislabel) — caught at the door.
+  3. **Nightly audit (`audit_future_data()`):** independent scan for `available_at > now()` across all tables. Should be silent in steady state; fires only if the write guard was bypassed or data predates it. Distinct from the read filter — auditing for `available_at > as_known_at` would fire constantly on healthy historical data and is not the error condition being detected.
+  > **Why three layers, not one:** conflating "serve only knowable data" (read concern) with "detect corrupt timestamps" (integrity concern) leads to a store that refuses every historical backtest query once any newer data is loaded. Keep them separate.
 - **RAG indexes:** filings, transcripts, and news are chunked and embedded into a vector index, partitioned by date so retrieval can also be time-bounded.
 - **Universe service:** maintains the investable universe (e.g., S&P 500 / Russell 1000 constituents *as of each historical date*, including delisted names) to avoid survivorship bias.
 
