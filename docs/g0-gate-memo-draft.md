@@ -65,7 +65,13 @@ History (this narrative is part of the evidence the gate was honest):
 ## G0.4 — Replay determinism
 
 - [ ] One sampled soak night (≥ night 2) rebuilt from raw archive byte-identically —
-      ops/replay_check.py, artifact: _pending_
+      ops/replay_check.py, artifact: _pending official soak-night run_
+- Mechanism verified 2026-06-10 against the shakedown-day archive
+  (run `ingest_20260610_e9e371`): all 5 archives SHA256-verified; all 4 tables
+  byte-identical — price_bars 33,033 rows (be51dfaa5e57), fundamentals 57,083
+  (ede79b6dc977), universe_membership 59,116 (2b96cbf8eb58), corporate_actions
+  5,139 (ea66f6bae5de). Official evidence run = same drill against a night-2+
+  archive per the soak-window ruling.
 
 ## G0.5 — Broker round-trip
 

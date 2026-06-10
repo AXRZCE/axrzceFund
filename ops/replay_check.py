@@ -101,6 +101,7 @@ def main() -> int:
     # 3. Compare per table: replica rows vs production rows at the same keys
     prod = PITStore()
     all_match = True
+    comparisons = []
     for table, keys in TABLE_KEYS.items():
         rep_rows = [
             dict(zip([d[0] for d in replica.conn.execute(f"SELECT * FROM {table} LIMIT 0").description], r))
@@ -113,11 +114,29 @@ def main() -> int:
         h_rep, h_prod = canonical_hash(rep_rows), canonical_hash(prod_rows)
         match = h_rep == h_prod
         all_match &= match
+        comparisons.append({"table": table, "replica_rows": len(rep_rows),
+                            "prod_rows": len(prod_rows), "hash": h_rep,
+                            "match": match})
         print(f"  compare  {table:<20} replica={len(rep_rows)} prod={len(prod_rows)} "
               f"hash {'MATCH' if match else 'MISMATCH'} ({h_rep[:12]})")
 
     replica.close()
     prod.close()
+
+    # Persist the drill artifact (G0.4 evidence)
+    from datetime import datetime, timezone
+    art_dir = Path("var/g04")
+    art_dir.mkdir(parents=True, exist_ok=True)
+    artifact = art_dir / f"replay_{run_id}.json"
+    artifact.write_text(json.dumps({
+        "run_id": run_id,
+        "drilled_at": datetime.now(timezone.utc).isoformat(),
+        "archive_integrity": "verified",
+        "comparisons": comparisons,
+        "pass": all_match,
+    }, indent=2), encoding="utf-8")
+    print(f"  artifact: {artifact}")
+
     print(f"\n  G0.4 VERDICT: {'PASS - byte-identical rebuild' if all_match else 'FAIL'}")
     return 0 if all_match else 1
 
