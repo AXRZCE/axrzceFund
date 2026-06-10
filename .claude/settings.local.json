@@ -4,7 +4,10 @@
       "PowerShell(git init)",
       "PowerShell(git add .)",
       "PowerShell(git commit -m \"Initial commit: project documentation for axrzceFund\")",
-      "PowerShell(if \\($env:NASDAQ_DATA_LINK_API_KEY\\) { \"API key env var: SET \\(length $\\($env:NASDAQ_DATA_LINK_API_KEY.Length\\)\\)\" } else { \"API key env var: NOT SET\" })"
+      "PowerShell(if \\($env:NASDAQ_DATA_LINK_API_KEY\\) { \"API key env var: SET \\(length $\\($env:NASDAQ_DATA_LINK_API_KEY.Length\\)\\)\" } else { \"API key env var: NOT SET\" })",
+      "PowerShell(powershell -ExecutionPolicy ByPass -NoProfile -Command \"irm https://astral.sh/uv/install.ps1 | iex\")",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\Aksharajsinh\\\\.local\\\\bin;$env:Path\"; uv --version)",
+      "PowerShell(cd 'C:\\\\Users\\\\Aksharajsinh\\\\Claude\\\\Projects\\\\axrzce fund'; mkdir -Force core, agents, graphs, data, harness, ops, tests, var | Out-Null; Get-ChildItem -Directory | Where-Object {$_.Name -match '^\\(core|agents|graphs|data|harness|ops|tests|var\\)$'} | ForEach-Object {Write-Host \"Created: $_\"})"
     ]
   }
 }
