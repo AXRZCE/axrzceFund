@@ -105,8 +105,8 @@ Pod = a sector/strategy bucket once Phase 2 pods exist; Phase 1 treats the whole
 ## 10. Data, Broker, and Infrastructure Settings
 
 - `broker_primary = Alpaca paper`, `broker_secondary = IBKR paper` — both behind `BrokerInterface` from day one (ADR-8); secondary validated weekly by mirroring a sample of orders.
-- `market_data = Alpaca (IEX feed) Phase 1 → Polygon Phase 2` — IEX-only is fine for daily-cadence decisions; consolidated-tape accuracy starts mattering when slippage measurement does. (api-data-sources.md owns details)
-- `fundamentals = point-in-time provider, TBD in api-data-sources.md` — hard requirement: `available_at` semantics or a documented restatement policy; this choice is flagged as the #1 open procurement item.
+- `market_data = Alpaca (IEX feed) Phase 1 → Polygon Phase 2` — IEX-only is fine for daily-cadence decisions; consolidated-tape accuracy starts mattering when slippage measurement does. Live feed only — backtest/historical prices come from Sharadar SEP. (api-data-sources.md owns details)
+- `fundamentals = Sharadar SFA bundle via Nasdaq Data Link (purchased June 2026, $79/mo)` — SF1 fundamentals with native `available_at` (filing-date) semantics, plus SEP/ACTIONS/TICKERS/SP500-history; key in `NASDAQ_DATA_LINK_API_KEY` env var only. The former #1 open procurement item is resolved.
 - `filings/news = EDGAR direct + news API (TBD)` with ingestion-time stamping.
 - `storage = DuckDB/Parquet + SQLite event log (Phase 1) → Postgres (Phase 2)` (ADR-7).
 - `event_log_integrity = daily hash chain check` (P10).
@@ -137,7 +137,7 @@ Pod = a sector/strategy bucket once Phase 2 pods exist; Phase 1 treats the whole
 | P12 | cooldown_cycles |
 
 ## Open Items
-- Point-in-time fundamentals vendor decision → api-data-sources.md (**blocking for Phase 1 fundamental memos**).
+- ~~Point-in-time fundamentals vendor decision~~ — resolved June 2026: Sharadar SFA purchased (api-data-sources.md §4).
 - Slippage/cost model parameters → backtesting-framework.md (the `edge_to_cost_multiple` check needs the cost model to mean anything).
 - Factor model choice for §6 caps → backtesting-framework.md / Phase 2.
 - Dashboard thresholds referencing these values → monitoring-metrics.md.

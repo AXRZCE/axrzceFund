@@ -54,21 +54,28 @@ Hard requirements every data integration must satisfy before it touches L1:
 - **Trigger to upgrade:** the moment we start *measuring* slippage seriously (Phase 2 exit criteria) or `monitor_interval` tightens below 60s, IEX-only stops being honest. Budget line: ≤ $250/mo.
 - Alternative if tick-grade ever needed: Databento (institutional, usage-priced) — Phase 4 question at the earliest.
 
+### Backtest / historical prices — Sharadar SEP (included in the §4 bundle)
+- Survivorship-free EOD price history including delisted names, back to ~1998 — the **canonical historical/backtest price series** from day one.
+- **Division of labor:** Alpaca (IEX) is the *live* price feed only; backtest price ingestion is never built against Alpaca. Polygon upgrade trigger unchanged (slippage measurement, Phase 2).
+- SEP also serves as the independent EOD price cross-check against the live feed (§4 adjacencies).
+
 ### Corporate actions & reference
 - Phase 1: Alpaca corporate-actions endpoints + Sharadar ACTIONS table (comes with §4 choice) cross-checked nightly; disagreements halt the affected name (fail closed).
 - Canonical symbology: our own `instrument_id` keyed to FIGI where available; ticker changes tracked as events, not overwrites.
 
 ---
 
-## 4. Fundamentals — THE blocking decision, resolved
+## 4. Fundamentals — THE blocking decision, resolved & purchased
 
-### Recommendation: **Sharadar Core US Fundamentals (SF1) via Nasdaq Data Link — PRIMARY**, EDGAR XBRL — verification & depth.
+**Status (June 2026): PURCHASED.** Sharadar Core US Equities Bundle (SFA), full history, $79/mo via Nasdaq Data Link. Entitlements: SF1 (fundamentals), SEP (EOD prices), ACTIONS (corporate actions), TICKERS (metadata), S&P 500 constituent history, plus insiders/institutional tables (unused for now). API key lives in the `NASDAQ_DATA_LINK_API_KEY` environment variable only — never in config files, prompts, logs, or the event log (configuration.md §10).
+
+### Decision: **Sharadar Core US Fundamentals (SF1) via Nasdaq Data Link — PRIMARY**, EDGAR XBRL — verification & depth.
 
 **Why Sharadar SF1 wins for us:**
 - **True point-in-time:** data is time-indexed to the *filing date* (knowledge time) with restatement-inclusive and restatement-exclusive views — exactly our R1 `available_at` semantics, natively.
 - **Survivorship-free:** 16,000+ US companies including 10,000+ delisted (R2), with up to ~28 years of history and ~150 standardized indicators; quarterly/TTM/annual dimensions.
 - **Bundle adjacencies we'll use:** TICKERS (metadata/sector), ACTIONS (corporate actions cross-check), **S&P 500 constituent history** (point-in-time index membership — solves the P1 universe service cleanly), EVENTS (8-K), and optionally SEP (EOD prices as an independent price cross-check).
-- **Practicalities:** updated twice daily; standard Nasdaq Data Link API/libraries; single-user licenses are among the cheapest professional PIT options (order of ~$50–100/mo class for core tables; confirm current pricing at checkout). Budget line: ≤ $150/mo.
+- **Practicalities:** updated twice daily; standard Nasdaq Data Link API/libraries; single-user licenses are among the cheapest professional PIT options — actual price paid: **$79/mo for the SFA bundle** (June 2026). Budget line: ≤ $150/mo (actual: $79).
 
 **EDGAR XBRL (free) — the verification layer, not the primary:**
 - Filings are the ground truth and `available_at` is the filing acceptance timestamp — perfect PIT semantics, $0.
@@ -97,6 +104,7 @@ Hard requirements every data integration must satisfy before it touches L1:
 |---|---|---|---|
 | EOD bars + actions | Alpaca (P2: Polygon) | nightly 18:30 ET | vendor-stamped |
 | Fundamentals delta | Sharadar SF1 | nightly post-17:30 ET update (+23:30 catch) | filing-date (native) |
+| Backtest price history | Sharadar SEP | nightly post-17:30 ET update | vendor-stamped (native PIT) |
 | Universe/constituents | Sharadar SP500 table | nightly | native PIT |
 | Filings mirror | EDGAR | nightly + intraday poll for held names | acceptance-stamped |
 | News stream | Alpaca News websocket | continuous | ingestion-stamped |
@@ -110,11 +118,11 @@ Rules: every pipeline is idempotent (re-runs converge); staleness sentinel per t
 |---|---|---|
 | Alpaca trading (paper) | 200 req/min — we use <10 | $0 |
 | Alpaca data (IEX/news) | ample for daily cadence | $0 |
-| Sharadar via NDL | API quota generous at our volume | ~$50–150 → same |
+| Sharadar via NDL (SFA bundle) | API quota generous at our volume | $79 actual → same |
 | EDGAR | 10 req/s hard, be polite | $0 |
 | Polygon | n/a Phase 1 | $0 → ≤$250 |
 | IBKR paper | session-based | $0 |
-| **Total data budget** | | **≤$150 Phase 1, ≤$400 Phase 2** |
+| **Total data budget** | | **$79 actual Phase 1 (≤$150 budgeted), ≤$400 Phase 2** |
 
 (Compare: LLM budget $50/day ≈ $1,100/mo — data is not the cost driver; don't economize on it where PIT quality is at stake.)
 

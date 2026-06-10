@@ -3,7 +3,8 @@
     "allow": [
       "PowerShell(git init)",
       "PowerShell(git add .)",
-      "PowerShell(git commit -m \"Initial commit: project documentation for axrzceFund\")"
+      "PowerShell(git commit -m \"Initial commit: project documentation for axrzceFund\")",
+      "PowerShell(if \\($env:NASDAQ_DATA_LINK_API_KEY\\) { \"API key env var: SET \\(length $\\($env:NASDAQ_DATA_LINK_API_KEY.Length\\)\\)\" } else { \"API key env var: NOT SET\" })"
     ]
   }
 }
