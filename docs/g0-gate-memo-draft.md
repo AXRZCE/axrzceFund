@@ -35,12 +35,15 @@ History (this narrative is part of the evidence the gate was honest):
    at IC=0.04/10y demanded ~100% power where honest power is ~80%). Detector
    contrast decisive: neg 0.514 vs pos 0.028. Stopped per decision tree; owner
    restated both arms (final restatement, amendment log 2026-06-10 (final)).
-4. Final run on seeds {40..59}: **PENDING — readout artifact to be linked here.**
+4. Final run on seeds {40..59}: **PASSED 2026-06-10** — artifact:
+   docs/g01-readout-final-seeds40-59.json (no re-runs per decision tree Outcome 1).
 
-- [ ] **G0.1a (contrast):** neg median PBO ≥ 0.45, neg median DSR p ≥ 0.20,
-      neg median |IC| ≤ 0.01, pos median PBO < 0.25 — artifact: _pending_
-- [ ] **G0.1b (positive, 20y panel):** DSR p < 0.05 in ≥ 19/20 seeds AND
-      median p < 0.01 — artifact: _pending_
+- [x] **G0.1a (contrast):** neg median PBO **0.456** ≥ 0.45 (squarely in the
+      no-skill band theory predicts), neg median DSR p **0.541** ≥ 0.20, neg
+      median |IC| **0.0025** ≤ 0.01, pos median PBO **0.000** < 0.25 — PASS
+- [x] **G0.1b (positive, 20y panel):** DSR p < 0.05 in **20/20** seeds (≥ 19
+      required; worst seed p = 0.038), median p **1.5e-05** < 0.01; realized IC
+      0.0403 vs 0.04 target; true `factor` family selected in all 20 seeds — PASS
 
 ## G0.2 — PIT refusal
 
