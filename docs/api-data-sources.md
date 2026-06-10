@@ -62,6 +62,7 @@ Hard requirements every data integration must satisfy before it touches L1:
 ### Corporate actions & reference
 - Phase 1: Alpaca corporate-actions endpoints + Sharadar ACTIONS table (comes with §4 choice) cross-checked nightly; disagreements halt the affected name (fail closed).
 - Canonical symbology: our own `instrument_id` keyed to FIGI where available; ticker changes tracked as events, not overwrites.
+- **Announcement semantics (table-scoped exception to the `available_at ≥ as_of` physics check):** corporate actions are the one data type where knowledge legitimately *precedes* the event — a split effective tomorrow (`as_of` in the future) is announced and knowable today (`available_at` = now). The PIT store therefore does NOT apply the `available_at ≥ as_of` impossibility check to the `corporate_actions` table; the write guard (`available_at ≤ now`) and the read filter (on `available_at`) apply unchanged, so PIT correctness is preserved — tomorrow's announced split is readable today precisely because we genuinely knew it. **This exception is scoped to `corporate_actions` only. Do not "fix" it back into the check, and do not generalize it to measurement data** (a price bar or a filing cannot be known before it exists). Ruling approved by project owner, 2026-06-10, after the guard caught SHPH (action dated tomorrow) on soak night 1.
 
 ---
 
@@ -73,6 +74,7 @@ Hard requirements every data integration must satisfy before it touches L1:
 
 **Why Sharadar SF1 wins for us:**
 - **True point-in-time:** data is time-indexed to the *filing date* (knowledge time) with restatement-inclusive and restatement-exclusive views — exactly our R1 `available_at` semantics, natively.
+- **Field semantics (binding, learned from a live PIT-guard catch on soak night 1):** `as_of` = **`reportperiod`** (the ACTUAL fiscal period end), `available_at` = `datekey` (filing date). Sharadar's `calendardate` is a *normalized calendar-quarter label* that can postdate the filing for off-calendar fiscal years (e.g. PVH: fiscal Q ends early Aug, filed Sep, labeled Sep 30) — using it as event time makes knowledge precede the event, a silent look-ahead vector. `calendardate` is used only as the `period` label. `reportperiod ≤ datekey` always.
 - **Survivorship-free:** 16,000+ US companies including 10,000+ delisted (R2), with up to ~28 years of history and ~150 standardized indicators; quarterly/TTM/annual dimensions.
 - **Bundle adjacencies we'll use:** TICKERS (metadata/sector), ACTIONS (corporate actions cross-check), **S&P 500 constituent history** (point-in-time index membership — solves the P1 universe service cleanly), EVENTS (8-K), and optionally SEP (EOD prices as an independent price cross-check).
 - **Practicalities:** updated twice daily; standard Nasdaq Data Link API/libraries; single-user licenses are among the cheapest professional PIT options — actual price paid: **$79/mo for the SFA bundle** (June 2026). Budget line: ≤ $150/mo (actual: $79).

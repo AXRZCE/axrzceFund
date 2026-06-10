@@ -23,13 +23,7 @@ structlog.configure(wrapper_class=structlog.make_filtering_bound_logger(logging.
 
 import numpy as np
 
-from harness.fraud_catch import (
-    run_ensemble,
-    evaluate_gate,
-    beta_from_ic,
-    POSITIVE_IC,
-    SEED_ENSEMBLE,
-)
+from harness.fraud_catch import run_full_gate, SEED_ENSEMBLE
 
 ARTIFACT_DIR = Path("var/g01")
 
@@ -61,17 +55,17 @@ def summarize(name, results):
 
 
 def main():
-    print(f"Running G0.1 (campaign v2) over pre-committed gate seeds {SEED_ENSEMBLE} ...")
-    neg = run_ensemble("negative", beta=0.0)
-    pos = run_ensemble("positive", beta=beta_from_ic(POSITIVE_IC))
-    verdict = evaluate_gate(neg, pos)
+    print(f"Running G0.1 (final restatement; positive panel 20y) over pre-committed "
+          f"gate seeds {SEED_ENSEMBLE} ...")
+    result = run_full_gate()
+    neg, pos, verdict = result["negative"], result["positive"], result["verdict"]
 
     # Artifact FIRST — a print failure must never lose a completed run.
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     artifact = ARTIFACT_DIR / f"g01_readout_{stamp}.json"
     artifact.write_text(json.dumps({
-        "campaign": "v2",
+        "campaign": "v2-final-restatement",
         "seeds": SEED_ENSEMBLE,
         "negative": to_jsonable(neg),
         "positive": to_jsonable(pos),
@@ -83,8 +77,8 @@ def main():
     summarize("negative", neg)
     summarize("positive", pos)
 
-    print("\n=== GATE VERDICT ===")
-    print(f"  G0.1a (negative): {verdict['G0.1a_negative']}")
+    print("\n=== GATE VERDICT (final restatement) ===")
+    print(f"  G0.1a (contrast): {verdict['G0.1a_contrast']}")
     print(f"  G0.1b (positive): {verdict['G0.1b_positive']}")
     print(f"  OVERALL PASS: {verdict['pass']}")
 
