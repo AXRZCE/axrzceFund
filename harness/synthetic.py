@@ -244,7 +244,12 @@ def random_linear_score(
     signal: np.ndarray, returns: np.ndarray, lookback: int, seed: int = 0
 ) -> np.ndarray:
     """Random seeded linear combination of the last `lookback` daily returns —
-    a decoy 'feature' a data-mining campaign would try. Strictly lagged."""
+    a decoy 'feature' a data-mining campaign would try. Strictly lagged.
+
+    Dimensionality note: every returns-based linear feature lives in lag-space of
+    dimension <= lookback, so a campaign of these can never exceed ~max-lookback
+    effective independent trials. Use junk_indicator_score for an independent-
+    by-construction decoy family."""
     T, B = returns.shape
     rng = np.random.default_rng(seed)
     weights = rng.standard_normal(lookback)
@@ -253,6 +258,23 @@ def random_linear_score(
         window = returns[t - lookback + 1:t + 1]      # (lookback, B), rows <= t
         out[t] = weights @ window                      # combine lagged returns
     return out
+
+
+def junk_indicator_score(
+    signal: np.ndarray, returns: np.ndarray, lookback: int, seed: int = 0
+) -> np.ndarray:
+    """An independent junk data source: an iid-noise indicator panel of its own
+    (synthetic 'alt-data' — moon phases, social counts, weather...), trailing-mean
+    smoothed over `lookback`. Each seed is a fully independent channel, which is
+    what a real multi-source data-mining campaign looks like and what gives the
+    negative-control campaign genuinely independent trials (no lag-space ceiling).
+
+    Strictly lagged trivially: the indicator is independent of returns entirely,
+    and only values <= t enter the score at t."""
+    T, B = returns.shape
+    rng = np.random.default_rng(seed)
+    indicator = rng.standard_normal((T, B))
+    return _trailing_mean(indicator, lookback)
 
 
 def realized_ic(signal: np.ndarray, returns: np.ndarray) -> float:

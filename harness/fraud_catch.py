@@ -49,7 +49,7 @@ from harness.synthetic import (
     momentum_score,
     reversal_score,
     vol_scaled_momentum_score,
-    random_linear_score,
+    junk_indicator_score,
 )
 from harness.trial_registry import TrialRegistry
 
@@ -58,7 +58,13 @@ POSITIVE_IC = 0.04
 N_ASSETS = 30          # calibrated so the true-factor strategy lands SR ≈ 1 (indep panels)
 N_DAYS = 2520          # ~10 trading years
 EDGE_HORIZON = 1       # 1-day exogenous edge (multi-day persistence → comically strong)
-SEED_ENSEMBLE = list(range(20))   # pre-committed, a-priori — never substituted
+
+# Seed discipline (docs/g01-decision-tree.md, validation-criteria.md amendment log):
+#   {0..19}  — CONSUMED. Used by the campaign-v1 gate run and the effective-N
+#              diagnosis. May never be reused for gating.
+#   {20..39} — the pre-committed gate ensemble for campaign v2.
+DIAGNOSIS_SEEDS = list(range(20))
+SEED_ENSEMBLE = list(range(20, 40))
 
 # Strategy families. Only "factor" sees the exogenous edge; the rest are decoys.
 _FAMILIES = {
@@ -66,13 +72,31 @@ _FAMILIES = {
     "momentum": momentum_score,
     "reversal": reversal_score,
     "vol_mom": vol_scaled_momentum_score,
-    "random": random_linear_score,
+    "random": junk_indicator_score,
 }
 
-_LOOKBACKS = [1, 2, 3, 5, 10]
-_HOLDS = [2, 3, 5, 10]
-_DECILES = [0.10, 0.20]
-_RANDOM_SEEDS = [0, 1, 2, 3]
+# Campaign v2 (a-priori design target: effective N >= 60, verified by eigenvalue
+# diagnosis BEFORE any PBO was computed on this design).
+# v1 failure mode: effective N ~ 6.8 of 208 — reversal was momentum's exact
+# negation, the random family reused 4 seeds with shared draws, and dense grids
+# made within-family trials near-clones. A first v2 attempt with unique-seed
+# random-LINEAR features only reached effective N ~ 13.5: every returns-based
+# linear feature lives in lag-space of dimension <= max lookback (10), a hard
+# ceiling. v2 final fixes:
+#   - momentum at long lookbacks only, reversal at short only (no mirror pairs)
+#   - sparse deterministic grids (few parameterizations per family)
+#   - 170 junk-INDICATOR trials, each its own independent noise data channel
+#     (unique seed) — independent by construction, no lag-space ceiling; this is
+#     what a real multi-source data-mining campaign looks like
+_FACTOR_LOOKBACKS = [1, 2, 3, 5, 10]
+_FACTOR_HOLDS = [2, 3, 5]
+_MOMENTUM_LOOKBACKS = [10, 20, 40]
+_REVERSAL_LOOKBACKS = [1, 2, 3]
+_VOLMOM_LOOKBACKS = [10, 20]
+_DETERMINISTIC_HOLDS = [2, 5]
+_N_RANDOM_TRIALS = 170
+_RANDOM_LOOKBACKS = [3, 5, 10]
+_RANDOM_HOLDS = [2, 3, 5, 10]
 
 
 @dataclass
@@ -94,22 +118,42 @@ class ControlResult:
 
 
 def build_campaign() -> list[dict]:
-    """The registered research campaign: a diverse multi-family trial set (~208)."""
+    """Campaign v2: a diverse multi-family trial set (209 trials, effective N >= 60).
+
+    factor 5x3=15, momentum 3x2=6, reversal 3x2=6, vol_mom 2x2=4, random 170
+    (unique seed per trial) -> 201 + 8 deterministic decile variants = 209.
+    """
     campaign: list[dict] = []
-    for fam in ("factor", "momentum", "reversal", "vol_mom"):
-        for lb in _LOOKBACKS:
-            for h in _HOLDS:
-                for q in _DECILES:
-                    campaign.append(
-                        {"family": fam, "lookback": lb, "hold": h, "decile_frac": q, "rand_seed": 0}
-                    )
-    # Random linear-combo family varies its seed instead of decile breadth.
-    for lb in [3, 5, 10]:
-        for h in _HOLDS:
-            for rs in _RANDOM_SEEDS:
+    for lb in _FACTOR_LOOKBACKS:
+        for h in _FACTOR_HOLDS:
+            campaign.append(
+                {"family": "factor", "lookback": lb, "hold": h, "decile_frac": 0.10, "rand_seed": 0}
+            )
+    for fam, lbs in (("momentum", _MOMENTUM_LOOKBACKS),
+                     ("reversal", _REVERSAL_LOOKBACKS),
+                     ("vol_mom", _VOLMOM_LOOKBACKS)):
+        for lb in lbs:
+            for h in _DETERMINISTIC_HOLDS:
                 campaign.append(
-                    {"family": "random", "lookback": lb, "hold": h, "decile_frac": 0.10, "rand_seed": rs}
+                    {"family": fam, "lookback": lb, "hold": h, "decile_frac": 0.10, "rand_seed": 0}
                 )
+    # Decile-breadth variants on a few deterministic configs (analyst knob-turning).
+    for fam, lb in (("factor", 3), ("factor", 5), ("momentum", 20), ("momentum", 40),
+                    ("reversal", 1), ("reversal", 2), ("vol_mom", 10), ("vol_mom", 20)):
+        campaign.append(
+            {"family": fam, "lookback": lb, "hold": 5, "decile_frac": 0.20, "rand_seed": 0}
+        )
+    # Random-feature campaign: each trial a UNIQUE seed (independent direction).
+    for s in range(_N_RANDOM_TRIALS):
+        campaign.append(
+            {
+                "family": "random",
+                "lookback": _RANDOM_LOOKBACKS[s % len(_RANDOM_LOOKBACKS)],
+                "hold": _RANDOM_HOLDS[s % len(_RANDOM_HOLDS)],
+                "decile_frac": 0.10,
+                "rand_seed": 1000 + s,
+            }
+        )
     return campaign
 
 

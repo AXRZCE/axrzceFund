@@ -186,6 +186,20 @@ class PITStore:
         """)
 
         self.conn.execute("""
+            CREATE TABLE IF NOT EXISTS corporate_actions (
+                ticker        TEXT NOT NULL,
+                as_of         TEXT NOT NULL,
+                available_at  TEXT NOT NULL,
+                pit_grade     TEXT NOT NULL DEFAULT 'ingestion-stamped',
+                action        TEXT NOT NULL,
+                value         DOUBLE,
+                contraticker  TEXT,
+                source        TEXT,
+                PRIMARY KEY (ticker, as_of, action)
+            )
+        """)
+
+        self.conn.execute("""
             CREATE TABLE IF NOT EXISTS ingestion_audit (
                 run_id        TEXT NOT NULL,
                 table_name    TEXT NOT NULL,
@@ -432,6 +446,39 @@ class PITStore:
         )
         return len(rows)
 
+    def insert_corporate_actions(self, rows: list[dict[str, Any]]) -> int:
+        """Upsert corporate-action rows.
+
+        Announcement semantics: corporate actions are the one data type where
+        available_at < as_of is VALID — a split effective tomorrow (as_of in the
+        future) is announced and knowable today (available_at = now). The
+        available_at >= as_of physics check applies to MEASUREMENT data (a price
+        bar can't be known before the bar closes) and is deliberately not applied
+        here. The write guard (available_at <= now) and the read filter (on
+        available_at) still hold, so PIT correctness is preserved: tomorrow's
+        announced split is readable today precisely because we genuinely knew it.
+        """
+        self._check_write_guard(rows)
+        values = []
+        for r in rows:
+            as_of = to_utc_iso(r["as_of"])
+            available_at = to_utc_iso(r["available_at"])
+            values.append(
+                (r["ticker"], as_of, available_at,
+                 r.get("pit_grade", "ingestion-stamped"), r["action"],
+                 r.get("value"), r.get("contraticker"), r.get("source"))
+            )
+        self.conn.executemany(
+            """
+            INSERT OR REPLACE INTO corporate_actions
+            (ticker, as_of, available_at, pit_grade, action, value, contraticker, source)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            values,
+        )
+        logger.info("corporate_actions_inserted", count=len(rows))
+        return len(rows)
+
     def record_ingestion(
         self,
         run_id: str,
@@ -503,7 +550,7 @@ class PITStore:
                 raise violations[0]   # halt ingestion pipeline
         """
         now = _utc_now_iso()
-        tables = ["price_bars", "fundamentals", "universe_membership"]
+        tables = ["price_bars", "fundamentals", "universe_membership", "corporate_actions"]
         violations: list[PITAuditError] = []
 
         for table in tables:
