@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(git init)",
+      "PowerShell(git add .)",
+      "PowerShell(git commit -m \"Initial commit: project documentation for axrzceFund\")"
+    ]
+  }
+}
