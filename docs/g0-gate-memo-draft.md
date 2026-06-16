@@ -15,6 +15,20 @@ owner only when every criterion below is green with its artifact linked.
   scheduled 21:30 runs starting 2026-06-10. The earlier same-day manual runs are
   baseline/shakedown, not soak evidence.
 - **G0.4 replay target:** night 2 or later (night-1 runs predate raw archiving).
+- **Soak host (2026-06-15, after the laptop failure):** the soak runs on the
+  always-on VM (DigitalOcean, Ubuntu 24.04) via **systemd timers**, isolated under
+  `/root/hedgefund` (own venv on system Python 3.12, own `.env`, never touching the
+  co-resident ANTS project). The laptop is decommissioned as a soak host. The five
+  consecutive clean nights count the `21:30 ET` (`hedgefund-soak.timer`) firings
+  starting after the timer-fired mechanism proof lands clean.
+- **Catch-up-night counting (pre-committed 2026-06-15, before it can occur):** the
+  soak timer uses `Persistent=true`, so if the VM is down/restarting at 21:30 ET the
+  run fires on next boot rather than being missed. **A catch-up run that completes
+  cleanly (all_ok, PIT audit clean, reconciliation passed) COUNTS as a clean soak
+  night** — the pipeline ran, the data landed, operational reliability was
+  demonstrated; only the wall-clock time shifted. This is the sensible standard, and
+  strictly better than the laptop's all-or-nothing. A catch-up run that fails its
+  checks does NOT count and restarts the 5-night counter, same as any failed night.
 - **Seed bookkeeping (G0.1):** {0..19} consumed (v1 + effective-N diagnosis);
   {20..39} consumed (v2 run under original thresholds); **{40..59} = the final
   gate ensemble.** Pre-committed: a failure on {40..59} triggers full stop and
