@@ -29,6 +29,12 @@ owner only when every criterion below is green with its artifact linked.
   demonstrated; only the wall-clock time shifted. This is the sensible standard, and
   strictly better than the laptop's all-or-nothing. A catch-up run that fails its
   checks does NOT count and restarts the 5-night counter, same as any failed night.
+- **Timeout-killed-run counting (pre-committed 2026-06-15, before it can occur):**
+  the soak/G0.5 services carry `TimeoutStartSec=1800`, so a hung run (e.g. a network
+  stall mid-fetch) is killed at 30 min rather than blocking the next night's timer.
+  **A run killed at the timeout is an operational failure: it does NOT count as a
+  clean night and the 5-night counter does not advance** (holds, then restarts on the
+  next outcome). Honest reading — a killed run did not demonstrate clean operation.
 - **Seed bookkeeping (G0.1):** {0..19} consumed (v1 + effective-N diagnosis);
   {20..39} consumed (v2 run under original thresholds); **{40..59} = the final
   gate ensemble.** Pre-committed: a failure on {40..59} triggers full stop and
@@ -68,9 +74,19 @@ History (this narrative is part of the evidence the gate was honest):
 - Three-layer design documented (architecture.md §L1); canonical-UTC invariant
   enforced and regression-tested (mixed-offset bug caught and fixed).
 
-## G0.3 — Ingestion soak (RESTARTED — soak window TBD after scheduling decision)
+## G0.3 — Ingestion soak (RESTARTED on the VM — clock starts tomorrow 21:30 ET)
 
-- [ ] 5 consecutive scheduled nightly runs, zero unexplained row-count deviations
+- [ ] 5 consecutive clean nightly runs (VM systemd timer, 21:30 ET), zero unexplained
+      row-count deviations. **Night 1 = first `hedgefund-soak.timer` firing,
+      2026-06-16 21:30 ET (Wed 01:30 UTC).**
+- **Canonical host PROVEN 2026-06-15 (the saga's close):** ported to the always-on VM
+  (Ubuntu 24.04, systemd timers, isolated `/root/hedgefund`). Stand-up evidence:
+  data layer verified (Sharadar 5/5, Alpaca ACTIVE); first run `all_ok`, universe 503,
+  IEX 2515; **timer-fired proof** — `hedgefund-soak.timer` triggered `hedgefund-soak.service`
+  (journal `02:59:11 Starting…`, not a manual invocation), `.env` loaded under
+  systemd's bare environment, ran 15 min to clean completion (run `ingest_20260616_f63c9e`,
+  `all_ok`, PIT 0, IEX 2515, **reconciliation [] clean** `2515→2515`). systemd
+  `Persistent=true` (reboot catch-up) + `TimeoutStartSec=1800` (hung-run self-heal).
 - **INCIDENT 2026-06-10 → 06-15: the first soak attempt produced ZERO clean nights.**
   Per the pre-committed "missed night restarts the count" rule, the count is reset.
   Root causes (both in the scheduling layer; pipeline code was healthy throughout):
@@ -103,19 +119,21 @@ History (this narrative is part of the evidence the gate was honest):
 
 ## G0.4 — Replay determinism
 
-- [ ] One sampled soak night (≥ night 2) rebuilt from raw archive byte-identically —
-      ops/replay_check.py, artifact: _pending official soak-night run_
-- Mechanism verified 2026-06-10 against the shakedown-day archive
-  (run `ingest_20260610_e9e371`): all 5 archives SHA256-verified; all 4 tables
-  byte-identical — price_bars 33,033 rows (be51dfaa5e57), fundamentals 57,083
-  (ede79b6dc977), universe_membership 59,116 (2b96cbf8eb58), corporate_actions
-  5,139 (ea66f6bae5de). Official evidence run = same drill against a night-2+
-  archive per the soak-window ruling.
+- [x] **PASS on the canonical VM host** against the timer-fired soak archive
+      `ingest_20260616_f63c9e` (a genuine systemd-triggered run): all archives
+      SHA256-verified; all 4 tables byte-identical — price_bars 33,695
+      (ae5438e11a3e), fundamentals 43,119 (ea58fbd295d5), universe_membership
+      59,116 (e6ecf2b005bd), corporate_actions 5,334 (e505ab0d9f79). Artifact:
+      `var/g04/replay_ingest_20260616_f63c9e.json` on the VM.
+- Mechanism additionally verified twice on the laptop (2026-06-10 shakedown archive
+  and 2026-06-15 archive), both byte-identical — determinism is robust across hosts.
 
 ## G0.5 — Broker round-trip
 
 - [ ] 10 scripted paper orders submit→fill→reconcile, zero mismatches, modeled-fill
-      logged on all 10 — ops/broker_roundtrip.py (market-hours run), artifact: _pending_
+      logged on all 10 — ops/broker_roundtrip.py. **Scheduled on the VM
+      (`hedgefund-g05.timer`) for 2026-06-16 10:00 ET (14:00 UTC), market hours.**
+      Laptop one-shot disabled to avoid a double-fire. artifact: _pending tomorrow_
 
 ---
 
