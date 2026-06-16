@@ -139,6 +139,13 @@ def transform_sf1(df, stamp: str, dimension: str = "ARQ") -> list[dict[str, Any]
 
 
 def transform_sp500(df, stamp: str) -> list[dict[str, Any]]:
+    """Constituent history. available_at = the CHANGE DATE (native knowledge time),
+    NOT the ingestion stamp: an index membership change is public/effective on its
+    date, so that is when we'd have known it. Stamping all of history with now()
+    (a) collapses the knowledge dimension and (b) makes get_universe's "latest row
+    per ticker by available_at" resolve on an arbitrary tie-break among equal
+    timestamps — which silently emptied the universe and dropped IEX coverage from
+    ~500 names to the 10-name fallback (caught by soak reconciliation 2026-06-15)."""
     rows = []
     for r in df.itertuples():
         action = str(r.action).lower()
@@ -148,10 +155,11 @@ def transform_sp500(df, stamp: str) -> list[dict[str, Any]]:
             in_index = False
         else:
             continue
+        change_date = f"{r.date:%Y-%m-%d}T00:00:00+00:00"
         rows.append(dict(
             index_name="SP500", ticker=r.ticker,
-            as_of=f"{r.date:%Y-%m-%d}T00:00:00+00:00",
-            available_at=stamp, pit_grade="ingestion-stamped",
+            as_of=change_date,
+            available_at=change_date, pit_grade="native",
             in_index=in_index,
         ))
     return rows

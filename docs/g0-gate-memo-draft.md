@@ -54,13 +54,38 @@ History (this narrative is part of the evidence the gate was honest):
 - Three-layer design documented (architecture.md §L1); canonical-UTC invariant
   enforced and regression-tested (mixed-offset bug caught and fixed).
 
-## G0.3 — Ingestion soak (nights 2–6)
+## G0.3 — Ingestion soak (RESTARTED — soak window TBD after scheduling decision)
 
 - [ ] 5 consecutive scheduled nightly runs, zero unexplained row-count deviations
-- Night-by-night log: var/ingestion_logs/ (summaries) — table to be filled here.
-- Findings already banked from shakedown night 1 (both doc'd in api-data-sources):
-  SF1 `as_of` = reportperiod (calendardate is a label that can postdate filing);
-  corporate-actions announcement semantics (available_at < as_of valid, table-scoped).
+- **INCIDENT 2026-06-10 → 06-15: the first soak attempt produced ZERO clean nights.**
+  Per the pre-committed "missed night restarts the count" rule, the count is reset.
+  Root causes (both in the scheduling layer; pipeline code was healthy throughout):
+  1. **`.cmd` wrapper redirect bug.** Log filename used `%date%` substitution which,
+     under the machine's dd/MM/yyyy locale, produced an invalid path (contained `/`).
+     cmd aborted the redirect *before launching python*, so every scheduled run
+     (nightly catch-ups + the 06-11 G0.5) executed the wrapper but never ran python.
+     Evidence: `var/g05` created (mkdir ran) but empty; zero console logs anywhere.
+     Fixed: both wrappers now use a fixed, locale-independent filename (console_soak.log).
+  2. **Never-sleep power setting reverted** to 30-min (a Windows-update reboot switched
+     the active power scheme to "Performance", discarding the 06-10 setting on the
+     prior scheme). Modern Standby can't timer-wake, so the laptop slept through every
+     21:30. Re-applied on the active scheme; StartWhenAvailable catch-up is the real
+     safety net (one run on next wake).
+  3. **Verification gap (the lesson):** on 06-10 the *wake test* used a simple wrapper
+     with no date-redirect, so the real wrappers' redirect bug was never exercised
+     before going live. Fix verified end-to-end this time by running the actual task.
+- **Bug surfaced by soak reconciliation (the soak doing its job), now fixed:**
+  SP500 universe `available_at` was stamped `now()` for all historical constituent
+  rows → `get_universe` resolved on an arbitrary tie-break among equal timestamps →
+  empty universe → IEX coverage collapsed 2515→10 rows (10-name fallback). Fixed:
+  `transform_sp500` stamps `available_at` = the change date (native knowledge time);
+  verified get_universe NOW = 503 names, deterministic. (Historical PIT membership
+  is incomplete — Sharadar lacks a pre-coverage baseline — tracked as a Phase 1 item;
+  not a G0 blocker since the soak/IEX only needs the current universe.)
+- Night-by-night log table: to be filled from var/ingestion_logs/ once the restarted
+  soak runs.
+- Findings banked from shakedown (both doc'd in api-data-sources): SF1 `as_of` =
+  reportperiod; corporate-actions announcement semantics (available_at < as_of valid).
 
 ## G0.4 — Replay determinism
 

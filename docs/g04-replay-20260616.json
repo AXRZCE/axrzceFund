@@ -1,0 +1,36 @@
+{
+  "run_id": "ingest_20260616_37bf3b",
+  "drilled_at": "2026-06-16T01:29:40.267650+00:00",
+  "archive_integrity": "verified",
+  "comparisons": [
+    {
+      "table": "price_bars",
+      "replica_rows": 31190,
+      "prod_rows": 31190,
+      "hash": "65549d04592fadb6aac6f83507c5f5e177a4684ba7b8759d41b50bdea396d5ee",
+      "match": true
+    },
+    {
+      "table": "fundamentals",
+      "replica_rows": 43119,
+      "prod_rows": 43119,
+      "hash": "ea58fbd295d57d5f688c2d1d0a7abf553eebb50f3627a9b63dadbb8a9e3213f9",
+      "match": true
+    },
+    {
+      "table": "universe_membership",
+      "replica_rows": 59116,
+      "prod_rows": 59116,
+      "hash": "e6ecf2b005bd30be73b062cd69a4c431d6f217b4a605d0d694f50c592f495c5c",
+      "match": true
+    },
+    {
+      "table": "corporate_actions",
+      "replica_rows": 5334,
+      "prod_rows": 5334,
+      "hash": "c09e620e1b6f54df99d2037e8648594095b7add32dbf785cc9e705ae5dc7fe9b",
+      "match": true
+    }
+  ],
+  "pass": true
+}
