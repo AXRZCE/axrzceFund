@@ -1,10 +1,25 @@
-# VM Soak Setup — porting the nightly soak + G0.5 to the always-on ANTS VM
+# VM Soak Setup — porting the nightly soak + G0.5 to the always-on VM
+
+> **AS DEPLOYED (2026-06-15, authoritative) — read this before the runbook below.**
+> The soak runs on the DigitalOcean Ubuntu 24.04 VM under **systemd timers**, NOT cron.
+> Debian's `cron 3.0pl1` has unreliable `CRON_TZ`; systemd resolves named-TZ schedules
+> DST-correctly and was verified with `systemd-analyze calendar`. Deployed units
+> (isolated under `/root/hedgefund`, system Python 3.12, never touching ANTS):
+> - `hedgefund-soak.{service,timer}` — `OnCalendar=*-*-* 21:30:00 America/New_York`
+> - `hedgefund-g05.{service,timer}` — one-shot `OnCalendar=2026-06-16 10:00:00 America/New_York`
+> - Both services: `Type=oneshot`, `WorkingDirectory=/root/hedgefund`,
+>   `ExecStart=/root/hedgefund/.venv/bin/python ops/<entrypoint>`,
+>   **`TimeoutStartSec=1800`** (hung-run self-heal) + **`Persistent=true`** (reboot
+>   catch-up). These two directives are **load-bearing for the G0.3 counting rulings**
+>   (validation-criteria.md G0.3): catch-up counts, timeout-kill does not.
+> The **cron sections below are SUPERSEDED** — kept only as the original plan/history.
+> The "prove the scheduler not the manual run" gate was met by a **timer-fired** proof
+> (a throwaway timer triggering the real service), not a cron-fired one.
 
 **Why:** the laptop cannot run the soak unattended (Modern Standby can't timer-wake;
-the never-sleep power setting reverts across Windows updates). The owner's existing
-always-on VM ("ANTS" project) is the reliable host. Moving to **cron on Linux**
-also retires the entire Windows scheduling layer that produced the 5-day failure
-(`.cmd` wrappers + locale-date redirect bug) — that class of bug cannot exist here.
+the never-sleep power setting reverts across Windows updates). The always-on VM is the
+reliable host. Moving to a Linux scheduler also retires the entire Windows scheduling
+layer that produced the 5-day failure (`.cmd` wrappers + locale-date redirect bug).
 
 **The lesson that governs this runbook:** "the pipeline works when I run it by hand"
 proved nothing — the *scheduler* was the failure point. So the official soak clock
@@ -46,10 +61,12 @@ timedatectl | grep "Time zone" # note the VM's TZ — we override per-job anyway
 nproc; df -h ~; free -h        # capacity sanity
 crontab -l 2>/dev/null         # see ANTS cron jobs → avoid name/time collisions
 ```
-> **Python note:** `pyproject.toml` currently pins `requires-python >= 3.14` (the
-> laptop's version). The code only needs 3.11+ (`datetime.fromisoformat` with `Z`,
-> `X | Y` unions). If the VM has 3.11–3.13, relax that pin to `>=3.11` rather than
-> installing 3.14 — confirm and edit before `pip install`.
+> **Python note (resolved):** `pyproject.toml` pins `requires-python = ">=3.11"`
+> (relaxed from an incidental `>=3.14` laptop pin — already applied). The code only
+> needs 3.11+ (`datetime.fromisoformat` with `Z`, `X | Y` unions), so the VM's
+> Python 3.12 is fine; no edit needed before `pip install`. (Minor follow-up: the
+> black/ruff/mypy `target-version`/`python_version` in pyproject still say 3.14 —
+> tool targets only, not the floor; align to 3.11 when convenient.)
 
 ### 1. Isolated checkout
 ```bash
