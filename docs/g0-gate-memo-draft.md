@@ -74,11 +74,19 @@ History (this narrative is part of the evidence the gate was honest):
 - Three-layer design documented (architecture.md §L1); canonical-UTC invariant
   enforced and regression-tested (mixed-offset bug caught and fixed).
 
-## G0.3 — Ingestion soak (RESTARTED on the VM — clock starts tomorrow 21:30 ET)
+## G0.3 — Ingestion soak (RUNNING on the VM — 2 of 5 clean as of 2026-06-17)
 
 - [ ] 5 consecutive clean nightly runs (VM systemd timer, 21:30 ET), zero unexplained
       row-count deviations. **Night 1 = first `hedgefund-soak.timer` firing,
-      2026-06-16 21:30 ET (Wed 01:30 UTC).**
+      2026-06-16 21:30 ET (Wed 01:30 UTC).** Night-by-night:
+
+  | Night | Date (21:30 ET) | run_id | all_ok | PIT | IEX | recon |
+  |---|---|---|---|---|---|---|
+  | 1 | 2026-06-16 | `ingest_…` (014037Z) | ✅ | 0 | 2515 | `[]` |
+  | 2 | 2026-06-17 | `ingest_…` (014244Z) | ✅ | 0 | 2515 | `[]` |
+  | 3 | 2026-06-18 | — | ⏳ | | | |
+  | 4 | 2026-06-19 | — | ⏳ | | | |
+  | 5 | 2026-06-20 | — | ⏳ | | | |
 - **Canonical host PROVEN 2026-06-15 (the saga's close):** ported to the always-on VM
   (Ubuntu 24.04, systemd timers, isolated `/root/hedgefund`). Stand-up evidence:
   data layer verified (Sharadar 5/5, Alpaca ACTIVE); first run `all_ok`, universe 503,
@@ -130,10 +138,10 @@ History (this narrative is part of the evidence the gate was honest):
 
 ## G0.5 — Broker round-trip
 
-- [ ] 10 scripted paper orders submit→fill→reconcile, zero mismatches, modeled-fill
-      logged on all 10 — ops/broker_roundtrip.py. **Scheduled on the VM
-      (`hedgefund-g05.timer`) for 2026-06-16 10:00 ET (14:00 UTC), market hours.**
-      Laptop one-shot disabled to avoid a double-fire. artifact: _pending tomorrow_
+- [x] **PASS** — fired from the VM (`hedgefund-g05.timer`) 2026-06-16 10:00 ET
+      (14:00 UTC), market hours: **10 orders, zero mismatches, modeled-fill logged
+      on all 10**, account flat after. Artifact: `var/g05/g05_20260616_8b8c4d.json`
+      on the VM.
 
 ---
 
