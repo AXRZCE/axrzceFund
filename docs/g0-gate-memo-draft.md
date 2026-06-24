@@ -161,8 +161,43 @@ History (this narrative is part of the evidence the gate was honest):
 
 ---
 
+## Phase 0 scope — built vs. consciously deferred (honesty appendix)
+
+The **exit gate** (G0.1–G0.5) is fully met — and per the plan's "gates, not dates"
+principle, that is what advances the phase. But several Phase 0 *workstream* items
+(implementation-plan.md §Phase 0) were deferred, and this records them so Phase 1
+inherits an accurate picture rather than assuming the harness is 100% complete.
+
+**Built (✅):** repo scaffolding + config-hash `config_version` + structlog +
+replay-tuple (core/); append-only hash-chained event log + nightly look-ahead audit
+(event_log.py, pit_store.audit_future_data); PIT store with `as_of`/`available_at`
+enforcement + canonical-UTC + universe service (pit_store.py); nightly ingestion +
+staleness sentinels + raw archive (ingestion.py); Trial Registry; CPCV (purge +
+embargo); DSR/PSR/PBO calculators (statistics.py); fraud-catch harness; Alpaca +
+Sharadar verified; fill-divergence logging (in the G0.5 drill).
+
+**Deferred (⚠️) — tracked as Phase 1 prerequisites unless noted:**
+| Item | plan ref | Where it lands | Why deferral is OK |
+|---|---|---|---|
+| **MinTRL calculator** | WS4 (DSR/PSR/PBO/**MinTRL**) | Phase 1 step 5 — MinTRL countdown is a day-one dashboard widget (monitoring-metrics §104) | Not needed for any G0 gate; needed when the live record starts |
+| **Vendor interface adapters** (`BrokerInterface`, `FundamentalsInterface`, `MarketDataInterface`, `DocumentsInterface`) | api-data-sources **R5** | Phase 1 steps 1–2, **before** agents read data | We accessed SDKs directly in ingestion/broker scripts; this is a real R5 deviation to repay before agents are wired, not after |
+| **Order manager skeleton** | WS5 | Phase 1 step 4 (risk gate + order manager) | G0.5 proved the broker round-trip as a script; the managed path is a Phase 1 build |
+| **Cost model v1** (spread+impact+fees) | WS4 | Phase 2 (E2 signal admission needs 1×/2×/3× costs) | G0.1 is deliberately cost-free (signal-detection stats, not net-of-cost) |
+| **EDGAR XBRL mirror** (pilot sector) | WS2 | Phase 1/2 as needed | Secondary to Sharadar SF1 (primary, built); EDGAR is "verification & depth" |
+
+**Architecture-principle check:** the one genuine deviation is **R5** (vendor SDKs
+called directly in `data/ingestion.py` and `ops/broker_roundtrip.py` rather than
+behind adapter interfaces). Functionally fine for Phase 0's gate work; must be repaid
+as the first Phase 1 step so agent/protocol code never imports a vendor SDK. All
+other architecture non-negotiables (PIT enforcement, event-log auditability,
+replay determinism, evidence classes, incorruptible gate/log) are honored in code.
+
+---
+
 **Sign-off (owner, only when all boxes are checked):**
 
-> I have reviewed each criterion against its artifact. G0 is passed; Phase 1 may begin.
+> I have reviewed each criterion against its artifact, and the built-vs-deferred
+> appendix. G0 is passed; Phase 1 may begin (starting with the R5 interface repay
+> and the stub-agent skeleton).
 >
 > Signed: ______________  Date: ______________
