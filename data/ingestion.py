@@ -64,14 +64,26 @@ def _date_str(days_ago: int = 0) -> str:
     return (datetime.now(timezone.utc) - timedelta(days=days_ago)).strftime("%Y-%m-%d")
 
 
-def _ndl():
-    import nasdaqdatalink as ndl
-    import os
-    key = os.environ.get("NASDAQ_DATA_LINK_API_KEY")
-    if not key:
-        raise RuntimeError("NASDAQ_DATA_LINK_API_KEY not set (configuration.md §10)")
-    ndl.ApiConfig.api_key = key
-    return ndl
+# Vendor access is via the R5 adapters only (data/interfaces). Lazy singletons so a
+# missing key surfaces at first fetch, not at import.
+_sharadar = None
+_alpaca_md = None
+
+
+def _sharadar_adapter():
+    global _sharadar
+    if _sharadar is None:
+        from data.interfaces import SharadarData
+        _sharadar = SharadarData()
+    return _sharadar
+
+
+def _alpaca_md_adapter():
+    global _alpaca_md
+    if _alpaca_md is None:
+        from data.interfaces import AlpacaMarketData
+        _alpaca_md = AlpacaMarketData()
+    return _alpaca_md
 
 
 # ── Raw archive (R4) ───────────────────────────────────────────────────────────
@@ -227,8 +239,7 @@ def ingest_sep(store: PITStore, run_id: str, window_days: int = 7) -> JobResult:
     """SEP daily bars (backtest/historical price series) — trailing window, all tickers."""
     return _run_job(
         store, run_id, "sep_daily_bars", "sep", "price_bars(sep)",
-        lambda: _ndl().get_table("SHARADAR/SEP", date={"gte": _date_str(window_days)},
-                                 paginate=True),
+        lambda: _sharadar_adapter().get_daily_bars(window_days=window_days),
     )
 
 
@@ -236,9 +247,7 @@ def ingest_sf1(store: PITStore, run_id: str, window_days: int = 7) -> JobResult:
     """SF1 fundamentals delta — rows the vendor updated in the trailing window."""
     return _run_job(
         store, run_id, "sf1_fundamentals", "sharadar_sf1", "fundamentals",
-        lambda: _ndl().get_table("SHARADAR/SF1", dimension="ARQ",
-                                 lastupdated={"gte": _date_str(window_days)},
-                                 paginate=True),
+        lambda: _sharadar_adapter().get_fundamentals(window_days=window_days, dimension="ARQ"),
     )
 
 
@@ -246,7 +255,7 @@ def ingest_sp500(store: PITStore, run_id: str) -> JobResult:
     """SP500 constituent history — full history (small table, idempotent upsert)."""
     return _run_job(
         store, run_id, "sp500_universe", "sharadar_sp500", "universe_membership",
-        lambda: _ndl().get_table("SHARADAR/SP500", paginate=True),
+        lambda: _sharadar_adapter().get_index_constituents("SP500"),
     )
 
 
@@ -254,43 +263,14 @@ def ingest_actions(store: PITStore, run_id: str, window_days: int = 30) -> JobRe
     """Corporate actions — trailing window (cross-checked vs Alpaca nightly in P1+)."""
     return _run_job(
         store, run_id, "corporate_actions", "sharadar_actions", "corporate_actions",
-        lambda: _ndl().get_table("SHARADAR/ACTIONS", date={"gte": _date_str(window_days)},
-                                 paginate=True),
+        lambda: _sharadar_adapter().get_corporate_actions(window_days=window_days),
     )
 
 
 def _fetch_iex(store: PITStore, window_days: int):
-    import os
-    import pandas as pd
-    from alpaca.data.historical import StockHistoricalDataClient
-    from alpaca.data.requests import StockBarsRequest
-    from alpaca.data.timeframe import TimeFrame
-
-    key = os.environ.get("APCA_API_KEY_ID")
-    secret = os.environ.get("APCA_API_SECRET_KEY")
-    if not key or not secret:
-        raise RuntimeError("Alpaca keys not set (configuration.md §10)")
-
+    """Resolve the current universe (PIT) and fetch its IEX bars through the adapter."""
     tickers = store.get_universe("SP500", as_known_at=_now_utc()) or DEFAULT_WATCHLIST
-    client = StockHistoricalDataClient(api_key=key, secret_key=secret)
-    end = datetime.now(timezone.utc)
-    start = end - timedelta(days=window_days)
-    resp = client.get_stock_bars(StockBarsRequest(
-        symbol_or_symbols=tickers, timeframe=TimeFrame.Day,
-        start=start, end=end, feed="iex"))
-
-    records = []
-    for symbol, bars in resp.data.items():
-        for bar in bars:
-            records.append(dict(
-                symbol=symbol,
-                timestamp=bar.timestamp.astimezone(timezone.utc).isoformat(),
-                open=float(bar.open), high=float(bar.high), low=float(bar.low),
-                close=float(bar.close), volume=int(bar.volume),
-            ))
-    return pd.DataFrame.from_records(
-        records, columns=["symbol", "timestamp", "open", "high", "low", "close", "volume"]
-    )
+    return _alpaca_md_adapter().get_daily_bars(tickers, window_days)
 
 
 def ingest_iex_bars(store: PITStore, run_id: str, window_days: int = 7) -> JobResult:
