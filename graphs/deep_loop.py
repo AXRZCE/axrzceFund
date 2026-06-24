@@ -66,8 +66,14 @@ def _replay_payload(state: CycleState, agent_id: str, extra: dict) -> dict:
 
 
 def build_deep_loop(event_log: EventLog, fault: Optional[FaultInjector] = None,
-                    checkpoint_path: Path = CHECKPOINT_PATH):
-    """Compile the deep-loop graph with a durable SQLite checkpointer."""
+                    checkpoint_path: Path = CHECKPOINT_PATH,
+                    interrupt_before: Optional[list[str]] = None):
+    """Compile the deep-loop graph with a durable SQLite checkpointer.
+
+    `interrupt_before` (LangGraph native) pauses execution before the named nodes —
+    used by the kill-resume test to stop after a checkpoint exists but before a mid
+    node runs, so the subprocess can be SIGKILLed at a known boundary.
+    """
     fault = fault or FaultInjector()
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -170,7 +176,7 @@ def build_deep_loop(event_log: EventLog, fault: Optional[FaultInjector] = None,
 
     conn = sqlite3.connect(str(checkpoint_path), check_same_thread=False)
     saver = SqliteSaver(conn)
-    return graph.compile(checkpointer=saver)
+    return graph.compile(checkpointer=saver, interrupt_before=interrupt_before or [])
 
 
 def new_cycle_state(config_version: str = "stub_cfg", code_version: str = "wp1") -> CycleState:
