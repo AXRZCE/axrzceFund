@@ -1,7 +1,8 @@
-# G0 Gate Memo — DRAFT (Phase 0 → Phase 1)
+# G0 Gate Memo — READY FOR SIGNATURE (Phase 0 → Phase 1)
 
-**Status:** Draft — accumulating evidence as criteria close. Signed by the project
-owner only when every criterion below is green with its artifact linked.
+**Status (2026-06-24): ALL FIVE G0 CRITERIA GREEN.** G0.1 ✅ · G0.2 ✅ · G0.3 ✅ ·
+G0.4 ✅ · G0.5 ✅. Each is recorded below against its artifact. Awaiting the project
+owner's review and signature — the human gate. **No Phase 1 build until signed.**
 **Rule:** validation-criteria.md — ALL criteria must pass; no waivers.
 
 ---
@@ -74,19 +75,34 @@ History (this narrative is part of the evidence the gate was honest):
 - Three-layer design documented (architecture.md §L1); canonical-UTC invariant
   enforced and regression-tested (mixed-offset bug caught and fixed).
 
-## G0.3 — Ingestion soak (RUNNING on the VM — 2 of 5 clean as of 2026-06-17)
+## G0.3 — Ingestion soak — PASSED (5 of 5 clean; held clean through night 9, 2026-06-24)
 
-- [ ] 5 consecutive clean nightly runs (VM systemd timer, 21:30 ET), zero unexplained
-      row-count deviations. **Night 1 = first `hedgefund-soak.timer` firing,
-      2026-06-16 21:30 ET (Wed 01:30 UTC).** Night-by-night:
+- [x] **5 consecutive clean nightly runs**, VM systemd timer 21:30 ET, every run
+      `all_ok` + PIT 0; the single row-count deviation is **explained** (below).
+      Night 1 = first `hedgefund-soak.timer` firing, 2026-06-16 21:30 ET. Every
+      night fired on-schedule at 01:30 UTC (no missed nights, no catch-up runs, no
+      timeout-kills). Night-by-night:
 
-  | Night | Date (21:30 ET) | run_id | all_ok | PIT | IEX | recon |
+  | Night | Date (21:30 ET) | summary file | all_ok | PIT | IEX | recon |
   |---|---|---|---|---|---|---|
-  | 1 | 2026-06-16 | `ingest_…` (014037Z) | ✅ | 0 | 2515 | `[]` |
-  | 2 | 2026-06-17 | `ingest_…` (014244Z) | ✅ | 0 | 2515 | `[]` |
-  | 3 | 2026-06-18 | — | ⏳ | | | |
-  | 4 | 2026-06-19 | — | ⏳ | | | |
-  | 5 | 2026-06-20 | — | ⏳ | | | |
+  | 1 | 2026-06-16 | night_…0617T014037Z | ✅ | 0 | 2515 | `[]` |
+  | 2 | 2026-06-17 | night_…0618T014244Z | ✅ | 0 | 2515 | `[]` |
+  | 3 | 2026-06-18 | night_…0619T014047Z | ✅ | 0 | 2520 | `[]` |
+  | 4 | 2026-06-19 | night_…0620T013915Z | ✅ | 0 | 2016 | `[]` |
+  | 5 | 2026-06-20 | night_…0621T013930Z | ✅ | 0 | 2016 | `[]` |
+  | 6–9 | 06-21 … 06-24 | (continued) | ✅ | 0 | 2016 | `[]` |
+
+- **Row-count deviation — EXPLAINED (logged per G0.3 "explained = logged"):** IEX
+  daily-bar counts moved 2515 → 2520 → 2016 across the window. **This is a
+  market-calendar effect, not a coverage loss.** IEX rows = (universe names) ×
+  (trading days in the trailing 7-calendar-day window). Verified 2026-06-24:
+  `get_universe` = **504**, and every recent trading date carries the full ~503–506
+  tickers — so 504 × 5 days = 2520, 504 × 4 days = 2016. The drop to 4 trading days
+  is the **June 19 Juneteenth market holiday** (plus weekend positioning) shrinking
+  the lookback's trading-day count. Universe coverage is intact; only the window's
+  day count changed. (The 50% reconciliation tolerance did not auto-flag the 20%
+  move; per the G0.3 ruling it is the nightly human review — performed here — that
+  adjudicates, and it is clean.)
 - **Canonical host PROVEN 2026-06-15 (the saga's close):** ported to the always-on VM
   (Ubuntu 24.04, systemd timers, isolated `/root/hedgefund`). Stand-up evidence:
   data layer verified (Sharadar 5/5, Alpaca ACTIVE); first run `all_ok`, universe 503,
