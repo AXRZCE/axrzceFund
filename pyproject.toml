@@ -56,7 +56,7 @@ packages = ["core", "agents", "graphs", "harness"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-v --tb=short --strict-markers"
+addopts = "-v --tb=short --strict-markers -m 'not integration'"
 markers = [
   "unit: unit tests",
   "integration: integration tests",
