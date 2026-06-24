@@ -15,6 +15,7 @@ license = {text = "MIT"}
 dependencies = [
   # Core orchestration & LLMs
   "langgraph>=0.1.0",
+  "langgraph-checkpoint-sqlite>=2.0.0",  # durable checkpointer (WP1 kill/resume)
   "anthropic>=0.32.0",
   "openai>=1.0.0",
   "google-generativeai>=0.3.0",
