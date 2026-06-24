@@ -16,10 +16,14 @@
   (which-of-code/test/spec), do not patch it.
 - **R2 — Determinism definition.** A stub cycle's decision *content* is deterministic;
   only the replay-identity fields vary per run. Ruling: **the replay compare excludes
-  the replay-identity fields `{trade_id, decision_ts}`** (they are definitionally
-  per-run); every other field of the final `CycleState` must be byte-identical on
-  replay. (Chosen over injecting a fake clock/ID, which would falsify the replay
-  tuple itself.)
+  the replay-identity fields `{cycle_id, decision_ts, trade_id}`** (definitionally
+  per-run; `cycle_id`/`decision_ts` are top-level, `trade_id` is nested in the
+  `decision` payload). "Replay" = re-invoke the graph with the **same initial state**
+  (same cycle_id/decision_ts) on a fresh checkpointer/event-log; every other field of
+  the final `CycleState` must be byte-identical. (Chosen over injecting a fake
+  clock/ID, which would falsify the replay tuple itself.) *Refinement (post-commit):
+  trade_id added to the excluded set — it was missed in the first cut; the principle
+  (exclude per-run identity) is unchanged.*
 - **R3 — Checkpointing.** Checkpoint **after every node** so a mid-cycle kill resumes
   exactly. Checkpointer DB = `var/checkpoints.sqlite`, **separate** from the event
   log (`core/event_log.py` remains the immutable source of truth). A run **killed**
