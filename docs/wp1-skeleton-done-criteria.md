@@ -14,16 +14,19 @@
   (candidate, halted/halt_reason, failure, per-stage outputs) — orchestration
   bookkeeping, not invented memo content. If a §2 schema looks wrong, flag it
   (which-of-code/test/spec), do not patch it.
-- **R2 — Determinism definition.** A stub cycle's decision *content* is deterministic;
-  only the replay-identity fields vary per run. Ruling: **the replay compare excludes
-  the replay-identity fields `{cycle_id, decision_ts, trade_id}`** (definitionally
-  per-run; `cycle_id`/`decision_ts` are top-level, `trade_id` is nested in the
-  `decision` payload). "Replay" = re-invoke the graph with the **same initial state**
-  (same cycle_id/decision_ts) on a fresh checkpointer/event-log; every other field of
-  the final `CycleState` must be byte-identical. (Chosen over injecting a fake
-  clock/ID, which would falsify the replay tuple itself.) *Refinement (post-commit):
-  trade_id added to the excluded set — it was missed in the first cut; the principle
-  (exclude per-run identity) is unchanged.*
+- **R2 — Determinism definition.** Strip pure *labels*, keep *causal inputs*. The
+  replay compare excludes only the pure identity labels **`{cycle_id, trade_id}`**
+  (`cycle_id` top-level; `trade_id` nested in the `decision` payload) — they do not
+  change what the decision *is*. **`decision_ts` is KEPT in the compare**: it is the
+  information boundary that determines what PIT data an agent reads, so a replay at a
+  different boundary (different inputs) MUST fail. "Replay" = re-invoke the graph with
+  the **same initial state** (same cycle_id/decision_ts) on a fresh
+  checkpointer/event-log; every non-label field — `decision_ts` included — must be
+  byte-identical. Since the ReplayTuple reuses the cycle's fixed `decision_ts`, a
+  faithful same-cycle replay still matches; a mismatch would surface a boundary being
+  regenerated instead of reused — exactly the bug worth catching. (Chosen over a fake
+  clock, which would falsify the replay tuple.) *History: first cut excluded
+  decision_ts (wrong — it's causal, not a label) and missed trade_id; both corrected.*
 - **R3 — Checkpointing.** Checkpoint **after every node** so a mid-cycle kill resumes
   exactly. Checkpointer DB = `var/checkpoints.sqlite`, **separate** from the event
   log (`core/event_log.py` remains the immutable source of truth). A run **killed**
