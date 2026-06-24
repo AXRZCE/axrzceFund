@@ -45,6 +45,26 @@
   PMORT-01, VERIF-01. Stubs are the ONLY canned code in Phase 1: each `Stub<Role>`,
   in `graphs/stubs/` only, docstring "replaced in WP2", returning clearly-fake memos.
 
+- **R7 — Kill-resume honesty (committed before the test).** A kill-resume test that
+  asserts only "the resumed cycle finished with a decision" can be green while the
+  resume secretly restarted from zero (checkpoint unused) or a re-run node duplicated
+  its effects. Three properties make it real, all required:
+  1. **Real kill, real process.** The cycle runs in a *subprocess* and takes an actual
+     **`SIGKILL`** (uncatchable — no cleanup/flush). This is the point of the durable
+     saver: the on-disk checkpoint must suffice with zero cooperation from the dying
+     process. SIGTERM would let it flush and weaken the proof.
+  2. **Killed mid-cycle, after a checkpoint exists.** Use LangGraph `interrupt_before`
+     a mid node (e.g. `pm`) so nodes up to `ballot` are checkpointed and `pm` has not
+     run; the subprocess signals "ready" (barrier) and blocks; the parent kills it
+     there. Pre-kill assertion: `ballot_cast` present, `proposal_written` absent.
+  3. **Resume proves it resumed, and matches a clean run.** Resume from the on-disk
+     checkpoint (same thread_id) in a fresh process; assert TWO things — (a) each
+     pre-kill node's events appear **exactly once** (`ballot_cast`==3, not 6 → it
+     continued, did not restart or duplicate; the kill-resume analog of the
+     decision_ts hole — a re-run node = a duplicate order at WP4), and (b) the final
+     `replay_comparable()` (now incl. `decision_ts`) equals an un-killed run's.
+  Runs on Linux/VM (SIGKILL); `tests/integration/test_kill_resume.py`.
+
 ## Node order (decision-protocols.md)
 P1 cycle_open → P2 research (FUND-TECH, TECH-01, SENT-01) → VERIF-01 strip →
 P3 debate_gate → P4 debate (BULL, BEAR, MOD) → P5 sealed ballot → P6 PM proposal →
