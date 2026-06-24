@@ -8,7 +8,11 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 SEARCH_DIRS = ["core", "data", "harness", "graphs", "agents", "ops", "tests"]
-ALLOWED_PREFIX = "data/interfaces/"
+# data/interfaces/: the adapters (the only production SDK site).
+# tests/integration/: deliberate adapter-vs-raw-SDK equivalence checks that must
+#   reference the vendor by their nature (test_adapter_equivalence.py) — gated
+#   @pytest.mark.integration, out of the default run. Not a production path.
+ALLOWED_PREFIXES = ("data/interfaces/", "tests/integration/")
 
 # Matches a real import line for a vendor SDK at the start of a (possibly indented)
 # line — not a mention inside a string or comment.
@@ -26,7 +30,7 @@ def test_vendor_sdk_imports_only_in_interfaces():
     leaks = []
     for p in _py_files():
         rel = p.relative_to(REPO).as_posix()
-        if rel.startswith(ALLOWED_PREFIX):
+        if rel.startswith(ALLOWED_PREFIXES):
             continue
         for m in VENDOR_IMPORT.finditer(p.read_text(encoding="utf-8")):
             leaks.append(f"{rel}: {m.group(0).strip()}")

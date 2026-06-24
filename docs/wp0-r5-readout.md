@@ -20,7 +20,7 @@
 | 4 ABCs + adapters cover every Phase-0 vendor call | ✅ |
 | Consumers call only through adapters | ✅ |
 | `test_no_vendor_leakage` green (SDKs only under `data/interfaces/`) | ✅ regex covers `import`/aliased/`from`/submodule; ignores our own `data.interfaces.alpaca` |
-| **Adapter behavior-preserving** (the load-bearing check) | ✅ `SharadarData.get_daily_bars` **byte-identical** to the raw `nasdaqdatalink.get_table` (shape, dtype, row order, values) — proven by direct adapter-vs-SDK frame compare |
+| **Adapter behavior-preserving** (the load-bearing check) | ✅ **committed, re-runnable** as `tests/integration/test_adapter_equivalence.py`: SEP and SP500 adapter output **byte-identical** to the raw `nasdaqdatalink.get_table` (shape/dtype/order/values via `assert_frame_equal`) + an IEX output-contract check. Gated `@pytest.mark.integration` (out of default run) + skip-without-creds; runs with `pytest -m integration` (3 passed, 22s, live). Replaces the deleted one-off so the repo can re-run its own most-important evidence. |
 | Replay determinism preserved | ✅ `replay_check` on the adapter-produced archive `ingest_20260624_ac4aef` = byte-identical rebuild, all 4 tables hash-match |
 | Nightly ingest through adapters | ✅ `all_ok`, PIT 0, valid archive |
 | Real integration through adapter (not mock) | ✅ Sharadar 5/5 datasets; Alpaca account + 9 real IEX bars (AAPL 293.32 @ 06-24) |
