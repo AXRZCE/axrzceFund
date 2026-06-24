@@ -133,15 +133,19 @@ class CycleState(BaseModel):
     halt_reason: Optional[str] = None
     failure: Optional[dict[str, Any]] = None  # {node, error} on fail-closed
 
-    # Fields excluded from the replay-equality compare (ruling R2): per-run identity.
-    # trade_id is per-run identity too — it is nested in the `decision` payload, so it
-    # is stripped there (not a top-level field).
-    REPLAY_IDENTITY_FIELDS: ClassVar[tuple[str, ...]] = ("cycle_id", "decision_ts")
+    # Excluded from the replay compare: PURE IDENTITY LABELS only (ruling R2).
+    # cycle_id (top-level) and trade_id (nested in `decision`) are labels — they do not
+    # change what the decision IS. decision_ts is deliberately NOT excluded: it is the
+    # information boundary that decides what PIT data an agent reads, so a replay at a
+    # different boundary (seeing different inputs) must FAIL the compare. Since the
+    # ReplayTuple reuses the cycle's fixed decision_ts, a faithful same-cycle replay
+    # still matches; a mismatch would surface a boundary being regenerated — the bug.
+    REPLAY_IDENTITY_FIELDS: ClassVar[tuple[str, ...]] = ("cycle_id",)
 
     def replay_comparable(self) -> dict[str, Any]:
-        """The decision content used for the replay-determinism compare — everything
-        except the per-run identity fields (ruling R2): top-level cycle_id/decision_ts
-        and the trade_id embedded in the decision payload."""
+        """The decision content for the replay-determinism compare — everything except
+        the pure identity labels (cycle_id top-level; trade_id nested in `decision`).
+        decision_ts (the PIT information boundary) is KEPT in the compare on purpose."""
         data = self.model_dump(exclude=set(self.REPLAY_IDENTITY_FIELDS))
         if isinstance(data.get("decision"), dict):
             data["decision"] = {k: v for k, v in data["decision"].items() if k != "trade_id"}
