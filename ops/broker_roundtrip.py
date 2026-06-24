@@ -1,25 +1,14 @@
 """G0.5 broker round-trip drill — validation-criteria.md G0.5.
 
 10 scripted paper orders: submit -> fill -> reconcile with zero mismatches;
-modeled-fill logging populated on all 10.
+modeled-fill logging populated on all 10. BUY 1 share of 5 liquid names, wait for
+fills, then SELL 1 of each — flat at the end.
 
-Script: BUY 1 share of each of 5 liquid names (market orders), wait for fills,
-then SELL 1 share of each — 10 orders total, flat at the end. For every order we
-log BOTH the broker-reported fill and our modeled fill (latest trade price plus a
-1bp half-spread floor per backtesting-framework.md §3.3 — megacap floor; the
-divergence becomes the standing fill-divergence metric of api-data-sources §2.1).
+All broker/market-data access goes through the R5 adapters (data/interfaces) — no
+vendor SDK is imported here.
 
-Reconciliation (all must hold for every order):
-  - terminal status == FILLED, filled_qty == requested qty
-  - broker fill price present and positive
-  - modeled fill logged
-  - net position change across the buy/sell pair == 0 (account flat afterwards)
-
-Market-hours guard: paper market orders only fill while the market is open. If
-closed, exits with code 2 and the next open time - run it during market hours.
-
-Read/write scope: paper account only (paper-api.alpaca.markets), 5 long shares
-held for ~seconds. No real money exists anywhere in this system.
+Market-hours guard: paper market orders only fill while the market is open; exits 2
+(with the next open time) if closed. Read/write scope: paper account only.
 
 Usage:  python ops/broker_roundtrip.py
 """
@@ -38,38 +27,25 @@ logging.basicConfig(level=logging.WARNING)
 structlog.configure(wrapper_class=structlog.make_filtering_bound_logger(logging.WARNING))
 
 from core.event_log import EventLog
+from data.interfaces import AlpacaBroker, AlpacaMarketData
 
 SYMBOLS = ["AAPL", "MSFT", "NVDA", "AMZN", "GOOGL"]
-HALF_SPREAD_BPS = 1.0           # megacap floor, backtesting-framework.md §3.3
 FILL_TIMEOUT_S = 120
 ARTIFACT_DIR = Path("var/g05")
 
 
-def modeled_fill(latest_trade: float, side: str) -> float:
-    adj = latest_trade * HALF_SPREAD_BPS / 1e4
-    return latest_trade + adj if side == "buy" else latest_trade - adj
-
-
 def main() -> int:
     load_dotenv()
-    import os
-    key, secret = os.environ.get("APCA_API_KEY_ID"), os.environ.get("APCA_API_SECRET_KEY")
-    if not key or not secret:
-        print("ERROR: Alpaca keys not set", file=sys.stderr)
+    try:
+        broker = AlpacaBroker(paper=True)
+        market = AlpacaMarketData()
+    except RuntimeError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
         return 1
 
-    from alpaca.trading.client import TradingClient
-    from alpaca.trading.requests import MarketOrderRequest
-    from alpaca.trading.enums import OrderSide, TimeInForce
-    from alpaca.data.historical import StockHistoricalDataClient
-    from alpaca.data.requests import StockLatestTradeRequest
-
-    trading = TradingClient(api_key=key, secret_key=secret, paper=True)
-    data = StockHistoricalDataClient(api_key=key, secret_key=secret)
-
-    clock = trading.get_clock()
-    if not clock.is_open:
-        print(f"Market closed. Next open: {clock.next_open}. Run during market hours.")
+    clock = broker.clock()
+    if not clock["is_open"]:
+        print(f"Market closed. Next open: {clock['next_open']}. Run during market hours.")
         return 2
 
     run_id = f"g05_{datetime.now(timezone.utc):%Y%m%d}_{uuid.uuid4().hex[:6]}"
@@ -78,18 +54,14 @@ def main() -> int:
 
     def place(side: str) -> None:
         for sym in SYMBOLS:
-            latest = data.get_stock_latest_trade(
-                StockLatestTradeRequest(symbol_or_symbols=sym, feed="iex"))[sym]
-            model = modeled_fill(float(latest.price), side)
-            order = trading.submit_order(MarketOrderRequest(
-                symbol=sym, qty=1,
-                side=OrderSide.BUY if side == "buy" else OrderSide.SELL,
-                time_in_force=TimeInForce.DAY))
+            latest = market.get_latest_trade(sym)
+            model = broker.simulate_fill({"side": side}, {"price": latest})
+            order_id = broker.submit(
+                {"symbol": sym, "qty": 1, "side": side, "type": "market", "tif": "day"})
             records.append({
-                "symbol": sym, "side": side, "order_id": str(order.id),
+                "symbol": sym, "side": side, "order_id": order_id,
                 "submitted_at": datetime.now(timezone.utc).isoformat(),
-                "latest_trade_at_submit": float(latest.price),
-                "modeled_fill": model,
+                "latest_trade_at_submit": latest, "modeled_fill": model,
             })
             print(f"  submitted {side.upper():4} 1 {sym}  modeled={model:.4f}")
 
@@ -101,21 +73,20 @@ def main() -> int:
             for r in records:
                 if r["order_id"] not in pending:
                     continue
-                o = trading.get_order_by_id(r["order_id"])
-                if str(o.status).lower().endswith("filled") and o.filled_avg_price:
-                    r["broker_fill"] = float(o.filled_avg_price)
-                    r["filled_qty"] = float(o.filled_qty)
-                    r["status"] = str(o.status)
+                o = broker.get_order(r["order_id"])
+                if o["status"].lower().endswith("filled") and o["filled_avg_price"]:
+                    r["broker_fill"] = o["filled_avg_price"]
+                    r["filled_qty"] = o["filled_qty"]
+                    r["status"] = o["status"]
                     r["divergence_bps"] = (
-                        (r["broker_fill"] - r["modeled_fill"]) / r["modeled_fill"] * 1e4
-                    )
+                        (r["broker_fill"] - r["modeled_fill"]) / r["modeled_fill"] * 1e4)
                     pending.discard(r["order_id"])
                     print(f"  filled    {r['side'].upper():4} 1 {r['symbol']}  "
                           f"broker={r['broker_fill']:.4f}  div={r['divergence_bps']:+.1f}bps")
         return not pending
 
     print(f"=== G0.5 BROKER ROUND-TRIP {run_id} ===")
-    pos_before = {p.symbol: float(p.qty) for p in trading.get_all_positions()}
+    pos_before = {p["symbol"]: p["qty"] for p in broker.positions()}
 
     place("buy")
     if not await_fills():
@@ -126,12 +97,11 @@ def main() -> int:
         print("ERROR: sell fills timed out")
         return 1
 
-    pos_after = {p.symbol: float(p.qty) for p in trading.get_all_positions()}
+    pos_after = {p["symbol"]: p["qty"] for p in broker.positions()}
 
-    # Reconciliation
     mismatches = []
     for r in records:
-        if r.get("status", "").lower() != "orderstatus.filled" and "filled" not in r.get("status", "").lower():
+        if "filled" not in r.get("status", "").lower():
             mismatches.append(f"{r['order_id']}: status {r.get('status')}")
         if r.get("filled_qty") != 1.0:
             mismatches.append(f"{r['order_id']}: filled_qty {r.get('filled_qty')}")
@@ -141,7 +111,7 @@ def main() -> int:
             mismatches.append(f"{r['order_id']}: modeled fill missing")
     for sym in SYMBOLS:
         if pos_before.get(sym, 0.0) != pos_after.get(sym, 0.0):
-            mismatches.append(f"{sym}: position changed {pos_before.get(sym,0)} -> {pos_after.get(sym,0)}")
+            mismatches.append(f"{sym}: position changed {pos_before.get(sym, 0)} -> {pos_after.get(sym, 0)}")
 
     summary = {
         "run_id": run_id, "orders": records, "mismatches": mismatches,
