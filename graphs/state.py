@@ -134,9 +134,15 @@ class CycleState(BaseModel):
     failure: Optional[dict[str, Any]] = None  # {node, error} on fail-closed
 
     # Fields excluded from the replay-equality compare (ruling R2): per-run identity.
+    # trade_id is per-run identity too — it is nested in the `decision` payload, so it
+    # is stripped there (not a top-level field).
     REPLAY_IDENTITY_FIELDS: ClassVar[tuple[str, ...]] = ("cycle_id", "decision_ts")
 
     def replay_comparable(self) -> dict[str, Any]:
         """The decision content used for the replay-determinism compare — everything
-        except the per-run identity fields (ruling R2)."""
-        return self.model_dump(exclude=set(self.REPLAY_IDENTITY_FIELDS))
+        except the per-run identity fields (ruling R2): top-level cycle_id/decision_ts
+        and the trade_id embedded in the decision payload."""
+        data = self.model_dump(exclude=set(self.REPLAY_IDENTITY_FIELDS))
+        if isinstance(data.get("decision"), dict):
+            data["decision"] = {k: v for k, v in data["decision"].items() if k != "trade_id"}
+        return data
