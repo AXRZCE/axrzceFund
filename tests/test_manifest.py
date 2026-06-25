@@ -10,23 +10,25 @@ import pytest
 from core.manifest import ManifestError, ModelSpec, load_manifest
 
 
-def test_real_manifest_loads_with_wp2_roster():
+def test_real_manifest_loads_with_wp2_value_roster():
     m = load_manifest()  # deploy/model_manifest.yaml
     assert m.access == "openrouter"
     assert len(m.manifest_version) == 12
-    # WP2 in-scope research pool
+    # WP2 in-scope research pool — value-frontier, NO Anthropic (ADR-2 amendment 2026-06-25)
     assert set(m.specs) == {"TECH-01", "FUND-TECH", "SENT-01"}
-    assert m.resolve("TECH-01").model_version == "anthropic/claude-haiku-4.5"
-    assert m.resolve("FUND-TECH").model_version == "anthropic/claude-sonnet-4.6"
-    assert m.resolve("SENT-01").model_version == "anthropic/claude-sonnet-4.6"
+    assert m.resolve("TECH-01").model_version == "google/gemini-2.5-flash-lite"
+    assert m.resolve("FUND-TECH").model_version == "google/gemini-3.1-pro-preview"
+    assert m.resolve("SENT-01").model_version == "openai/gpt-5.4"
+    assert not any("anthropic" in s.model_version for s in m.specs.values())
 
 
-def test_binding_cutoff_is_max_training_cutoff():
+def test_binding_cutoff_is_max_availability_cutoff():
     m = load_manifest()
-    # Haiku training cutoff Jul 2025, Sonnet Jan 2026 -> max binds.
-    assert m.binding_cutoff(["TECH-01"]) == date(2025, 7, 31)
-    assert m.binding_cutoff(["FUND-TECH"]) == date(2026, 1, 31)
-    assert m.binding_cutoff(["TECH-01", "FUND-TECH", "SENT-01"]) == date(2026, 1, 31)
+    # Availability-date cutoffs: gemini-flash-lite 2025-07-22, gemini-3.1-pro 2026-02-19,
+    # gpt-5.4 2026-03-05 -> the max binds.
+    assert m.binding_cutoff(["TECH-01"]) == date(2025, 7, 22)
+    assert m.binding_cutoff(["FUND-TECH"]) == date(2026, 2, 19)
+    assert m.binding_cutoff(["TECH-01", "FUND-TECH", "SENT-01"]) == date(2026, 3, 5)
 
 
 def test_unknown_role_raises():
@@ -69,11 +71,17 @@ def test_fail_closed_on_unparseable_cutoff(tmp_path: Path):
 
 def test_provider_pin_present_and_loaded():
     """Replay completeness: every role must pin its OpenRouter backend so model_version
-    alone doesn't under-specify what ran (OpenRouter load-balances slugs across backends)."""
+    alone doesn't under-specify what ran (OpenRouter load-balances slugs across backends).
+    All WP2 backends are Western-hosted."""
     m = load_manifest()
-    for role in ("TECH-01", "FUND-TECH", "SENT-01"):
+    expected = {
+        "TECH-01": ["google-vertex"],
+        "FUND-TECH": ["google-vertex"],
+        "SENT-01": ["openai"],
+    }
+    for role, only in expected.items():
         prov = m.resolve(role).provider
-        assert prov.get("only") == ["anthropic"]
+        assert prov.get("only") == only
         assert prov.get("allow_fallbacks") is False
 
 
