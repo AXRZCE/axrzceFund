@@ -1,0 +1,48 @@
+# Deployment manifest — the version-pinning layer (WP2).
+#
+# configuration.md §3 fixes family/tier by ROLE (the decorrelation design: different model
+# families so adversaries/judges aren't one model checking itself). This manifest pins the
+# exact model_version per role and each model's TRAINING-DATA cutoff. It carries its own hash
+# (manifest_version), stamped per call alongside model_version into the ReplayTuple
+# (core/replay.py), so a model swap is auditable in the replay identity. Versions are
+# swappable here without touching the architecture.
+#
+# CUTOFF SEMANTICS (R1 / backtesting-framework.md §6 C1). The post-cutoff fixture gate guards
+# against MEMORIZATION, so `cutoff` is the **training-data cutoff** (the broader date range of
+# training data), NOT the narrower "reliable knowledge cutoff". Source: Anthropic model
+# overview (platform.claude.com/docs/en/about-claude/models/overview.md), fetched 2026-06-24.
+# Each cutoff is taken to END-OF-MONTH (conservative): a model whose training data runs
+# "through Jan 2026" may have ingested any day in Jan, so a fixture is safe only if its
+# decision_ts is strictly AFTER 2026-01-31. `knowledge_cutoff` is recorded for reference only;
+# the GATE uses `cutoff`. Binding cutoff for a fixture = MAX cutoff across the models reading it.
+#
+# Access: OpenRouter aggregator (OpenAI-compatible); model_version = OpenRouter slug (dotted).
+
+manifest_kind: deployment
+access: openrouter
+
+# WP2 in-scope research pool (Anthropic). OpenAI (T2_B) and Google (T2_C) families, and the
+# adversarial roles (BULL≠BEAR, MOD third family, VERIF≠judged), enter at WP3 — added here then.
+# VERIF-01 is a DETERMINISTIC validator in WP2 (no LLM call, no model_version), so it is not a
+# manifest role yet; it becomes one when it does LLM claim/debate judging in WP3.
+roles:
+  TECH-01:                                  # §3.4 Technical Analyst — lowest-stakes memo
+    family: anthropic
+    tier: T1.5
+    model_version: anthropic/claude-haiku-4.5
+    cutoff: 2025-07-31                      # training-data cutoff: Jul 2025
+    knowledge_cutoff: 2025-02-28            # reference only (reliable knowledge: Feb 2025)
+
+  FUND-TECH:                                # §3.2 Sector Fundamental Analyst (pilot sector)
+    family: anthropic
+    tier: T2
+    model_version: anthropic/claude-sonnet-4.6
+    cutoff: 2026-01-31                      # training-data cutoff: Jan 2026
+    knowledge_cutoff: 2025-08-31            # reference only (reliable knowledge: Aug 2025)
+
+  SENT-01:                                  # §3.5 Sentiment & News Analyst (defers if no PIT news)
+    family: anthropic
+    tier: T2
+    model_version: anthropic/claude-sonnet-4.6
+    cutoff: 2026-01-31
+    knowledge_cutoff: 2025-08-31
