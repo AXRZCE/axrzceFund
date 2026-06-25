@@ -30,12 +30,14 @@ Format per parameter: `name = value` — *rationale* — (protocol where used).
 
 Tier assignments by **family role**, not pinned versions (versions pinned in a deployment manifest, stamped as `model_version`):
 
-- `T1_fast = small-model class of any major family` (e.g., Haiku / GPT-mini / Gemini Flash class) — triage, extraction, screening, intraday classification.
-- `T2_reasoning_A = Anthropic frontier class` → **BULL-01**, plus half the research pool.
+- `T1_fast = small-model class of any major family` (e.g., Gemini Flash-Lite / GPT-5-mini / DeepSeek-Flash class) — triage, extraction, screening, intraday classification.
+- `T2_reasoning_A = Chinese open-weight frontier class` (DeepSeek / GLM) → **BULL-01**, plus half the research pool. Open-weight is a deliberate replay + decorrelation choice (pinnable/self-hostable frozen artifact); **gated on golden-day FINANCIAL-task validation and a Western inference host before any high-stakes role** (backtesting §6; benchmarks are coding/math, do not transfer).
 - `T2_reasoning_B = OpenAI frontier class` → **BEAR-01**, plus the other half of the research pool.
 - `T2_reasoning_C = Google frontier class` → **PM-01** and MOD-01 — the synthesizer/referee sits outside both debating families. (agent-specifications §4–5)
 - `T3_judge = strongest available family ≠ judged agents per call` → VERIF-01, PMORT-01, META-01; the orchestrator resolves the family at call time to maintain judge ≠ judged.
 - Heterogeneity invariant (restated as config): `family(BULL) ≠ family(BEAR)`, `family(PM) ∉ {family(BULL), family(BEAR)}` where the provider set allows.
+
+> **ADR-2 amendment (2026-06-25): Anthropic dropped from the agent roster; the three families are now Google / OpenAI / Chinese-open-weight.** *Rationale:* on Jun-2026 price-performance, Anthropic wins no value tier (Gemini 3.x and DeepSeek/GLM dominate $/quality), so it is not in the fund's agent roster (it may return later as an optional 4th decorrelation family). The decorrelation **principle is unchanged** — three distinct families so BULL≠BEAR and the referee sits outside both. **WP2 (research only, no debate) runs Western-only** (Google + OpenAI); the Chinese open-weight family (T2_A) is piloted + fixture-validated at WP3, where the debate makes family choice load-bearing. Exact per-role version pins live in `deploy/model_manifest.yaml`. (The Claude Code orchestration/dev layer is a separate tool, **not** part of this roster.)
 
 Budgets (budget governor, architecture §5):
 - `daily_llm_budget_usd = $50` — Phase 1 ceiling; forces the P3 debate-gate discipline to actually matter. Expect ~$25/day typical at 10 candidates with ~40% debate rate.

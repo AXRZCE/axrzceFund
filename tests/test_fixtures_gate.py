@@ -16,9 +16,10 @@ from core.manifest import load_manifest
 from data.fixtures.harness import Fixture, FixtureGateError, load_fixture, record_fixture
 from data.pit_store import PITStore
 
-# Binding cutoff for FUND-TECH (Sonnet) is 2026-01-31 in the real manifest.
-PRE_CUTOFF_TS = "2026-01-15T21:00:00+00:00"   # at/before the cutoff -> must be rejected
-ON_CUTOFF_TS = "2026-01-31T21:00:00+00:00"    # boundary day itself -> still rejected (<=)
+# Binding cutoff for FUND-TECH (google/gemini-3.1-pro-preview) is its availability date
+# 2026-02-19 in the real manifest.
+PRE_CUTOFF_TS = "2026-01-15T21:00:00+00:00"   # before the cutoff -> must be rejected
+ON_CUTOFF_TS = "2026-02-19T21:00:00+00:00"    # boundary day itself -> still rejected (<=)
 POST_CUTOFF_TS = "2026-03-02T21:00:00+00:00"  # strictly after -> allowed
 
 
@@ -80,14 +81,15 @@ def test_gate_keys_on_decision_ts_not_record_date(tmp_path):
 
 
 def test_binding_cutoff_is_the_max_across_roles(tmp_path):
-    """Haiku alone (Jul 2025) would let a Sep-2025 fixture through, but adding Sonnet
-    (Jan 2026) raises the binding cutoff so the same fixture is rejected for the pair."""
+    """TECH-01 alone (Gemini Flash-Lite, avail 2025-07-22) would let a Sep-2025 fixture
+    through, but adding FUND-TECH (Gemini 3.1 Pro, avail 2026-02-19) raises the binding cutoff
+    so the same fixture is rejected for the pair."""
     store = _store_with_bars(tmp_path, "2025-09-10T21:00:00+00:00")
     path = _record(store, tmp_path, "sep2025", "2025-09-15T21:00:00+00:00")
     m = load_manifest()
-    # Allowed for Haiku-only (after Jul 2025)...
+    # Allowed for TECH-01 only (after 2025-07-22)...
     assert load_fixture(path, for_roles=["TECH-01"], manifest=m).fixture_id == "sep2025"
-    # ...but rejected once Sonnet (Jan 2026 cutoff) is in the run.
+    # ...but rejected once FUND-TECH (2026-02-19) is in the run.
     with pytest.raises(FixtureGateError):
         load_fixture(path, for_roles=["TECH-01", "FUND-TECH"], manifest=m)
     store.close()
