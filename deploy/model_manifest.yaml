@@ -17,6 +17,14 @@
 # the GATE uses `cutoff`. Binding cutoff for a fixture = MAX cutoff across the models reading it.
 #
 # Access: OpenRouter aggregator (OpenAI-compatible); model_version = OpenRouter slug (dotted).
+#
+# PROVIDER PIN (replay completeness). OpenRouter load-balances ONE slug across multiple
+# backends by default (e.g. anthropic/claude-sonnet-4.6 is served by Anthropic-direct,
+# Amazon Bedrock, Google Vertex, and Azure) — same weights, but NOT guaranteed-identical
+# compute (version lag, param defaults, tokenization edges). So model_version alone does not
+# fully pin what ran. Each role therefore pins `provider` so the backend is fixed and the
+# replay identity is complete; `allow_fallbacks: false` means a routing miss FAILS rather than
+# silently serving from a different backend. An unpinned role fails to load (fail-closed).
 
 manifest_kind: deployment
 access: openrouter
@@ -26,23 +34,32 @@ access: openrouter
 # VERIF-01 is a DETERMINISTIC validator in WP2 (no LLM call, no model_version), so it is not a
 # manifest role yet; it becomes one when it does LLM claim/debate judging in WP3.
 roles:
-  TECH-01:                                  # §3.4 Technical Analyst — lowest-stakes memo
-    family: anthropic
-    tier: T1.5
-    model_version: anthropic/claude-haiku-4.5
-    cutoff: 2025-07-31                      # training-data cutoff: Jul 2025
-    knowledge_cutoff: 2025-02-28            # reference only (reliable knowledge: Feb 2025)
-
-  FUND-TECH:                                # §3.2 Sector Fundamental Analyst (pilot sector)
+  FUND-TECH:                                # §3.2 Sector Fundamental Analyst (pilot sector) — built FIRST (deep data now)
     family: anthropic
     tier: T2
     model_version: anthropic/claude-sonnet-4.6
     cutoff: 2026-01-31                      # training-data cutoff: Jan 2026
     knowledge_cutoff: 2025-08-31            # reference only (reliable knowledge: Aug 2025)
+    provider:                              # Anthropic-direct only — completes the replay identity
+      only: [anthropic]
+      allow_fallbacks: false
 
-  SENT-01:                                  # §3.5 Sentiment & News Analyst (defers if no PIT news)
+  TECH-01:                                  # §3.4 Technical Analyst — gated on a SEP price backfill (see done-criteria amendment)
+    family: anthropic
+    tier: T1.5
+    model_version: anthropic/claude-haiku-4.5
+    cutoff: 2025-07-31                      # training-data cutoff: Jul 2025
+    knowledge_cutoff: 2025-02-28            # reference only (reliable knowledge: Feb 2025)
+    provider:
+      only: [anthropic]
+      allow_fallbacks: false
+
+  SENT-01:                                  # §3.5 Sentiment & News Analyst (defers if no PIT news; family revisited at WP3)
     family: anthropic
     tier: T2
     model_version: anthropic/claude-sonnet-4.6
     cutoff: 2026-01-31
     knowledge_cutoff: 2025-08-31
+    provider:
+      only: [anthropic]
+      allow_fallbacks: false
