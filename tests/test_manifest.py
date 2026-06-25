@@ -60,12 +60,56 @@ def test_fail_closed_on_unparseable_cutoff(tmp_path: Path):
         "    tier: T1.5\n"
         "    model_version: anthropic/claude-haiku-4.5\n"
         "    cutoff: 'July 2025'\n"  # not ISO
+        "    provider:\n"
+        "      only: [anthropic]\n"
     )
     with pytest.raises(ManifestError, match="ISO date"):
         load_manifest(bad)
 
 
+def test_provider_pin_present_and_loaded():
+    """Replay completeness: every role must pin its OpenRouter backend so model_version
+    alone doesn't under-specify what ran (OpenRouter load-balances slugs across backends)."""
+    m = load_manifest()
+    for role in ("TECH-01", "FUND-TECH", "SENT-01"):
+        prov = m.resolve(role).provider
+        assert prov.get("only") == ["anthropic"]
+        assert prov.get("allow_fallbacks") is False
+
+
+def test_fail_closed_on_missing_provider(tmp_path: Path):
+    bad = tmp_path / "noprov.yaml"
+    bad.write_text(
+        "roles:\n"
+        "  FUND-TECH:\n"
+        "    family: anthropic\n"
+        "    tier: T2\n"
+        "    model_version: anthropic/claude-sonnet-4.6\n"
+        "    cutoff: 2026-01-31\n"  # provider deliberately absent
+    )
+    with pytest.raises(ManifestError, match="provider"):
+        load_manifest(bad)
+
+
+def test_fail_closed_on_unpinned_provider(tmp_path: Path):
+    """A provider block with neither `only` nor `order` is not a pin -> rejected."""
+    bad = tmp_path / "looseprov.yaml"
+    bad.write_text(
+        "roles:\n"
+        "  FUND-TECH:\n"
+        "    family: anthropic\n"
+        "    tier: T2\n"
+        "    model_version: anthropic/claude-sonnet-4.6\n"
+        "    cutoff: 2026-01-31\n"
+        "    provider:\n"
+        "      allow_fallbacks: true\n"  # present but doesn't pin a backend
+    )
+    with pytest.raises(ManifestError, match="provider"):
+        load_manifest(bad)
+
+
 def test_modelspec_cutoff_date_parses():
     spec = ModelSpec(role="X", family="anthropic", tier="T2",
-                     model_version="anthropic/claude-sonnet-4.6", cutoff="2026-01-31")
+                     model_version="anthropic/claude-sonnet-4.6", cutoff="2026-01-31",
+                     provider={"only": ["anthropic"], "allow_fallbacks": False})
     assert spec.cutoff_date == date(2026, 1, 31)

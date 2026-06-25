@@ -23,7 +23,7 @@ from typing import Iterable
 import yaml
 
 DEFAULT_MANIFEST = Path("deploy/model_manifest.yaml")
-_REQUIRED = ("family", "tier", "model_version", "cutoff")
+_REQUIRED = ("family", "tier", "model_version", "cutoff", "provider")
 
 
 class ManifestError(Exception):
@@ -38,6 +38,7 @@ class ModelSpec:
     tier: str
     model_version: str   # OpenRouter slug, e.g. "anthropic/claude-sonnet-4.6"
     cutoff: str          # training-data cutoff, ISO date (YYYY-MM-DD), end-of-month conservative
+    provider: dict       # OpenRouter routing pin, e.g. {"only": ["anthropic"], "allow_fallbacks": False}
 
     @property
     def cutoff_date(self) -> date:
@@ -97,12 +98,22 @@ def load_manifest(path: Path = DEFAULT_MANIFEST) -> Manifest:
             raise ManifestError(
                 f"role {role!r}: cutoff {cutoff!r} is not an ISO date (YYYY-MM-DD)"
             ) from None
+
+        provider = d["provider"]
+        if not isinstance(provider, dict) or not (provider.get("only") or provider.get("order")):
+            raise ManifestError(
+                f"role {role!r}: `provider` must pin the OpenRouter backend with `only` or "
+                f"`order` (replay completeness — an unpinned provider load-balances across "
+                f"backends, so model_version alone would not pin what ran)"
+            )
+
         specs[role] = ModelSpec(
             role=role,
             family=str(d["family"]),
             tier=str(d["tier"]),
             model_version=str(d["model_version"]),
             cutoff=cutoff,
+            provider=provider,
         )
 
     return Manifest(
@@ -116,5 +127,6 @@ if __name__ == "__main__":
     m = load_manifest()
     print(f"manifest_version: {m.manifest_version}  access: {m.access}")
     for role, spec in m.specs.items():
-        print(f"  {role:10} {spec.tier:5} {spec.family:10} {spec.model_version:30} cutoff={spec.cutoff}")
+        print(f"  {role:10} {spec.tier:5} {spec.family:10} {spec.model_version:30} "
+              f"cutoff={spec.cutoff} provider={spec.provider}")
     print(f"binding cutoff (all roles): {m.binding_cutoff(list(m.specs))}")

@@ -144,3 +144,28 @@ For TECH-01, then FUND-TECH, then SENT-01:
 Every load-bearing proof is a **committed, re-runnable test** (no deleted one-offs). Done-criteria
 committed **before** code. WP ends with a readout in `docs/` + the events in `core/event_log.py`
 (the event log is the source of truth). Branch + PR; **the human reads the PR — do not self-merge.**
+
+---
+
+## Amendments (recorded after the initial commit — change the plan in the open, not silently)
+
+- **A1 — Build order flipped to FUND-TECH first** (was TECH-01 → FUND-TECH → SENT-01; now
+  **FUND-TECH → TECH-01 → SENT-01**). *Rationale:* the kickoff put TECH-01 first as "lowest
+  stakes," but the **data reality inverts that**. The PIT store currently holds only ~3 weeks of
+  SEP price bars (Jun 3–24 2026), which cannot support trend / support-resistance / ADV / moving
+  averages (§3.4's actual inputs) — TECH-01's first memo would be grounded in the fixture yet
+  substantively hollow, making the "first real agent works" milestone read greener than it is.
+  FUND-TECH has deep data **now** (fundamentals 1993→, 312 tickers post-cutoff) and produces a
+  substantive memo today. **TECH-01 prerequisite:** a SEP price backfill covering a trailing
+  window adequate for §3.4 (target ≈ 252 trading days before the fixture date) for the candidate
+  tickers; TECH-01's real call waits on it. Spend now begins at **FUND-TECH**, not TECH-01.
+
+- **A2 — Provider pin added to the manifest (extends R5, replay completeness).** OpenRouter
+  load-balances one slug across multiple backends by default (anthropic/claude-sonnet-4.6 is
+  served by Anthropic-direct, Bedrock, Vertex, Azure) — same weights, not guaranteed-identical
+  compute — so `model_version` alone does not fully pin what ran. Each manifest role now pins
+  `provider: {only: [...], allow_fallbacks: false}`; the loader is **fail-closed** on an
+  unpinned role. This completes the replay identity that the manifest layer exists to provide,
+  consistent with every other field in the ReplayTuple. (WP2 roster otherwise unchanged —
+  Anthropic-only research; the OpenAI/Google/open-weight value roster is a WP3 decision.)
+
