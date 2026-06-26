@@ -71,7 +71,8 @@ proposal:
   thesis: str
   premortem_top_risks: [str]       # from Moderator's pre-mortem
   expected_edge_bps: int           # forces explicit edge claim vs costs
-  ballot_summary: {weighted_score: float, dissent: str}
+  ballot_summary: {weighted_score: float, margin: float, dissent_summary: str, contested: bool}
+                                   # ballot_summary mechanics are authoritative in decision-protocols.md P5 (see §8)
 ```
 
 ### 2.4 RiskOpinion / PostMortem / Attribution — defined inline with their agents (§5–6).
@@ -165,7 +166,7 @@ proposal:
 - **Reads:** Everything in the cycle state for the candidate (post-Verifier), unsealed ballot, current portfolio/exposures, episodic memory analogs, semantic memory lessons, Macro memo.
 - **Writes:** `TradeProposal` (schema §2.3) or `no_trade: {ticker, reason, what_would_reopen: str}`. Every proposal must state `expected_edge_bps` ≥ configured multiple of estimated round-trip costs — a structural "is this worth doing at all" check.
 - **Believability metrics:** realized risk-adjusted P&L of proposals vs. ballot-only baseline (does PM synthesis add value over the vote?); sizing skill (hit rate × payoff vs. size correlation); NO-TRADE quality (opportunity cost of passes).
-- **Failure modes & guards:** overriding strong dissent silently → guard: if PM proposes against the weighted ballot direction, `ballot_summary.dissent` must contain an explicit rebuttal, and these overrides are tracked as a dedicated believability sub-metric; size creep → guard: gate clamps are logged as PM calibration errors, training pressure toward realistic sizing.
+- **Failure modes & guards:** overriding strong dissent silently → guard: if PM proposes against the weighted ballot direction, `ballot_summary.dissent_summary` must contain an explicit rebuttal, and these overrides are tracked as a dedicated believability sub-metric; size creep → guard: gate clamps are logged as PM calibration errors, training pressure toward realistic sizing.
 - **Prompt anchors:** "You are graded on what happened after you decided, including the trades you didn't make. Conviction without invalidation conditions is not conviction; it's exposure. When the Bear's crux is unresolved, size like it."
 - **Cannot:** submit orders; alter stops post-approval outside the deep loop; see raw debate transcript (only the Moderator summary + Judge scores — keeps eloquence from leaking into decisions).
 
