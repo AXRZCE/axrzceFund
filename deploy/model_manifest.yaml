@@ -1,0 +1,65 @@
+# Deployment manifest — the version-pinning layer (WP2).
+#
+# configuration.md §3 fixes family/tier by ROLE (the decorrelation design: different model
+# families so adversaries/judges aren't one model checking itself). This manifest pins the exact
+# model_version per role and each model's training boundary. It carries its own hash
+# (manifest_version), stamped per call alongside model_version into the ReplayTuple
+# (core/replay.py), so a model swap is auditable in the replay identity. Versions are swappable
+# here without touching the architecture.
+#
+# ROSTER (ADR-2 amendment 2026-06-25, configuration.md §3): value-frontier per family, NO
+# Anthropic. WP2 runs Western-only (Google + OpenAI) — research is isolated, no debate, so family
+# choice is moot here; the Chinese open-weight family (DeepSeek/GLM, T2_A) is piloted +
+# fixture-validated at WP3 where the debate makes it load-bearing.
+#
+# CUTOFF SEMANTICS (R1 / backtesting-framework.md §6 C1). The gate guards against MEMORIZATION:
+# `cutoff` must be a date provably >= the model's training-data cutoff, so fixture_date > cutoff
+# guarantees the fixture was not in training. Anthropic publishes a training-data cutoff; Google
+# and OpenAI publish only a "knowledge cutoff" — a LOWER bound on training data, unsafe to use
+# directly. So for these models `cutoff` = the model's **public availability date** (OpenRouter
+# `created`), a provably-conservative UPPER bound (training data necessarily ends before a model
+# ships). Stricter than a self-reported cutoff, and uniform across providers. Sourced 2026-06-25:
+#   google/gemini-2.5-flash-lite  avail 2025-07-22  (knowledge cutoff ~Jan 2025)
+#   google/gemini-3.1-pro-preview avail 2026-02-19
+#   openai/gpt-5.4                avail 2026-03-05  (knowledge cutoff Aug 2025)
+# Binding cutoff for a fixture = MAX across its models = 2026-03-05 here -> fixtures must be dated
+# AFTER 2026-03-05. Our SEP/SFA data is June 2026, clearing it by ~3 months.
+#
+# PROVIDER PIN (replay completeness). OpenRouter load-balances one slug across backends by default;
+# each role pins `provider` so the backend is fixed and the replay identity is complete.
+# `allow_fallbacks: false` -> a routing miss FAILS rather than silently serving from a different
+# backend. An unpinned role fails to load (fail-closed). All WP2 backends are Western-hosted.
+#
+# Access: OpenRouter aggregator (OpenAI-compatible); model_version = OpenRouter slug.
+
+manifest_kind: deployment
+access: openrouter
+
+# WP2 in-scope research pool (Western value-frontier; no Anthropic). Build order: FUND-TECH first.
+roles:
+  FUND-TECH:                                # §3.2 Sector Fundamental Analyst (pilot) — built FIRST (deep data now)
+    family: google
+    tier: T2
+    model_version: google/gemini-3.1-pro-preview
+    cutoff: 2026-02-19                      # availability date (conservative >= training cutoff)
+    provider:
+      only: [google-vertex]
+      allow_fallbacks: false
+
+  TECH-01:                                  # §3.4 Technical Analyst — gated on a SEP price backfill (done-criteria A1)
+    family: google
+    tier: T1.5
+    model_version: google/gemini-2.5-flash-lite
+    cutoff: 2025-07-22                      # availability date (knowledge cutoff ~Jan 2025)
+    provider:
+      only: [google-vertex]
+      allow_fallbacks: false
+
+  SENT-01:                                  # §3.5 Sentiment & News Analyst (defers if no PIT news)
+    family: openai
+    tier: T2
+    model_version: openai/gpt-5.4
+    cutoff: 2026-03-05                      # availability date (knowledge cutoff Aug 2025)
+    provider:
+      only: [openai]
+      allow_fallbacks: false

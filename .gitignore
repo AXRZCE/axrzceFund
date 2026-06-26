@@ -55,6 +55,10 @@ var/
 event_log.json
 *.lock
 
+# Recorded golden-day fixtures (hold licensed vendor data — keep out of git;
+# the harness rebuilds them from the PIT store, and tests record to tmp dirs)
+data/fixtures/recorded/
+
 # Secrets (NEVER commit)
 secrets/
 *.key
