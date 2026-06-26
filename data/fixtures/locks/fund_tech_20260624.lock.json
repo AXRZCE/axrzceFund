@@ -1,0 +1,24 @@
+{
+  "fixture_id": "fund_tech_20260624",
+  "decision_ts": "2026-06-24T20:00:00+00:00",
+  "tickers": [
+    "BIOX",
+    "BNC",
+    "SUNB"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-06-26T03:26:47.326469+00:00",
+  "content_hash": "5e5215e605c7f6fb",
+  "payload_summary": {
+    "price_bars": 27,
+    "fundamentals": {
+      "ASSETS": 82,
+      "EPS": 74,
+      "EQUITY": 82,
+      "FCF": 72,
+      "NETINC": 76,
+      "REVENUE": 76
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}

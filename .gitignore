@@ -55,9 +55,11 @@ var/
 event_log.json
 *.lock
 
-# Recorded golden-day fixtures (hold licensed vendor data — keep out of git;
-# the harness rebuilds them from the PIT store, and tests record to tmp dirs)
+# Golden-day fixtures hold licensed vendor (Sharadar) data — NEVER commit (repo is PUBLIC).
+# The harness rebuilds them from the PIT store; their content_hash + metadata is committed in
+# data/fixtures/locks/ for replay/reproducibility. Tests skip if the local fixture is absent.
 data/fixtures/recorded/
+data/fixtures/golden/
 
 # Secrets (NEVER commit)
 secrets/

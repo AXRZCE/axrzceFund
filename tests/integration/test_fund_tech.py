@@ -11,6 +11,7 @@ Skipped when no OPENROUTER_API_KEY.
 
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 
@@ -25,18 +26,22 @@ from core.manifest import load_manifest  # noqa: E402
 from data.fixtures.harness import load_fixture  # noqa: E402
 from graphs.agents.fund_tech import run_fund_tech  # noqa: E402
 
-pytestmark = pytest.mark.skipif(
-    not os.getenv("OPENROUTER_API_KEY"),
-    reason="OPENROUTER_API_KEY not set — live FUND-TECH test skipped",
-)
-
-GOLDEN = Path("data/fixtures/golden/fund_tech_20260624.json")
+GOLDEN = Path("data/fixtures/golden/fund_tech_20260624.json")  # gitignored (licensed data)
+LOCK = Path("data/fixtures/locks/fund_tech_20260624.lock.json")  # tracked: hash + metadata
 CANDIDATE = "BNC"
+
+# Needs the key AND the local fixture — the fixture is gitignored, so a fresh clone skips.
+pytestmark = pytest.mark.skipif(
+    not os.getenv("OPENROUTER_API_KEY") or not GOLDEN.exists(),
+    reason="needs OPENROUTER_API_KEY + the local golden fixture (gitignored, not in fresh clones)",
+)
 
 
 def test_fund_tech_grounded_validated_metered_replay(tmp_path):
     man = load_manifest()
     fx = load_fixture(GOLDEN, for_roles=["FUND-TECH"], manifest=man)  # R1 gate
+    # reproducibility: the local fixture matches the committed lockfile hash (no drift)
+    assert fx.content_hash == json.loads(LOCK.read_text())["content_hash"]
     log = EventLog(tmp_path / "ev.db")
 
     run = run_fund_tech(
