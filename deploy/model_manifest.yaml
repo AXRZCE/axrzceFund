@@ -71,14 +71,16 @@ roles:
   # Chinese-origin models are WESTERN-HOST-pinned per R1 (a non-Western host fails to load —
   # core/manifest.py WESTERN_HOSTS, fail-closed).
   #
-  # PROVISIONAL cutoffs: the two Chinese availability dates below are PLACEHOLDERS to be CONFIRMED
-  # against the live OpenRouter `created` field before CP1b spend. The R1 date-gate (data/fixtures/
-  # harness.load_fixture) re-checks decision_ts > binding_cutoff at load, so a wrong date fails closed.
+  # CONFIRMED cutoffs (CP1b-PRE — OpenRouter `created` metadata, spend-free GET, no completion):
+  # DeepSeek V4-Pro created=1777000679 -> 2026-04-24; GLM-5.2 created=1781631930 -> 2026-06-16 (BINDS).
+  # New binding cutoff (comparison) = 2026-06-16; golden days 2026-06-23..26 clear it (THIN 7-day
+  # margin -> the C3 memorization probe is MANDATORY this run, docs/wp3-cp1-rubric.md §5). The R1
+  # date-gate (data/fixtures/harness.load_fixture) re-checks decision_ts > binding at load (fail-closed).
   BULL-01-CAND-DEEPSEEK:                     # T2_A candidate — DeepSeek V4-Pro (Chinese open-weight)
     family: chinese
     tier: T2
     model_version: deepseek/deepseek-v4-pro
-    cutoff: 2026-04-30                       # PROVISIONAL availability date — CONFIRM vs OpenRouter `created`
+    cutoff: 2026-04-24                       # CONFIRMED (OpenRouter created=1777000679, 2026-04-24T03:17:59Z)
     provider:
       only: [fireworks]                      # Western host (R1)
       allow_fallbacks: false
@@ -87,7 +89,7 @@ roles:
     family: chinese
     tier: T2
     model_version: z-ai/glm-5.2
-    cutoff: 2026-05-15                        # PROVISIONAL availability date — CONFIRM vs OpenRouter `created`
+    cutoff: 2026-06-16                        # CONFIRMED (OpenRouter created=1781631930, 2026-06-16T17:45:30Z) — BINDS
     provider:
       only: [together]                       # Western host (R1)
       allow_fallbacks: false

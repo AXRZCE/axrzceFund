@@ -32,8 +32,9 @@ def test_cp1_comparison_roles_present_western_host_pinned():
     assert m.resolve("BULL-01-CAND-DEEPSEEK").family == "chinese"
     assert m.resolve("BULL-01-CAND-DEEPSEEK").provider["only"] == ["fireworks"]
     assert m.resolve("BULL-01-CAND-GLM").provider["only"] == ["together"]
-    # binding cutoff for the comparison = MAX(deepseek 2026-04-30, glm 2026-05-15, west 2026-02-19)
-    assert m.binding_cutoff(cmp_roles) == date(2026, 5, 15)
+    # binding cutoff for the comparison = MAX(deepseek 2026-04-24, glm 2026-06-16, west 2026-02-19)
+    # (CONFIRMED via OpenRouter `created` at CP1b-PRE; GLM binds). Golden days 2026-06-23..26 clear it.
+    assert m.binding_cutoff(cmp_roles) == date(2026, 6, 16)
 
 
 def test_cp1_judge_family_disjoint_from_every_compared_model():

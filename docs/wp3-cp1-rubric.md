@@ -15,21 +15,22 @@ memorization probe). **Branch:** `phase1/wp3-debate`.
 
 | Role (manifest) | Model | Family | Host (Western, R1) | `cutoff` (availability) |
 |---|---|---|---|---|
-| `BULL-01-CAND-DEEPSEEK` | `deepseek/deepseek-v4-pro` | chinese | fireworks | **2026-04-30 — PROVISIONAL** |
-| `BULL-01-CAND-GLM` | `z-ai/glm-5.2` | chinese | together | **2026-05-15 — PROVISIONAL** |
+| `BULL-01-CAND-DEEPSEEK` | `deepseek/deepseek-v4-pro` | chinese | fireworks | **2026-04-24** (confirmed) |
+| `BULL-01-CAND-GLM` | `z-ai/glm-5.2` | chinese | together | **2026-06-16** (confirmed — binds) |
 | `BULL-01-BASELINE-WEST` | `google/gemini-3.1-pro-preview` | google | google-vertex | 2026-02-19 (= FUND-TECH) |
 | `VERIF-CP1-JUDGE` | `openai/gpt-5.4` | openai | openai | 2026-03-05 |
 
-- **Binding cutoff (comparison) = MAX = `2026-05-15`** (`core/manifest.binding_cutoff`). Every golden day
-  below is strictly after it (R1).
+- **Binding cutoff (comparison) = MAX = `2026-06-16`** (GLM-5.2 binds; `core/manifest.binding_cutoff`).
+  Every golden day below (2026-06-23…26) is strictly after it (R1) — a **thin 7-day margin**, so the C3
+  probe (§5) is **mandatory** this run.
 - **Western-host pin enforced in code:** a Chinese-origin (`family: chinese`) model pinned to a
   non-Western host **fails to load** (`core/manifest.WESTERN_HOSTS`, fail-closed; red test
   `tests/test_manifest.py::test_western_host_pin_red_a_chinese_model_on_a_non_western_host_fails`).
-- ⚠️ **PROVISIONAL availability dates.** The two Chinese `cutoff` values are placeholders. **Before CP1b
-  spend they MUST be confirmed against the live OpenRouter `created` field** (a spend-free metadata GET).
-  If a confirmed date is later than a golden day (all are 2026-06-23…26), that day is invalid and its
-  fixture is re-recorded; the R1 date-gate (`load_fixture`) re-checks at load, so a wrong date fails
-  closed rather than leaking. The ~5–6-week margin (2026-05-15 → 2026-06-23) gives headroom.
+- ✅ **Availability dates CONFIRMED (CP1b-PRE — spend-free OpenRouter `created` GET, no completion):**
+  DeepSeek V4-Pro `created=1777000679` → **2026-04-24**; GLM-5.2 `created=1781631930` → **2026-06-16**
+  (binds). New binding cutoff `2026-06-16` < first golden day `2026-06-23` ⇒ **proceed** (reviewer rule).
+  No re-recording needed — `decision_ts` unchanged and all four days still clear the confirmed cutoff, so
+  the committed locks stand. The margin is a thin 7 days ⇒ C3 (§5) is mandatory; R1 re-checks at load.
 
 ## 2. Golden-day fixtures (committed hash-locks; licensed data gitignored)
 
@@ -103,10 +104,15 @@ A Chinese candidate takes the **BULL-01 seat** iff it clears **all three** gates
 - **Neither clears → the BULL seat FALLS BACK to `BULL-01-BASELINE-WEST`** (recorded as the verdict,
   never silent).
 
-**C3 memorization probe (secondary backstop, build-if-cheap):** before scoring, elicit
-closing-price/headline recall for the golden window from each model; a hit-rate above a pre-set
-threshold disqualifies that model for that window (R1 date-gate is the primary guard; C3 is the tripwire
-for a model that memorized the window anyway).
+**C3 memorization probe — MANDATORY this run** (the dates were provisional until CP1b-PRE and the
+post-availability margin is a thin 7 days). BEFORE scoring, with **no fixture provided**, ask each model
+to recall the golden window it should not know — the closing prices of AVGO/COST/MDT/LULU on each golden
+day (2026-06-23…26) and any material headlines. **Hit = a stated close within ±1% of the actual** (from
+pit_store). **Disqualify a model whose hit-rate > 0.25** for the affected window: its comparison scores
+are voided and it cannot take the seat. Rationale: at ±1% for a *specific future date*, >25% correct
+implies memorization, not guessing (refusals / "unknown" count as non-hits — the expected honest
+behavior). ≤6 calls, batched per model. R1's date-gate remains the primary guard; C3 is the tripwire for
+a model that memorized the window despite the date claim.
 
 ## 6. Cost plan vs the $15 cap
 
