@@ -1,138 +1,127 @@
 # WP3 CP1b — BULL-seat comparison: results + verdict
 
-**Run of record:** `results/wp3_cp1/comparison.json` (+ `replay_stamps.jsonl`, `c3_probe.json`).
-Bar authority: [wp3-cp1-rubric.md](wp3-cp1-rubric.md) §5 (frozen at CP1a, applied **unchanged**).
+**Run of record: RUN3** — `results/wp3_cp1/run3/{comparison.json, replay_stamps.jsonl}`.
+Bar authority: [wp3-cp1-rubric.md](wp3-cp1-rubric.md) §5 (frozen at CP1a, applied **unchanged** across
+all runs). Run1 (discarded) and run2 (diagnostic, INCONCLUSIVE) are retained as history in §H below.
 
-## ⚠️ VERDICT: INCONCLUSIVE — no seat awarded (do NOT seat any model)
+## ✅ VERDICT (run3): SEAT THE CHINESE CANDIDATE — **GLM-5.2** (`z-ai/glm-5.2`)
 
-The run did **not** produce a valid seat decision. Only one of three models (GLM-5.2) yielded scorable
-memos; the **Western baseline was invalid** (all memos truncated by a harness `max_tokens` bug) and
-**DeepSeek was incomplete** (15/16 transport failures). With no valid baseline the **G3 parity gate
-cannot be evaluated**, so the §5 bar cannot be applied — seating GLM here would be a hollow sample.
-**Decision required from Akshar: rerun (fixes ready) vs. verdict** (per the standing contingency rule).
+A fully valid run: all 3 models completed 16/16 cells (schema 1.0, zero transport failures, zero
+truncations), the Western baseline is **valid** (mean 0.7188, status OK), and every cell was judged
+under **rubric conditions** — all 3 memos masked together, order randomized on the deterministic
+per-cell seed (`n_judged_together=3` in all 16 cells; run2's solo-judging defect is gone).
+
+| Gate (frozen at CP1a) | GLM-5.2 | DeepSeek V4-Pro |
+|---|---|---|
+| G1 `schema_valid_rate ≥ 0.90` | 1.00 ✓ | 1.00 ✓ |
+| G2 `mean_composite ≥ 0.70` | **0.7383 ✓** | 0.5938 ✗ |
+| G3 `mean ≥ west(0.7188) − 0.05 = 0.6688` | **0.7383 ✓** | 0.5938 ✗ |
+| C3 disqualified? | no | no |
+| **Passes** | **YES → seated** | no (complete run, genuine fail) |
+
+One passer → no tie-break needed. DeepSeek's fail is a **valid, complete** assessment this time (16/16
+scored) — not an artifact. The Grok fallback does **not** fire (it required *both* to fail).
+**Seat use is gated:** BULL-01 = GLM-5.2 takes effect only after reviewer verification of this artifact
+and Akshar's clearance; no CP2 work (debate code, seat wiring) before that.
 
 ---
 
-## 1. C3 memorization probe (mandatory, ran first) — PASS
+## Contract items 1–8 (run3)
 
-| Model | hit-rate (±1%) | threshold | disqualified? |
-|---|---|---|---|
-| DeepSeek V4-Pro | 0/16 = 0.000 | 0.25 | no |
-| GLM-5.2 | 0/16 = 0.000 | 0.25 | no |
-| gemini-3.1-pro (baseline) | 0/16 = 0.000 | 0.25 | no |
+### 1. C3 memorization probe — PASS (committed earlier, not re-run)
+0/16 hit-rate for all three models (±1% tolerance, 0.25 disqualification threshold) → none memorized the
+golden window; none disqualified. Spend $0.011. (`results/wp3_cp1/c3_probe.json`.)
 
-None recalled the golden-window closes → none memorized → none disqualified. **C3 spend = $0.011.**
-(`results/wp3_cp1/c3_probe.json`.)
+### 2. Per-model results (16 cells × 3 models = 48 memos, all scored)
 
-## 2. Per-model results (16 cells × 3 models = 48 memos attempted)
-
-| Model | status | n_scored | mean_composite | schema_valid_rate | grounding_mean | transport_fails | cost | tokens (p/c) |
+| Model | status | n_scored | mean_composite | schema_valid_rate | grounding_mean (D1) | cost | tokens (p/c) | calls |
 |---|---|---|---|---|---|---|---|---|
-| GLM-5.2 | **OK** | 16/16 | **0.7227** | 1.00 | 2.81 | 0 | $0.0923 | 19661 / 15460 |
-| DeepSeek V4-Pro | **INCOMPLETE_TRANSPORT** | 0/16 | — | — | — | **15** | $0.0248 | 4609 / 6400 |
-| gemini-3.1-pro (baseline) | **INVALID_LOWYIELD** | 0/16 | — | 0.00 | — | 0 | $0.7004 | 46352 / 50644 |
+| **GLM-5.2** | OK | 16/16 | **0.7383** | 1.00 | 2.38 | $0.0936 | 18496 / 15744 | 16 |
+| gemini-3.1-pro (baseline) | OK | 16/16 | 0.7188 | 1.00 | 2.94 | $0.5931 | 23176 / 45562 | 16 |
+| DeepSeek V4-Pro | OK | 16/16 | 0.5938 | 1.00 | 2.06 | $0.2437 | 21907 / 61173 | 19 |
 
-**GLM-5.2 per-cell scores (auditable — the mean is computed from these 16):**
+**Failed/retried cells:** none failed. DeepSeek used the one P2 retry in 3 cells (19 calls for 16
+memos), all resolving schema-valid — pacing (5s) + longer backoff fixed run2's transport failures
+(0 this run; `fail_reasons` = `ok:16` for all three). No truncations (`max_tokens=4096` +
+`finish_reason=length` handling).
 
-| cell | D1 | D2 | D3 | D4 | composite |
-|---|---|---|---|---|---|
-| 0623/AVGO | 3 | 3 | 4 | 3 | 0.8125 |
-| 0623/COST | 2 | 2 | 3 | 3 | 0.6250 |
-| 0623/MDT | 4 | 3 | 4 | 3 | 0.8750 |
-| 0623/LULU | 2 | 2 | 3 | 3 | 0.6250 |
-| 0624/AVGO | 3 | 3 | 4 | 3 | 0.8125 |
-| 0624/COST | 3 | 3 | 3 | 3 | 0.7500 |
-| 0624/MDT | 3 | 3 | 3 | 3 | 0.7500 |
-| 0624/LULU | 2 | 2 | 2 | 2 | 0.5000 |
-| 0625/AVGO | 4 | 3 | 4 | 3 | 0.8750 |
-| 0625/COST | 2 | 2 | 3 | 3 | 0.6250 |
-| 0625/MDT | 4 | 3 | 4 | 3 | 0.8750 |
-| 0625/LULU | 2 | 2 | 3 | 2 | 0.5625 |
-| 0626/AVGO | 3 | 3 | 4 | 3 | 0.8125 |
-| 0626/COST | 3 | 2 | 3 | 3 | 0.6875 |
-| 0626/MDT | 3 | 3 | 3 | 3 | 0.7500 |
-| 0626/LULU | 2 | 2 | 3 | 3 | 0.6250 |
-| **mean** | | | | | **0.7227** |
+**Per-cell scores (auditable — the means are computed from these):** D1,D2,D3,D4 (composite)
 
-**Failed / incomplete cells (which, why, resolution):**
-- **DeepSeek — 15/16 cells: transport/serving `LLMError`** (fail-closed after the client's bounded
-  retries). It succeeded in the single C3 call, so the failures are consistent with **rate-limiting on
-  rapid Fireworks calls**, not a bad pin. Only 4 metered calls landed. *(Exact error text not captured —
-  run2's stderr was discarded; the rerun captures it.)* → INCOMPLETE, **not scored on a hollow sample**
-  (contingency rule); the bar was **not** lowered or re-weighted to compensate.
-- **gemini-3.1-pro — 16/16 cells: memo JSON truncated** at `max_tokens=1600` (each call emitted
-  ~1580 completion tokens then cut off → unparseable JSON → 0 valid memos, all files `{}`). **This is a
-  harness bug, not a model deficiency.** Fixed (see §"Harness fixes").
-- **GLM-5.2 — 0 failures**, 16/16 schema-valid on first attempt.
+| cell | GLM-5.2 | WEST baseline | DeepSeek |
+|---|---|---|---|
+| 0623/AVGO | 1,4,4,4 (0.8125) | 4,3,3,3 (0.8125) | 2,2,3,2 (0.5625) |
+| 0623/COST | 3,3,4,4 (0.8750) | 4,3,4,3 (0.8750) | 1,2,3,3 (0.5625) |
+| 0623/MDT | 4,3,4,3 (0.8750) | 4,3,4,3 (0.8750) | 2,2,3,3 (0.6250) |
+| 0623/LULU | 1,1,2,2 (0.3750) | 0,1,3,3 (0.4375) | 2,2,2,2 (0.5000) |
+| 0624/AVGO | 2,3,4,4 (0.8125) | 4,3,4,3 (0.8750) | 4,3,4,3 (0.8750) |
+| 0624/COST | 3,3,3,3 (0.7500) | 4,3,4,3 (0.8750) | 2,2,2,2 (0.5000) |
+| 0624/MDT | 2,3,3,4 (0.7500) | 2,2,3,3 (0.6250) | 4,3,3,3 (0.8125) |
+| 0624/LULU | 2,2,3,3 (0.6250) | 1,1,2,3 (0.4375) | 1,1,2,2 (0.3750) |
+| 0625/AVGO | 2,3,3,4 (0.7500) | 4,3,4,3 (0.8750) | 2,2,3,3 (0.6250) |
+| 0625/COST | 2,3,3,4 (0.7500) | 4,3,4,3 (0.8750) | 1,2,3,3 (0.5625) |
+| 0625/MDT | 4,3,4,3 (0.8750) | 2,2,3,2 (0.5625) | 3,3,3,3 (0.7500) |
+| 0625/LULU | 2,2,3,3 (0.6250) | 1,1,2,3 (0.4375) | 1,1,2,3 (0.4375) |
+| 0626/AVGO | 2,3,4,4 (0.8125) | 4,2,3,2 (0.6875) | 2,2,3,3 (0.6250) |
+| 0626/COST | 2,2,3,3 (0.6250) | 4,3,4,4 (0.9375) | 2,2,2,2 (0.5000) |
+| 0626/MDT | 2,2,3,3 (0.6250) | 3,2,3,3 (0.6875) | 2,3,3,2 (0.6250) |
+| 0626/LULU | 4,3,4,3 (0.8750) | 2,2,3,3 (0.6250) | 2,2,3,2 (0.5625) |
+| **mean** | **0.7383** | **0.7188** | **0.5938** |
 
-## 3. Fixture hash verification (R1 integrity)
+*Reading note (honest):* GLM wins on composite (thesis coherence D3 / specificity D4) while the West
+baseline has the best **grounding** (D1 2.94 vs 2.38) — visible per-cell (e.g. 0623/AVGO: GLM D1=1 vs
+West D1=4). The bar weights the four dimensions equally as declared; recorded so the seat decision's
+texture is auditable, not smoothed over.
 
-All four golden-day fixtures' `content_hash` matched their committed locks at use time:
-`wp3_cp1_20260623..26` → True, True, True, True. Each also re-passed the R1 date-gate against the
-confirmed binding cutoff (2026-06-16).
+### 3. Fixture hash verification (R1 integrity)
+4/4 golden-day fixtures' `content_hash` matched their committed locks at use time
+(`wp3_cp1_20260623..26` → all True); each re-passed the R1 date-gate vs the confirmed binding cutoff
+(2026-06-16), `manifest_version=4f34593c18b7` logged per gate-pass.
 
-## 4. §5 bar applied — gate-by-gate
+### 4. Bar applied unchanged — gate-by-gate
+See the verdict table above. §5 thresholds byte-identical to CP1a (G1 0.90 / G2 0.70 / G3 west−0.05);
+`west_baseline_status=OK`, `west_baseline_mean=0.7188`. Outcome `SEAT_CHINESE`, seat `BULL-01-CAND-GLM`
+(`z-ai/glm-5.2`), no caveat.
 
-The bar is byte-identical to CP1a (`G1 schema≥0.90, G2 mean≥0.70, G3 mean≥west_baseline−0.05`).
-**It could not be validly applied**: `west_baseline_status = INVALID_LOWYIELD` (n_scored 0/16), so
-`west_baseline_mean` is undefined and **G3 has no baseline**. Awarding a seat on `west=0.0` (which makes
-G3 trivially true) is exactly the hollow-sample failure the rule forbids. Therefore:
-- **DeepSeek:** INCOMPLETE — not evaluated.
-- **GLM-5.2:** would clear G1 (1.00≥0.90) and G2 (0.7227≥0.70, thin), but **G3 is unevaluable** (no
-  valid baseline). **Not seated.**
-- **Verdict: INCONCLUSIVE. Seat: none.** (Grok fallback is NOT triggered — it fires only when both
-  Chinese candidates are *complete* and fail; here the run itself is invalid.)
-
-## 5 & 7. Spend actuals — cumulative, honest (vs $15 cap / $12 degrade)
+### 5 & 7. Spend — cumulative, honest (vs $15 cap / $12 degrade on the cumulative figure)
 
 | Phase | USD | note |
 |---|---|---|
-| C3 probe | $0.011 | instrumented |
-| **run1 (DISCARDED)** | **~$0.40 (estimated)** | uninstrumented; killed after ~23 memos. Discarded for **two** reasons: the `Path("")` repo-root memo-path bug **and** missing per-model/replay instrumentation. Same `max_tokens=1600` → West truncation present here too. No exact figure (no per-call metering); estimated from run2's per-call costs. |
-| run2 (of record) | $0.9405 | instrumented; per-model above. West's $0.70 was **wasted on 32 truncated calls** (the bug). |
-| **CUMULATIVE** | **~$1.35** | well under the $12 degrade stop and $15 cap. |
+| C3 probe | $0.011 | committed pass |
+| run1 (DISCARDED) | ~$0.40 est. | uninstrumented; killed for the repo-root memo-path bug + missing instrumentation |
+| run2 (diagnostic) | $0.9405 | INCONCLUSIVE — West truncated (harness bug), DeepSeek transport-failed, GLM solo-judged |
+| **run3 (RECORD)** | **$1.1673** | per-model: GLM $0.0936, West $0.5931, DeepSeek $0.2437, judge $0.2369 |
+| **CUMULATIVE** | **$2.5193** | never approached the $12 degrade (checked per cell) or the $15 cap |
 
-The $12 degrade rule was checked against the **cumulative** figure each cell; it never tripped.
-**Double-exposure note (auditability):** the 3 models saw the cell prompts twice (run1 partial + run2).
-No validity impact — **every reported score is from run2's complete grid**, and the judge ordering is
-deterministic-seeded; run1 contributed **no** scores (discarded).
+**Triple-exposure note (auditability):** the three models saw the cell prompts a **third** time (run1
+partial + run2 + run3). No validity impact — the post-cutoff date-gate is the primary anti-memorization
+guard and C3 passed; every recorded score comes from run3's complete grid under deterministic-seeded
+judging. Recorded for audit, not hidden.
 
-## 6. Replay evidence
+### 6. Replay evidence
+`results/wp3_cp1/run3/replay_stamps.jsonl` — **67 stamps** (48 memos + 16 judge calls + 3 DeepSeek P2
+retries), **all** carrying `manifest_version=4f34593c18b7`, `config_version=4190e44258ba`,
+`code_version=8bb03f3`, per-call `model_version`, `decision_ts`, and usage (tokens + USD).
 
-`results/wp3_cp1/replay_stamps.jsonl` — **69 stamps**, one per memo + judge call; **all carry
-`manifest_version` = `4f34593c18b7`** (+ `model_version`, `config_version=4190e44258ba`,
-`code_version=530744c`, `decision_ts`, per-call `usage`). Example:
-`{"agent_id":"BULL-01-CAND-GLM","model_version":"z-ai/glm-5.2-20260616","manifest_version":"4f34593c18b7",
-"decision_ts":"2026-06-23T20:00:00+00:00","usage":{"prompt_tokens":1165,"completion_tokens":896,"cost_usd":0.00535}}`.
-
-## 8. Guard gap closed (the run1 near-miss)
-
-Structural fix so a licensed-figure file can never again reach the tracked tree by a path bug:
-- **8a:** `core/agent_output.safe_agent_output_dir` fail-closes on empty/cwd/tracked-not-gitignored
-  paths (kills the `Path("")`-is-truthy class); committed test `tests/test_agent_output.py` (gut-demo
-  confirmed red). The harness now resolves memos through it → gitignored `var/cp1_memos`.
-- **8b:** `.gitignore` backstop (`/*BULL-0*.json`, `var/cp1_memos/`).
-- **8c (flagged, not built):** a deeper guard that scans JSONs for fixture `doc_id` patterns outside
-  approved dirs — WP4-adjacent; awaiting Akshar's go.
+### 8. Guard gap (closed at the prior checkpoint, exercised here)
+Run3 memos were written only via `core/agent_output.safe_agent_output_dir` → gitignored
+`var/cp1_memos/run3/` (test-enforced; gut-demo red). `.gitignore` backstop in place. Item 8c (doc_id
+content scan) remains flagged for Akshar, not built.
 
 ---
 
-## Root cause & harness fixes (applied — rerun-ready)
+## §H — History (prior runs, same frozen bar)
 
-1. **West truncation (my bug):** `max_tokens` 1600 → **4096**, and `_bull_memo` now treats
-   `finish_reason == "length"` as a truncation (retry, then record `reason="truncated"`) rather than a
-   silent schema fail.
-2. **Verdict integrity (logic bug):** `_aggregate_and_verdict` now assigns a per-model `status`
-   (`OK` / `INCOMPLETE_TRANSPORT` / `INVALID_LOWYIELD`) and returns **INCONCLUSIVE** whenever the
-   baseline is not `OK` — a seat can never rest on an invalid baseline again (this is why the artifact
-   above reads INCONCLUSIVE, not "SEAT GLM").
-3. **DeepSeek transport (to address on rerun):** capture stderr; add pacing / longer backoff for the
-   Fireworks-hosted DeepSeek calls (rate-limit hypothesis); confirm the exact error.
+- **Run1 (discarded, ~$0.40):** killed mid-run — a `Path("")`-is-truthy bug wrote 23 licensed-figure
+  memos into the repo working tree (cleaned before any commit/push; never entered git history) and the
+  run lacked per-model/replay instrumentation. Led to the item-8 structural guard.
+- **Run2 (diagnostic, $0.9405): INCONCLUSIVE, no seat.** West baseline invalid (16/16 memos truncated at
+  `max_tokens=1600` — harness bug), DeepSeek INCOMPLETE (15/16 transport failures), and the reviewer
+  found GLM had been judged **solo** (no 3-memo masking) — non-rubric conditions, so its 0.7227 was not
+  carried into any record. Fixes: `max_tokens` 4096 + truncation handling; DeepSeek pacing/backoff;
+  verdict logic hardened (invalid baseline ⇒ INCONCLUSIVE, never a hollow seat). Top-level
+  `results/wp3_cp1/{comparison.json, replay_stamps.jsonl}` are run2's diagnostic artifacts.
 
-## Recommendation — Akshar's call (rerun vs. verdict)
-
-**Recommend a rerun** with the fixes above (est. ~$1 more; cumulative would be ~$2.3, still << $15). A
-rerun gives a **valid** Western baseline + a complete DeepSeek, so the §5 bar can actually be applied.
-The alternative — accept a partial verdict — is not sound here because the baseline (the yardstick) was
-never measured. **No CP2 work (no debate, no seat wiring, no Grok role) proceeds until a valid CP1b
-verdict is verified and the seat is cleared.**
+## Next (gated)
+Reviewer verifies this artifact + the seat verdict; Akshar clears the seat. Only then does CP2 begin:
+BULL-01 manifest role = `z-ai/glm-5.2` (together, Western host), debate wiring per
+[wp3-done-criteria.md](wp3-done-criteria.md) R2/R3. No Grok role (fallback did not fire).

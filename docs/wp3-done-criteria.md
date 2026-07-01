@@ -222,11 +222,12 @@ Phase-3 believability work). Shadow outputs **never** touch the live decision.
 7. **Shadow-ensemble (R7)** — decorrelation recorded/measured.
 
 ## Done — each demonstrable (not asserted)
-- [~] **R1** — Western-host pin enforced (✓, red-tested); golden-day comparison committed
-      ([wp3-cp1-comparison.md](wp3-cp1-comparison.md), `results/wp3_cp1/`). CP1b run of record is
-      **INCONCLUSIVE** (no valid Western baseline — harness `max_tokens` truncation — + DeepSeek
-      transport-incomplete); **no seat awarded**. Fixes applied; awaits Akshar's rerun-vs-verdict, then a
-      valid verdict before the seat is used. Bar frozen at CP1a, applied unchanged.
+- [x] **R1** — Western-host pin enforced (✓, red-tested); golden-day comparison committed
+      ([wp3-cp1-comparison.md](wp3-cp1-comparison.md); run of record `results/wp3_cp1/run3/`). Run3
+      (valid: 3×16/16, valid baseline 0.7188, rubric judging conditions) → **VERDICT: SEAT GLM-5.2**
+      (mean 0.7383; clears G1/G2/G3 as frozen at CP1a). DeepSeek fails on a complete run (0.5938); Grok
+      fallback not fired. **Seat use gated on reviewer verification + Akshar's clearance** (no CP2 work
+      before that). History: run2 INCONCLUSIVE (diagnostic), run1 discarded.
 - [ ] **R2** — bull/bear divergence measured; sycophantic-bear injection voids the debate; same-family
       debaters fail; rounds ≤ 3; MOD-01 pre-mortem has observable indicators.
 - [ ] **R3** — `ballot_summary` computed from the sealed votes; distinct votes ⇒ distinct summary;

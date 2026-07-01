@@ -21,6 +21,7 @@ import json
 import os
 import random
 import subprocess
+import time
 from pathlib import Path
 
 from pydantic import ValidationError
@@ -40,9 +41,20 @@ MODELS = ["BULL-01-CAND-DEEPSEEK", "BULL-01-CAND-GLM", "BULL-01-BASELINE-WEST"]
 JUDGE = "VERIF-CP1-JUDGE"
 HARD_CAP, DEGRADE_STOP = 15.0, 12.0
 BAR_ABS, PARITY, SCHEMA_MIN = 0.70, 0.05, 0.90
-OUT = Path("results/wp3_cp1")
+OUT = Path("results/wp3_cp1/run3")            # run3 = the RUN OF RECORD (run1 discarded, run2 diagnostic)
+C3_PATH = Path("results/wp3_cp1/c3_probe.json")  # C3 already passed + committed — NOT re-run
 # Agent memos quote licensed figures -> resolve to a gitignored dir, fail-closed (WP3 CP1b guard 8a).
-MEMO_DIR = safe_agent_output_dir(os.environ.get("CP1_MEMO_DIR"), fallback="var/cp1_memos")
+MEMO_DIR = safe_agent_output_dir(os.environ.get("CP1_MEMO_DIR"), fallback="var/cp1_memos/run3")
+
+# Cumulative-spend discipline: the $12 degrade / $15 cap apply to the WHOLE CP1b effort, not this
+# process alone. Prior spend: C3 $0.011 + run1 ~$0.40 (discarded) + run2 $0.9405.
+PRIOR_SPEND_USD = 1.352
+
+# DeepSeek-on-Fireworks rate-limit mitigation (run2: 15/16 transport failures; the single spaced C3
+# call succeeded): pace the calls and lengthen the client's bounded backoff. Residual failures still
+# fail closed and count toward the >=25%-transport => INCOMPLETE contingency rule.
+PACING_S = {"BULL-01-CAND-DEEPSEEK": 5.0}
+RETRY_KW = {"BULL-01-CAND-DEEPSEEK": {"max_retries": 3, "backoff_s": 6.0}}
 
 BULL_SYS = (
     "You are BULL-01, an adversarial BULL-case equity researcher. Given ONLY the point-in-time data "
@@ -77,10 +89,13 @@ def _spent() -> float:
     return round(sum(u["cost_usd"] for u in USAGE.values()), 6)
 
 
-def _metered(client, role, spec, messages, man, cid, decision_ts, *, max_tokens):
+def _metered(client, role, spec, messages, man, cid, decision_ts, *, max_tokens,
+             max_retries=2, backoff_s=1.0):
     """One metered call: records per-model usage + a replay stamp (incl. manifest_version)."""
+    time.sleep(PACING_S.get(role, 0.0))  # rate-limit pacing (DeepSeek/Fireworks)
     resp = client.call(model_version=spec.model_version, messages=messages, provider=spec.provider,
-                       response_format={"type": "json_object"}, max_tokens=max_tokens)
+                       response_format={"type": "json_object"}, max_tokens=max_tokens,
+                       max_retries=max_retries, backoff_s=backoff_s)
     u = USAGE[role]
     u["cost_usd"] += resp.usage.cost_usd; u["prompt_tokens"] += resp.usage.prompt_tokens
     u["completion_tokens"] += resp.usage.completion_tokens; u["calls"] += 1
@@ -117,7 +132,8 @@ def _bull_memo(client, role, spec, ticker, decision_ts, data_block, man, cid) ->
     memo, ok, retries, reason = None, False, 0, "none"
     for attempt in range(2):  # one retry (P2)
         resp = _metered(client, role, spec, [{"role": "system", "content": BULL_SYS},
-                        {"role": "user", "content": user}], man, cid, decision_ts, max_tokens=4096)
+                        {"role": "user", "content": user}], man, cid, decision_ts, max_tokens=4096,
+                        **RETRY_KW.get(role, {}))
         if attempt == 1:
             retries = 1
         if resp.finish_reason == "length":     # truncated -> not a real schema failure; retry
@@ -172,13 +188,14 @@ def main() -> None:
     fail_reasons = {r: {} for r in MODELS}
     for d in DAYS:
         for t in TICKERS:
-            if _spent() >= DEGRADE_STOP:
-                print(f"DEGRADE STOP at ${_spent():.4f} — finalizing on completed cells")
+            if PRIOR_SPEND_USD + _spent() >= DEGRADE_STOP:   # degrade on the CUMULATIVE figure
+                print(f"DEGRADE STOP: cumulative ${PRIOR_SPEND_USD + _spent():.4f} >= ${DEGRADE_STOP} "
+                      f"— finalizing on completed cells")
                 break
             fx = fixtures[d]
             data_block, _doc_ids = _candidate_doc_block(fx, t)
             cid = f"cp1_{d}_{t}"
-            memos, oks, retried = {}, {}, {}
+            memos, oks, retried, reasons = {}, {}, {}, {}
             for role in MODELS:
                 if role in disq:
                     continue
@@ -187,10 +204,10 @@ def main() -> None:
                                                       fx.decision_ts, data_block, man, cid)
                 except LLMError as e:
                     memo, ok, rt = None, False, 0
-                    reason = "transport:" + str(e)[:80]
+                    reason = "transport:" + str(e)[:200]   # capture the actual error text (run2 gap)
                     incomplete[role] += 1
                     print(f"  {role} failed-closed: {str(e)[:100]}")
-                memos[role], oks[role], retried[role] = memo, ok, rt
+                memos[role], oks[role], retried[role], reasons[role] = memo, ok, rt, reason
                 key = reason.split(":")[0]
                 fail_reasons[role][key] = fail_reasons[role].get(key, 0) + 1
                 (MEMO_DIR / f"{d}_{t}_{role}.json").write_text(json.dumps(memo or {}, indent=2))
@@ -207,7 +224,8 @@ def main() -> None:
             except LLMError as e:
                 scores = {}; print(f"  judge failed-closed: {str(e)[:100]}")
             cell = {"day": d, "ticker": t, "schema_ok": oks, "retried": retried,
-                    "lab2role": lab2role, "scores": {}}
+                    "lab2role": lab2role, "n_judged_together": len(lab2role), "scores": {},
+                    "fail_detail": {r: reasons[r] for r in reasons if not oks.get(r)}}
             for lab, role in lab2role.items():
                 sc = scores.get(lab) or {}
                 dims = [sc.get(k) for k in ("D1", "D2", "D3", "D4")]
@@ -215,13 +233,17 @@ def main() -> None:
                     cell["scores"][role] = {"D1": dims[0], "D2": dims[1], "D3": dims[2], "D4": dims[3],
                                             "composite": round(sum(dims) / 16.0, 4)}
             per_cell.append(cell)
-            print(f"cell {d}/{t}: scored {list(cell['scores'])}  spent=${_spent():.4f}")
+            print(f"cell {d}/{t}: judged_together={len(lab2role)} scored={list(cell['scores'])} "
+                  f"run3=${_spent():.4f} cumulative=${PRIOR_SPEND_USD + _spent():.4f}")
         else:
             continue
         break
 
     report = _aggregate_and_verdict(per_cell, disq, man, incomplete)
-    report.update(total_cost_usd=_spent(), hard_cap_usd=HARD_CAP, degrade_stop_usd=DEGRADE_STOP,
+    report.update(run="run3 (run of record)", total_cost_usd=_spent(),
+                  prior_spend_usd=PRIOR_SPEND_USD,
+                  cumulative_cost_usd=round(PRIOR_SPEND_USD + _spent(), 6),
+                  hard_cap_usd=HARD_CAP, degrade_stop_usd=DEGRADE_STOP,
                   cells_completed=len(per_cell), usage_by_model=USAGE,
                   fixture_hash_verified=hash_ok, incomplete_cells=incomplete, fail_reasons=fail_reasons,
                   manifest_version=man.manifest_version, code_version=CODE_VERSION,
@@ -237,10 +259,9 @@ def main() -> None:
 
 
 def _load_c3_disqualified() -> set:
-    p = OUT / "c3_probe.json"
-    if not p.exists():
+    if not C3_PATH.exists():
         return set()
-    return {r for r, m in json.loads(p.read_text()).get("models", {}).items() if m.get("disqualified")}
+    return {r for r, m in json.loads(C3_PATH.read_text()).get("models", {}).items() if m.get("disqualified")}
 
 
 YIELD_MIN = 0.90  # a model must produce scorable memos in >=90% of cells to be a valid data point
