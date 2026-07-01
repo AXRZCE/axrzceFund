@@ -92,6 +92,12 @@ History (this narrative is part of the evidence the gate was honest):
   | 5 | 2026-06-20 | night_…0621T013930Z | ✅ | 0 | 2016 | `[]` |
   | 6–9 | 06-21 … 06-24 | (continued) | ✅ | 0 | 2016 | `[]` |
 
+- **Committed proofs (VM-bot-authored, off-box-verifiable on `main`):** `results/soak/night_*.json`
+  — 17 nights incl. the two 2026-06-16 baseline/timer-proof runs and the gate nights
+  `night_20260617T014037Z.json` … `night_20260621T013930Z.json`; every file `all_ok` true,
+  `pit_audit_violations []`. The IEX counts and clean `reconciliation_flags` above are verifiable
+  directly in these files.
+
 - **Row-count deviation — EXPLAINED (logged per G0.3 "explained = logged"):** IEX
   daily-bar counts moved 2515 → 2520 → 2016 across the window. **This is a
   market-calendar effect, not a coverage loss.** IEX rows = (universe names) ×
@@ -136,8 +142,8 @@ History (this narrative is part of the evidence the gate was honest):
   verified get_universe NOW = 503 names, deterministic. (Historical PIT membership
   is incomplete — Sharadar lacks a pre-coverage baseline — tracked as a Phase 1 item;
   not a G0 blocker since the soak/IEX only needs the current universe.)
-- Night-by-night log table: to be filled from var/ingestion_logs/ once the restarted
-  soak runs.
+- Night-by-night proofs are committed under `results/soak/night_*.json` (VM-bot-authored); the
+  table above is populated from them.
 - Findings banked from shakedown (both doc'd in api-data-sources): SF1 `as_of` =
   reportperiod; corporate-actions announcement semantics (available_at < as_of valid).
 
@@ -148,7 +154,9 @@ History (this narrative is part of the evidence the gate was honest):
       SHA256-verified; all 4 tables byte-identical — price_bars 33,695
       (ae5438e11a3e), fundamentals 43,119 (ea58fbd295d5), universe_membership
       59,116 (e6ecf2b005bd), corporate_actions 5,334 (e505ab0d9f79). Artifact:
-      `var/g04/replay_ingest_20260616_f63c9e.json` on the VM.
+      `var/g04/replay_ingest_20260616_f63c9e.json` on the VM — **NOT yet committed**: unlike the
+      soak (G0.3) and broker (G0.5) proofs, this replay JSON remains VM-only and is not
+      off-box-verifiable. Commit it to `results/g04/` to close the gap.
 - Mechanism additionally verified twice on the laptop (2026-06-10 shakedown archive
   and 2026-06-15 archive), both byte-identical — determinism is robust across hosts.
 
@@ -156,8 +164,9 @@ History (this narrative is part of the evidence the gate was honest):
 
 - [x] **PASS** — fired from the VM (`hedgefund-g05.timer`) 2026-06-16 10:00 ET
       (14:00 UTC), market hours: **10 orders, zero mismatches, modeled-fill logged
-      on all 10**, account flat after. Artifact: `var/g05/g05_20260616_8b8c4d.json`
-      on the VM.
+      on all 10**, account flat after. Artifact (committed to `main`, off-box-verifiable):
+      `results/g05/g05_20260616_8b8c4d.json` (pass true, mismatches []). A second broker drill is
+      likewise committed: `results/g05/g05_20260625_28e7af.json` (10 orders, zero mismatches, pass).
 
 ---
 

@@ -17,25 +17,25 @@ These are non-negotiable and unchanged from WP0–WP2:
 
 ---
 
-## Where we are (start of this plan)
+## Where we are (WP2 complete — WP3 next)
 
 | WP | Scope | Status |
 |---|---|---|
 | WP0 | Vendor interface adapters (R5 repay) | ✅ merged |
 | WP1 | LangGraph deep-loop skeleton on stubs | ✅ merged |
 | WP1-R1 | `ballot_summary` schema reconcile (→ P5) | ✅ merged |
-| **WP2** | Real research agents vs post-cutoff fixtures | 🔨 **scaffolding + R1 gate + value-roster manifest + VERIF-01/§3 blocks done (149 green, $0 spend); metered client + agents remaining** |
+| **WP2** | Real research agents vs post-cutoff fixtures | ✅ **COMPLETE (PR #3 merged) — two real agents proven: FUND-TECH (gemini-3.1-pro-preview) + TECH-01 (gemini-2.5-flash-lite), both google-vertex, fixture-grounded / VERIF-01-validated / metered / replay-stamped; SENT-01 logged-defer (no PIT news source). Readout: wp2-readout.md** |
 | WP3 | Debate + ballot + PM + shadow-ensemble | ⬜ |
 | WP4 | Risk gate + order manager + intraday monitor | ⬜ |
 | WP5 | Learning loop + PMORT-01 + dashboard v1 | ⬜ |
 | WP6 | Dry-run week (orders logged, not submitted) | ⬜ |
 | WP7 | Go live on paper + open the G1 clock | ⬜ |
 
-Roster on `main` (ADR-2 amendment, no Anthropic): FUND-TECH → `gemini-3.1-pro-preview` (google-vertex), TECH-01 → `gemini-2.5-flash-lite` (google-vertex), SENT-01 → `gpt-5.4` (openai). Binding fixture cutoff `2026-03-05`. Chinese open-weight family (DeepSeek/GLM, T2_A) parked for WP3.
+Roster on `main` (ADR-2 amendment, no Anthropic): FUND-TECH → `gemini-3.1-pro-preview` (google-vertex) and TECH-01 → `gemini-2.5-flash-lite` (google-vertex) are **proven**; SENT-01 → `gpt-5.4` (openai) is **deferred** by a logged ruling (wp2-sent01-defer-ruling.md — no PIT news source). Binding fixture cutoff `2026-03-05`. Chinese open-weight family (DeepSeek/GLM, T2_A) is deferred to WP3, where its **fixture-validation is the gating first task**.
 
 ---
 
-## WP2 (finish) — Real research agents on post-cutoff fixtures
+## WP2 (COMPLETE) — Real research agents on post-cutoff fixtures
 
 **Objective.** Prove the real-LLM research pipeline end to end against frozen, post-cutoff fixtures: a real call runs, is metered, is validated, is replay-stamped, and is provably grounded in its fixture.
 
@@ -43,8 +43,8 @@ Roster on `main` (ADR-2 amendment, no Anthropic): FUND-TECH → `gemini-3.1-pro-
 
 1. **Metered OpenRouter client (R4).** OpenAI-compatible client → OpenRouter. Wires each role's `provider` pin. Records real per-call token counts + USD cost into the decision record. *Anti-hoax:* gutting the metering (e.g., zeroing cost) turns a metering-assertion test red.
 2. **FUND-TECH — first real call.** Record a June-2026 fixture (`decision_ts > 2026-03-05`); gate it (R1 post-cutoff); run Gemini 3.1 Pro through the client; validate the memo (R3 / VERIF-01); stamp the ReplayTuple (R5); prove grounded-in-fixture (a canned memo that ignores the fixture fails the grounding test). Spend cap ~$15, report actuals. **Fixtures are licensed vendor data → gitignored, never committed** (see the WP2 leak-scrub); only the content-hash **lock** is committed for replay. Record fixtures wherever the pit_store data lives — **the dev box (it holds the Sharadar/Alpaca keys) or the VM's autonomous jobs** — and hash-lock them so any run/replay verifies the same frozen inputs. *(FUND-TECH: done — `d34ae72`.)*
-3. **TECH-01.** Gated on the **SEP price backfill** (parallel prerequisite, ≥252d trailing history so its first memo isn't substantively hollow). Then run Gemini 2.5 Flash-Lite through the same gate → validate → stamp → grounding chain.
-4. **SENT-01.** Needs a point-in-time news source — `DocumentsInterface.get_news` is ABC-only (the SENT-01 gap). Either implement a PIT-correct news source (then run GPT-5.4 through the chain) **or** record a logged defer ruling ("SENT-01 defers if no PIT news"). Do not fabricate a news path to make it pass.
+3. **TECH-01 — done (`10ade17`).** SEP-backfilled to 309 trailing days (targeted `ingest_sep(tickers=…)`), Gemini 2.5 Flash-Lite through the R1→R3→R4→R5 + grounding chain; the objective §3.4 `technical_block` is computed authoritatively in code (not model-trusted).
+4. **SENT-01 — logged defer (`33b2513`, docs/wp2-sent01-defer-ruling.md).** No PIT news source: an honest news path is out-of-scope data-layer work and would be hollow on day one (novelty detection needs a trailing coverage history). Shipped deferred, not faked; the un-defer condition is logged.
 5. **WP2 readout + PR.** Document the agents (or two + logged SENT defer), spend actuals, and the R1/R3/R4/R5 proofs with their anti-hoax confirmations.
 
 **Done-criteria** (the 5 WP2 rulings, already committed). Completion bar: each in-scope research agent produces a **fixture-grounded, VERIF-01-validated, metered, replay-stamped** memo, with every anti-hoax test holding (gut any layer → red).
