@@ -27,6 +27,11 @@ from data.pit_store import PITStore, to_utc_iso
 logger = structlog.get_logger()
 
 DEFAULT_FIXTURE_DIR = Path("data/fixtures/recorded")
+LOCK_DIR = Path("data/fixtures/locks")
+_LOCK_NOTE = (
+    "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these "
+    "params; content_hash must match for replay/reproducibility."
+)
 
 
 class FixtureGateError(Exception):
@@ -130,6 +135,37 @@ def record_fixture(
         tickers=len(tickers), price_rows=len(price_bars), hash=content_hash,
     )
     return fx
+
+
+def lock_from_fixture(fx: Fixture) -> dict[str, Any]:
+    """The committed hash-lock for a fixture: identity + `content_hash` + payload SIZES only (never
+    the licensed rows), so a reviewer can verify the same frozen inputs without the vendor data.
+    Shape matches the WP2 locks in data/fixtures/locks/."""
+    pb = fx.payload.get("price_bars", [])
+    fund = fx.payload.get("fundamentals", {})
+    return {
+        "fixture_id": fx.fixture_id,
+        "decision_ts": fx.decision_ts,
+        "tickers": list(fx.tickers),
+        "source": fx.source,
+        "recorded_at": fx.recorded_at,
+        "content_hash": fx.content_hash,
+        "payload_summary": {
+            "price_bars": len(pb),
+            "fundamentals": {ind: len(rows) for ind, rows in sorted(fund.items())},
+        },
+        "note": _LOCK_NOTE,
+    }
+
+
+def write_lock(fx: Fixture, out_dir: Path = LOCK_DIR) -> Path:
+    """Write the committed hash-lock for `fx` (the lock, NEVER the licensed payload)."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / f"{fx.fixture_id}.lock.json"
+    path.write_text(json.dumps(lock_from_fixture(fx), indent=2))
+    logger.info("fixture_lock_written", fixture_id=fx.fixture_id, path=str(path),
+                content_hash=fx.content_hash)
+    return path
 
 
 def load_fixture(path: Path, *, for_roles: list[str], manifest: Manifest) -> Fixture:

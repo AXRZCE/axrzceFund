@@ -29,6 +29,15 @@ import yaml
 DEFAULT_MANIFEST = Path("deploy/model_manifest.yaml")
 _REQUIRED = ("family", "tier", "model_version", "cutoff", "provider")
 
+# R1 (WP3, done-criteria §R1 sub-condition 2): an open-weight family whose weights are Chinese-origin
+# must run on a WESTERN inference host so no data leaves to a non-Western first-party API and
+# `model_version` pins a frozen artifact. Keyed on the declared `family`; DEFAULT-DENY — any host not
+# in this allowlist fails the load for such a family (fail-closed). The allowlist is the R1-approved
+# Western OpenRouter backends (extend only by review); e.g. `deepseek`/`zhipu`/`novita`/`siliconflow`
+# (non-Western first-party hosts) are deliberately absent.
+HOST_PINNED_FAMILIES = frozenset({"chinese"})
+WESTERN_HOSTS = frozenset({"fireworks", "together", "google-vertex"})
+
 
 class ManifestError(Exception):
     """Malformed/incomplete manifest. Fail-closed — an unpinned model or cutoff must never
@@ -110,6 +119,18 @@ def load_manifest(path: Path = DEFAULT_MANIFEST) -> Manifest:
                 f"`order` (replay completeness — an unpinned provider load-balances across "
                 f"backends, so model_version alone would not pin what ran)"
             )
+
+        family = str(d["family"])
+        if family.lower() in HOST_PINNED_FAMILIES:
+            hosts = list(provider.get("only") or provider.get("order") or [])
+            offending = [h for h in hosts if h not in WESTERN_HOSTS]
+            if offending:
+                raise ManifestError(
+                    f"role {role!r}: family {family!r} is open-weight and must be pinned to an "
+                    f"R1-approved WESTERN inference host {sorted(WESTERN_HOSTS)}; host(s) "
+                    f"{offending} are not approved. A Chinese-origin model on a non-Western host "
+                    f"could egress data and breaks R1 (fail-closed)."
+                )
 
         specs[role] = ModelSpec(
             role=role,
