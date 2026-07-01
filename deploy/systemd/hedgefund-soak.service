@@ -1,0 +1,17 @@
+[Unit]
+Description=axrzceFund nightly soak ingest (G0.3 counting driver)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/hedgefund
+# Self-update to the gated remote head before running (var/ + .env are gitignored, untouched).
+ExecStartPre=/usr/bin/env bash ops/vm_git_sync.sh
+ExecStart=/root/hedgefund/.venv/bin/python ops/nightly_ingest.py
+# Commit + push the night summary (our own G0.3 stats) even if the ingest flagged a deviation or
+# exited non-zero — ExecStopPost runs regardless of ExecStart's result.
+ExecStopPost=/usr/bin/env bash ops/vm_commit_results.sh soak
+# Load-bearing for G0.3 (validation-criteria.md): a hung run self-heals (timeout-kill does NOT
+# count); catch-up after downtime counts (see the timer's Persistent=true).
+TimeoutStartSec=1800

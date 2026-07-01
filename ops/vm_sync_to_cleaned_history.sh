@@ -13,7 +13,7 @@
 # Usage (on the VM):  ops/vm_sync_to_cleaned_history.sh [branch]      # default: main
 set -euo pipefail
 
-REPO="${AXRZCE_REPO:-$HOME/axrzceFund}"
+REPO="${AXRZCE_REPO:-/root/hedgefund}"
 BRANCH="${1:-main}"
 TIMERS=(hedgefund-soak.timer hedgefund-g05.timer)
 

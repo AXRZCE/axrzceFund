@@ -31,7 +31,7 @@ from data.interfaces import AlpacaBroker, AlpacaMarketData
 
 SYMBOLS = ["AAPL", "MSFT", "NVDA", "AMZN", "GOOGL"]
 FILL_TIMEOUT_S = 120
-ARTIFACT_DIR = Path("var/g05")
+ARTIFACT_DIR = Path("results/g05")  # tracked: our orders/fills proof, committed off-box
 
 
 def main() -> int:
