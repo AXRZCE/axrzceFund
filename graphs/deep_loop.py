@@ -26,7 +26,6 @@ from graphs.ballot import tally
 from graphs.state import CycleState
 from graphs.stubs import (
     StubFUNDTECH,
-    StubPM01,
     StubPMORT01,
     StubSENT01,
     StubTECH01,
@@ -40,11 +39,12 @@ from core.config import param_number
 
 BALLOT_MARGIN_THRESHOLD = param_number("ballot_margin_threshold")
 
-# WP3 CP2 (R2): the debate node takes an INJECTED implementation — the WP1 debate stubs were
-# removed when the real machinery (graphs/debate.py) landed. deep_loop deliberately does NOT
-# import graphs.debate (which needs the LLM client): production wiring injects it; tests inject
-# doubles. An un-wired debate node fails closed.
+# WP3 CP2/CP3: the debate and pm nodes take INJECTED implementations — their WP1 stubs were
+# removed when the real machinery (graphs/debate.py, graphs/pm.py) landed. deep_loop deliberately
+# does NOT import those modules (they need the LLM client): production wiring injects them; tests
+# inject doubles. An un-wired node fails closed.
 DebateImpl = Callable[[CycleState], dict]
+PMImpl = Callable[[CycleState], dict]
 
 CHECKPOINT_PATH = Path("var/checkpoints.sqlite")
 # Linear protocol order; the fail-closed router sends any node to END on halt.
@@ -83,7 +83,8 @@ def _replay_payload(state: CycleState, agent_id: str, extra: dict) -> dict:
 def build_deep_loop(event_log: EventLog, fault: Optional[FaultInjector] = None,
                     checkpoint_path: Path = CHECKPOINT_PATH,
                     interrupt_before: Optional[list[str]] = None,
-                    *, debate_impl: Optional[DebateImpl] = None):
+                    *, debate_impl: Optional[DebateImpl] = None,
+                    pm_impl: Optional[PMImpl] = None):
     """Compile the deep-loop graph with a durable SQLite checkpointer.
 
     `interrupt_before` (LangGraph native) pauses execution before the named nodes —
@@ -155,11 +156,18 @@ def build_deep_loop(event_log: EventLog, fault: Optional[FaultInjector] = None,
         summary, _direction = tally(votes, margin_threshold=BALLOT_MARGIN_THRESHOLD)
         return {"ballot": votes, "ballot_summary": summary}
 
-    def pm(state: CycleState) -> dict:  # P6
-        proposal = StubPM01().propose(state.candidate, state.ballot_summary, state.premortem_top_risks)
-        event_log.append(event_type="proposal_written", cycle_id=state.cycle_id, agent_id="PM-01",
-                         payload=_replay_payload(state, "PM-01", {"direction": proposal.direction}))
-        return {"proposal": proposal}
+    def pm(state: CycleState) -> dict:  # P6 — injected implementation (WP3 CP3, R5)
+        if pm_impl is None:
+            raise RuntimeError(
+                "no PM implementation wired: StubPM01 was removed in WP3 CP3 (R5). Inject pm_impl "
+                "(production: graphs.pm; tests: a double). Fail-closed."
+            )
+        updates = pm_impl(state)
+        proposal = updates.get("proposal")
+        if proposal is not None:
+            event_log.append(event_type="proposal_written", cycle_id=state.cycle_id, agent_id="PM-01",
+                             payload=_replay_payload(state, "PM-01", {"direction": proposal.direction}))
+        return updates
 
     def risk_gate(state: CycleState) -> dict:  # P7 code gate (deterministic, gate-only)
         p = state.proposal
@@ -214,10 +222,13 @@ def new_cycle_state(config_version: str = "stub_cfg", code_version: str = "wp1")
 def run_cycle(event_log: EventLog, fault: Optional[FaultInjector] = None,
               checkpoint_path: Path = CHECKPOINT_PATH,
               initial: Optional[CycleState] = None,
-              *, debate_impl: Optional[DebateImpl] = None) -> CycleState:
-    """Run one deep-loop cycle; returns the final CycleState. `debate_impl` is required for a
-    cycle to pass the debate node (WP3 CP2) — tests inject a double, production the real machinery."""
-    app = build_deep_loop(event_log, fault, checkpoint_path, debate_impl=debate_impl)
+              *, debate_impl: Optional[DebateImpl] = None,
+              pm_impl: Optional[PMImpl] = None) -> CycleState:
+    """Run one deep-loop cycle; returns the final CycleState. `debate_impl`/`pm_impl` are required
+    for a cycle to pass those nodes (WP3 CP2/CP3) — tests inject doubles, production the real
+    machinery."""
+    app = build_deep_loop(event_log, fault, checkpoint_path, debate_impl=debate_impl,
+                          pm_impl=pm_impl)
     state = initial or new_cycle_state()
     config = {"configurable": {"thread_id": state.cycle_id}}
     final = app.invoke(state, config=config)

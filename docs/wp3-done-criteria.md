@@ -245,10 +245,20 @@ Phase-3 believability work). Shadow outputs **never** touch the live decision.
       red). Distinct votes ⇒ distinct summary; dissent names actual dissenters; margin-boundary at
       exactly 0.20 pinned (test caught + fixed a real float-noise bug: 0.6−0.4 < 0.20 in IEEE754).
       Smoke ballot: long=1.15, margin=0.2637, dissent="BEAR-01 voted short (0.67)", not contested.
-- [ ] **R4** — contested ballot ⇒ ×0.5 haircut **and** ≤ 0.5% cap in the PM proposal; boundary at 0.20.
-- [ ] **R5** — PM grounded in the ballot (override needs a `dissent_summary` rebuttal); decision
-      reconstructable from the event log; **`manifest_version` added to `ReplayTuple`** (different
-      manifest hash ⇒ different replay identity — red-tested), landing **before** the new manifest roles.
+- [x] **R4** — built at CP3 ([graphs/pm.py](../graphs/pm.py) `size_position`): contested ⇒ ×0.5
+      haircut AND ≤0.5% cap, cap binding AFTER the haircut; non-contested applies neither; boundary
+      at exactly 0.20 pinned (test_ballot). Gut demos: haircut disabled → 3 red; cap disabled → 2
+      red (two contested test cases separate the guts). Margin denominator ruled at R4-PRE
+      (`a5592a4`, decision-protocols P5.3). Smoke: synthetic contested (margin 0.1) through the
+      real plumbing → 0.5% (`results/wp3_cp3/pm_smoke.json`).
+- [x] **R5** — built at CP3: PM-01 real (StubPM01 REMOVED; pm node injected, fail-closed
+      un-wired). Grounded: attached ballot_summary must equal the tally (canned → PMError);
+      override needs a written rebuttal + monthly cap 2 (red-tested). Sizing SERVER-AUTHORITATIVE
+      (base×conviction_factor, downward-only haircuts, caps; edge ≥3× cost check — cost model
+      placeholder FLAGGED). Replay: `reconstruct_decision(event_log)` reads the stored decision,
+      structurally client-free; `manifest_version` in every stamp (CP0 red test pins the
+      manifest-swap identity). Smoke: PM traded long with the ballot, bear-crux haircut ×0.7 fired
+      → 0.735% NAV, replay reconstructed == stored.
 - [ ] **R6** — judge family ≠ judged family, enforced in code, fail-closed; forced collision raises.
 - [ ] **R7** — shadow decisions logged, distinct, measured for decorrelation, zero live effect.
 

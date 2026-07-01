@@ -12,7 +12,6 @@ deterministic sealed votes, tallied by the REAL graphs/ballot.tally.
 
 from graphs.stubs.agents import (
     StubFUNDTECH,
-    StubPM01,
     StubPMORT01,
     StubSENT01,
     StubTECH01,
@@ -25,7 +24,6 @@ __all__ = [
     "StubTECH01",
     "StubSENT01",
     "StubVoters",
-    "StubPM01",
     "StubPMORT01",
     "StubVERIF01",
 ]

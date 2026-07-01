@@ -17,12 +17,9 @@ from __future__ import annotations
 
 from graphs.state import (
     Ballot,
-    BallotSummary,
     Catalyst,
-    EntryPlan,
     KeyClaim,
     ResearchMemo,
-    TradeProposal,
 )
 
 _STUB = "STUB — replaced in WP2"
@@ -86,18 +83,9 @@ class StubVoters:
         ]
 
 
-# ── Decision pool (P6) → TradeProposal ──────────────────────────────────────────
-class StubPM01:
-    agent_id = "PM-01"
-
-    def propose(self, candidate: str, ballot_summary: BallotSummary,
-                premortem: list[str]) -> TradeProposal:
-        return TradeProposal(
-            agent_id=self.agent_id, ticker=candidate, direction="long", size_pct_nav=1.0,
-            entry_plan=EntryPlan(type="market_open", params={}), stop_loss="5pct",
-            invalidation_conditions=[f"{_STUB} invalidation"], horizon_days=10,
-            thesis=f"{_STUB}: PM thesis", premortem_top_risks=premortem,
-            expected_edge_bps=25, ballot_summary=ballot_summary)
+# ── Decision pool (P6): StubPM01 REMOVED at WP3 CP3 — PM-01 is real (graphs/pm.py). ──
+# The deep-loop pm node takes an injected implementation (tests inject a double), same
+# pattern as the debate node at CP2. No stub left behind for a role with a real agent.
 
 
 # ── Governance (P9): post-mortem ────────────────────────────────────────────────

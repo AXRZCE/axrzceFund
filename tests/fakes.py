@@ -13,8 +13,10 @@ from graphs.state import (
     CycleState,
     DebateSummary,
     DebateTurn,
+    EntryPlan,
     FailureScenario,
     Premortem,
+    TradeProposal,
 )
 
 _FAKE = "FAKE (test double)"
@@ -46,3 +48,16 @@ def fake_debate_impl(state: CycleState) -> dict:
         "debate_summary": summary,
         "premortem_top_risks": [fs.scenario for fs in summary.premortem.failure_scenarios],
     }
+
+
+def fake_pm_impl(state: CycleState) -> dict:
+    """Deterministic PM double (StubPM01 left at CP3). Grounded in the REAL tallied
+    ballot_summary carried by the state — a fake that fabricated one would defeat the
+    grounding the R5 tests protect."""
+    proposal = TradeProposal(
+        agent_id="PM-01", ticker=state.candidate or "TEST", direction="long", size_pct_nav=1.0,
+        entry_plan=EntryPlan(type="market_open", params={}), stop_loss=f"{_FAKE} 5pct",
+        invalidation_conditions=[f"{_FAKE} invalidation"], horizon_days=10,
+        thesis=f"{_FAKE}: PM thesis", premortem_top_risks=list(state.premortem_top_risks),
+        expected_edge_bps=90, ballot_summary=state.ballot_summary)
+    return {"proposal": proposal}

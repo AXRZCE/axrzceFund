@@ -43,8 +43,8 @@ def test_cycle_runs_with_llm_clients_booby_trapped(tmp_path, monkeypatch):
 
     from core.event_log import EventLog
     from graphs.deep_loop import run_cycle
-    from tests.fakes import fake_debate_impl  # WP3 CP2: debate is injected; the double is zero-LLM
+    from tests.fakes import fake_debate_impl, fake_pm_impl  # WP3 CP2/CP3: injected; doubles are zero-LLM
 
     el = EventLog(tmp_path / "ev.db")
-    final = run_cycle(el, checkpoint_path=tmp_path / "ck.sqlite", debate_impl=fake_debate_impl)
+    final = run_cycle(el, checkpoint_path=tmp_path / "ck.sqlite", debate_impl=fake_debate_impl, pm_impl=fake_pm_impl)
     assert not final.halted and final.decision["action"] == "intended_order"
