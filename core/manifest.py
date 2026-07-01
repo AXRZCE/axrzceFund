@@ -1,15 +1,19 @@
-"""Deployment manifest — the version-pinning layer (WP2).
+"""Deployment manifest — the version-pinning layer (WP2; `manifest_version` consumed by WP3 R5).
 
 configuration.md §3 fixes family/tier by ROLE (the decorrelation design: different model
-families so adversaries/judges aren't one model checking itself). This manifest pins the
-exact `model_version` per role and each model's TRAINING-DATA cutoff. It carries its own hash
-(`manifest_version`), stamped per call alongside `model_version` into the ReplayTuple
-(core/replay.py), so a model swap is auditable in the replay identity.
+families so adversaries/judges aren't one model checking itself). This manifest pins the exact
+`model_version` per role and each model's post-cutoff gate date (`cutoff`, see below). It carries
+its own hash (`manifest_version`), stamped per call into the ReplayTuple's own `manifest_version`
+field (core/replay.py — WP3 R5 gave it a first-class field, un-conflating it from `config_version`),
+so a model/roster swap is auditable in the replay identity.
 
-R1 / backtesting-framework.md §6 C1: the post-cutoff fixture gate guards against MEMORIZATION,
-so `cutoff` is the **training-data cutoff** (the broader range), not the narrower "reliable
-knowledge cutoff". The binding cutoff for a fixture is the MAX cutoff across every model that
-will read it.
+R1 / backtesting-framework.md §6 C1: the post-cutoff fixture gate guards against MEMORIZATION, so
+`cutoff` must be a date provably >= the model's training-data cutoff (`fixture_date > cutoff` then
+guarantees the fixture was not in training). Where a provider publishes only a "knowledge cutoff"
+— a LOWER bound, unsafe to use directly (e.g. Google / OpenAI) — `cutoff` is the model's public
+availability date, a provably-conservative UPPER bound on training data. The binding cutoff for a
+fixture is the MAX cutoff across every model that will read it. (Same framing as
+deploy/model_manifest.yaml — SF-4 wording unified.)
 """
 
 from __future__ import annotations
@@ -37,7 +41,7 @@ class ModelSpec:
     family: str
     tier: str
     model_version: str   # OpenRouter slug, e.g. "anthropic/claude-sonnet-4.6"
-    cutoff: str          # training-data cutoff, ISO date (YYYY-MM-DD), end-of-month conservative
+    cutoff: str          # post-cutoff gate date >= training cutoff (availability-date proxy), ISO YYYY-MM-DD
     provider: dict       # OpenRouter routing pin, e.g. {"only": ["anthropic"], "allow_fallbacks": False}
 
     @property

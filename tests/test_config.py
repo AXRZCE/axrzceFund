@@ -73,6 +73,7 @@ class TestReplayTuple:
             agent_id="FUND-TECH",
             prompt_version="v1.0",
             model_version="claude-opus-4-8",
+            manifest_version="mani99",
             config_version="abc123",
             code_version="deadbeef",
         )
@@ -82,11 +83,15 @@ class TestReplayTuple:
         assert replay.agent_id == "FUND-TECH"
         assert replay.prompt_version == "v1.0"
         assert replay.config_version == "abc123"
+        # WP3 R5: manifest_version is first-class and DISTINCT from config_version (un-conflated).
+        assert replay.manifest_version == "mani99"
+        assert replay.manifest_version != replay.config_version
 
         # Should be serializable
         d = replay.to_dict()
         assert isinstance(d, dict)
         assert d["trade_id"] == trade
+        assert d["manifest_version"] == "mani99"
 
 
 if __name__ == "__main__":

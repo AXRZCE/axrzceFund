@@ -63,7 +63,7 @@ def _replay_payload(state: CycleState, agent_id: str, extra: dict) -> dict:
     rt = ReplayTuple(
         trade_id=(state.decision or {}).get("trade_id") or new_trade_id(),
         cycle_id=state.cycle_id, decision_ts=state.decision_ts, agent_id=agent_id,
-        prompt_version="stub", model_version="stub",
+        prompt_version="stub", model_version="stub", manifest_version="stub",  # stub loop loads no manifest
         config_version=state.config_version, code_version=state.code_version,
     )
     return {"replay_tuple": rt.to_dict(), **extra}

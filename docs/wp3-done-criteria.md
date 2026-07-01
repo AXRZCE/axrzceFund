@@ -107,9 +107,12 @@ The debate produces **materially different** arguments from **different families
   turns (P4/isolation); arguments cite `doc_id`s; rounds are capped at `max_debate_rounds = 3`; MOD-01
   extracts a neutral `debate_summary` + a pre-mortem with **observable** early-warning indicators
   (§4.2), and carries no stance.
+- **Build note (shared primitive):** BULL≠BEAR is enforced by the **TASK 0 heterogeneity primitive**
+  (`core/heterogeneity.assert_distinct_debaters`, built spend-free in CP0), not re-implemented here; R6
+  reuses the same module for judge≠judged.
 - **Red test:** inject a **sycophantic BEAR** (echoes the BULL / flips to agree) → the divergence check
-  goes red and the debate is voided; a BULL and BEAR pinned to the **same family** fails the
-  heterogeneity assertion (R6 shares this enforcement); a debater citing a memo not in the verified set
+  goes red and the debate is voided; a BULL and BEAR pinned to the **same family** fails
+  `assert_distinct_debaters` (shared with R6); a debater citing a memo not in the verified set
   fails the grounding check; a 4th round fails the round-cap test.
 
 ### R3 — Ballot integrity: `ballot_summary` is computed from the real votes (P5 tally), not asserted.
@@ -167,6 +170,9 @@ orchestrator **resolves the judge's family at call time to be ≠ the judged age
 alternative exists"; Frozen-Set §9.4). This is **code enforcement**, not a manifest comment: a run that
 would judge an agent with **its own family** — when a disjoint family is available — **raises / reroutes
 fail-closed**; the genuinely-no-alternative case is **logged**, never silently same-family.
+- **Build note (shared primitive):** R6 **reuses the TASK 0 heterogeneity module** built in CP0 —
+  `core/heterogeneity.assert_judge_disjoint` (fail-closed) and `resolve_judge_family` (deterministic
+  call-time resolution) — the same module R2 uses for the debaters; WP3 wires it onto the VERIF-01 judge.
 - **Red test:** force `family(judge) == family(judged)` with a disjoint family available → the resolver
   **raises** (or reroutes to a disjoint family), proven by a test; delete the disjointness check →
   same-family judging silently passes → **red**.
@@ -197,13 +203,22 @@ Phase-3 believability work). Shadow outputs **never** touch the live decision.
   soak-ritual threshold ⇒ **PASS**. **No action needed** — WP3 can rely on autonomous result-commits.
 
 **Then the WP3 task order (spend starts at task 1):**
+0. **Spend-free foundation (CP0) — no paid calls.** Two primitives the paid work depends on:
+   (a) **`manifest_version` on the `ReplayTuple`** (R5's SF-2 fix, un-conflated from `config_version`),
+   stamped per metered call — **moved ahead of task 1 so R1's committed comparison artifacts already
+   carry the manifest identity** (i.e. the roster used in the comparison is captured in replay). (b) the
+   **heterogeneity primitive** (`core/heterogeneity.py`: `family(BULL) ≠ family(BEAR)` and
+   `judge ≠ judged`, fail-closed) — a **shared primitive built before the debate**, reused by task 2 (R2)
+   and extended by task 6 (R6). Plus SF-4 (cutoff wording) unified. **No spend.**
 1. **Chinese open-weight fixture-validation (R1)** — golden-day comparison, Western-host-pinned,
    committed, evidence-gated for the BULL seat. **[first paid task]**
-2. **BULL-01 / BEAR-01 / MOD-01 debate (R2)** across the three decorrelated families (P4).
+2. **BULL-01 / BEAR-01 / MOD-01 debate (R2)** across the three decorrelated families (P4); **BULL≠BEAR
+   enforced via the TASK 0 heterogeneity primitive** (`assert_distinct_debaters`).
 3. **Ballot + BallotSummary (R3)** — P5 tally consumed at last; replaces the `deep_loop.py:135` stub.
 4. **Contested mechanics (R4)** — the haircut + cap fire on a contested ballot (P6).
-5. **PM-01 (R5)** — grounded, replay-reproducible allocation (P6).
-6. **VERIF-01-as-judge (R6)** — family-disjoint, enforced in code (§6.5).
+5. **PM-01 (R5)** — grounded, replay-reproducible allocation (P6); consumes the TASK 0 `manifest_version`.
+6. **VERIF-01-as-judge (R6)** — family-disjoint, enforced in code (§6.5), **reusing the TASK 0 primitive**
+   (`assert_judge_disjoint` / `resolve_judge_family`).
 7. **Shadow-ensemble (R7)** — decorrelation recorded/measured.
 
 ## Done — each demonstrable (not asserted)

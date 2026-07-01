@@ -23,6 +23,7 @@ import json
 from typing import Optional
 
 from core.event_log import EventLog
+from core.config import load_config
 from core.llm import OpenRouterClient
 from core.manifest import Manifest
 from core.replay import ReplayTuple, new_trade_id
@@ -209,7 +210,9 @@ def run_tech_01(
     replay = ReplayTuple(
         trade_id=new_trade_id(), cycle_id=cycle_id, decision_ts=fixture.decision_ts,
         agent_id=ROLE, prompt_version=PROMPT_VERSION, model_version=resp.model_version,
-        config_version=manifest.manifest_version, code_version=code_version,
+        manifest_version=manifest.manifest_version,        # WP3 R5: manifest hash in its own field
+        config_version=load_config().config_version,       # configuration.md hash (no longer conflated)
+        code_version=code_version,
     )
 
     if event_log is not None:
