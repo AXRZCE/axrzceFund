@@ -44,6 +44,9 @@ class ManifestError(Exception):
     silently pass R1, so loading raises rather than defaulting."""
 
 
+_SCOPES = ("runtime", "validation")
+
+
 @dataclass(frozen=True)
 class ModelSpec:
     role: str
@@ -52,6 +55,7 @@ class ModelSpec:
     model_version: str   # OpenRouter slug, e.g. "anthropic/claude-sonnet-4.6"
     cutoff: str          # post-cutoff gate date >= training cutoff (availability-date proxy), ISO YYYY-MM-DD
     provider: dict       # OpenRouter routing pin, e.g. {"only": ["anthropic"], "allow_fallbacks": False}
+    scope: str = "runtime"  # "runtime" (live loop may use) | "validation" (committed evidence only — CP1 comparison roles)
 
     @property
     def cutoff_date(self) -> date:
@@ -71,6 +75,18 @@ class Manifest:
             raise ManifestError(
                 f"role {role!r} not in manifest (have: {sorted(self.specs)})"
             ) from None
+
+    def resolve_runtime(self, role: str) -> ModelSpec:
+        """Resolve a role for the RUNTIME loop. Fail-closed on a validation-scoped role: the CP1
+        comparison roles (BULL-01-CAND-*, BULL-01-BASELINE-WEST, VERIF-CP1-JUDGE) are committed R1
+        evidence, not live seats — a runtime node must never route to them (WP3 CP2 STEP 1)."""
+        spec = self.resolve(role)
+        if spec.scope != "runtime":
+            raise ManifestError(
+                f"role {role!r} is scope={spec.scope!r} — validation-only (CP1 evidence), not a live "
+                f"seat. The runtime loop must use the live roles (e.g. BULL-01), never a CAND role."
+            )
+        return spec
 
     def binding_cutoff(self, roles: Iterable[str]) -> date:
         """R1: binding training-data cutoff for a fixture = MAX cutoff across the models that
@@ -132,6 +148,10 @@ def load_manifest(path: Path = DEFAULT_MANIFEST) -> Manifest:
                     f"could egress data and breaks R1 (fail-closed)."
                 )
 
+        scope = str(d.get("scope", "runtime"))
+        if scope not in _SCOPES:
+            raise ManifestError(f"role {role!r}: scope {scope!r} not in {_SCOPES} (fail-closed)")
+
         specs[role] = ModelSpec(
             role=role,
             family=str(d["family"]),
@@ -139,6 +159,7 @@ def load_manifest(path: Path = DEFAULT_MANIFEST) -> Manifest:
             model_version=str(d["model_version"]),
             cutoff=cutoff,
             provider=provider,
+            scope=scope,
         )
 
     return Manifest(

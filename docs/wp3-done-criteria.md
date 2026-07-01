@@ -228,10 +228,19 @@ Phase-3 believability work). Shadow outputs **never** touch the live decision.
       (mean 0.7383; clears G1/G2/G3 as frozen at CP1a). DeepSeek fails on a complete run (0.5938); Grok
       fallback not fired. **Seat use gated on reviewer verification + Akshar's clearance** (no CP2 work
       before that). History: run2 INCONCLUSIVE (diagnostic), run1 discarded.
-- [ ] **R2** — bull/bear divergence measured; sycophantic-bear injection voids the debate; same-family
-      debaters fail; rounds ≤ 3; MOD-01 pre-mortem has observable indicators.
-- [ ] **R3** — `ballot_summary` computed from the sealed votes; distinct votes ⇒ distinct summary;
-      stub-hardcode replaced.
+- [x] **R2** — built at CP2 ([graphs/debate.py](../graphs/debate.py); debate stubs REMOVED from
+      `graphs/stubs/`). Code-enforced: heterogeneity at entry (preflight, runtime-scoped roles),
+      grounding (doc_ids ⊆ verified set), rounds ≤ 3, capitulation voids (flip/echo/no-attacks/
+      closing-flip), MOD neutrality (extra=forbid schema + observable premortem indicators). Red
+      tests `tests/test_debate.py` (sycophantic bear gut-demoed → DID NOT RAISE, restored). E2E
+      smoke: one real three-family debate on `wp3_cp1_20260624`/AVGO —
+      `results/wp3_cp2/debate_smoke.json` (genuine divergence: bear attacks the memo's 57x-FCF
+      valuation + DCF-floor circularity by reference; 12 stamps all with manifest_version).
+- [x] **R3** — built at CP2 ([graphs/ballot.py](../graphs/ballot.py)): P5 tally (w=1) from sealed
+      votes; the `deep_loop.py:135` hardcode is DELETED (gut-demo: resurrecting it turns 7 tests
+      red). Distinct votes ⇒ distinct summary; dissent names actual dissenters; margin-boundary at
+      exactly 0.20 pinned (test caught + fixed a real float-noise bug: 0.6−0.4 < 0.20 in IEEE754).
+      Smoke ballot: long=1.15, margin=0.2637, dissent="BEAR-01 voted short (0.67)", not contested.
 - [ ] **R4** — contested ballot ⇒ ×0.5 haircut **and** ≤ 0.5% cap in the PM proposal; boundary at 0.20.
 - [ ] **R5** — PM grounded in the ballot (override needs a `dissent_summary` rebuttal); decision
       reconstructable from the event log; **`manifest_version` added to `ReplayTuple`** (different

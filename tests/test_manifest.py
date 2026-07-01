@@ -22,6 +22,68 @@ def test_real_manifest_loads_with_wp2_value_roster():
     assert not any("anthropic" in s.model_version for s in m.specs.values())
 
 
+def test_cp2_live_debate_roster_and_heterogeneity():
+    """WP3 CP2 S1: the live debate/decision roles exist, runtime-scoped, correctly pinned — and the
+    roster satisfies the Frozen-Set §9.4 heterogeneity invariant in code."""
+    from core.heterogeneity import assert_distinct_debaters, assert_judge_disjoint
+
+    m = load_manifest()
+    bull, bear = m.resolve_runtime("BULL-01"), m.resolve_runtime("BEAR-01")
+    mod, pm = m.resolve_runtime("MOD-01"), m.resolve_runtime("PM-01")
+    # the R1 verdict seat: GLM-5.2 on a Western host
+    assert bull.model_version == "z-ai/glm-5.2" and bull.family == "chinese"
+    assert bull.provider == {"only": ["together"], "allow_fallbacks": False}
+    assert bear.model_version == "openai/gpt-5.4" and bear.family == "openai"
+    assert mod.family == "google" and pm.family == "google"
+    # Frozen-Set §9.4: BULL≠BEAR; PM/MOD outside both — via the shared primitive, not string checks here
+    assert_distinct_debaters(bull.family, bear.family)
+    for referee in (pm, mod):
+        assert referee.family not in {bull.family, bear.family}
+    families = {s.family for s in m.specs.values()}
+    assert_judge_disjoint(mod.family, bull.family, families)
+    assert_judge_disjoint(mod.family, bear.family, families)
+
+
+def test_cp2_debate_binding_cutoff_clears_cp1_golden_days():
+    """GLM's 2026-06-16 availability now binds any fixture the DEBATE reads; the CP1 golden days
+    (2026-06-23..26) must still clear it."""
+    m = load_manifest()
+    binding = m.binding_cutoff(["BULL-01", "BEAR-01", "MOD-01", "PM-01"])
+    assert binding == date(2026, 6, 16)
+    assert binding < date(2026, 6, 23)  # first golden day strictly after
+
+
+def test_runtime_scope_guard_red_cand_roles_never_route_at_runtime():
+    """CP2 S1 red test: the CP1 validation-only roles resolve for evidence/replay purposes, but
+    RUNTIME resolution fail-closes. Gut resolve_runtime's scope check → a CAND role routes → red."""
+    m = load_manifest()
+    for role in ("BULL-01-CAND-DEEPSEEK", "BULL-01-CAND-GLM",
+                 "BULL-01-BASELINE-WEST", "VERIF-CP1-JUDGE"):
+        assert m.resolve(role).scope == "validation"  # still resolvable as committed evidence
+        with pytest.raises(ManifestError, match="validation-only"):
+            m.resolve_runtime(role)
+    # live roles pass the runtime path
+    assert m.resolve_runtime("BULL-01").scope == "runtime"
+
+
+def test_unknown_scope_fails_closed(tmp_path: Path):
+    bad = tmp_path / "scope.yaml"
+    bad.write_text(
+        "roles:\n"
+        "  X-01:\n"
+        "    family: google\n"
+        "    tier: T2\n"
+        "    scope: experimental\n"          # not a known scope
+        "    model_version: google/gemini-3.1-pro-preview\n"
+        "    cutoff: 2026-02-19\n"
+        "    provider:\n"
+        "      only: [google-vertex]\n"
+        "      allow_fallbacks: false\n"
+    )
+    with pytest.raises(ManifestError, match="scope"):
+        load_manifest(bad)
+
+
 def test_cp1_comparison_roles_present_western_host_pinned():
     """WP3 CP1: the BULL-seat comparison candidates load, Chinese models are Western-host-pinned,
     and the binding cutoff for the comparison is the MAX across the compared models."""

@@ -22,18 +22,29 @@ from langgraph.graph import END, START, StateGraph
 
 from core.event_log import EventLog
 from core.replay import ReplayTuple, new_trade_id
-from graphs.state import BallotSummary, CycleState
+from graphs.ballot import tally
+from graphs.state import CycleState
 from graphs.stubs import (
-    StubBEAR01,
-    StubBULL01,
     StubFUNDTECH,
-    StubMOD01,
     StubPM01,
     StubPMORT01,
     StubSENT01,
     StubTECH01,
     StubVERIF01,
+    StubVoters,
 )
+
+# configuration.md §4 (P5): margin below this fraction of total cast weight = CONTESTED.
+# Read once at import from the config file — a missing param is a build error by policy (§11).
+from core.config import param_number
+
+BALLOT_MARGIN_THRESHOLD = param_number("ballot_margin_threshold")
+
+# WP3 CP2 (R2): the debate node takes an INJECTED implementation — the WP1 debate stubs were
+# removed when the real machinery (graphs/debate.py) landed. deep_loop deliberately does NOT
+# import graphs.debate (which needs the LLM client): production wiring injects it; tests inject
+# doubles. An un-wired debate node fails closed.
+DebateImpl = Callable[[CycleState], dict]
 
 CHECKPOINT_PATH = Path("var/checkpoints.sqlite")
 # Linear protocol order; the fail-closed router sends any node to END on halt.
@@ -71,12 +82,17 @@ def _replay_payload(state: CycleState, agent_id: str, extra: dict) -> dict:
 
 def build_deep_loop(event_log: EventLog, fault: Optional[FaultInjector] = None,
                     checkpoint_path: Path = CHECKPOINT_PATH,
-                    interrupt_before: Optional[list[str]] = None):
+                    interrupt_before: Optional[list[str]] = None,
+                    *, debate_impl: Optional[DebateImpl] = None):
     """Compile the deep-loop graph with a durable SQLite checkpointer.
 
     `interrupt_before` (LangGraph native) pauses execution before the named nodes —
     used by the kill-resume test to stop after a checkpoint exists but before a mid
     node runs, so the subprocess can be SIGKILLed at a known boundary.
+
+    `debate_impl` (WP3 CP2): the debate node's implementation — production injects the real
+    graphs.debate machinery (make_debate_node in the production wiring); tests inject doubles.
+    None ⇒ the debate node FAILS CLOSED (halt), never a canned debate.
     """
     fault = fault or FaultInjector()
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
@@ -118,21 +134,25 @@ def build_deep_loop(event_log: EventLog, fault: Optional[FaultInjector] = None,
     def debate_gate(state: CycleState) -> dict:  # P3
         return {"debate_eligible": True}
 
-    def debate(state: CycleState) -> dict:  # P4
-        turns = [StubBULL01().run(state.candidate), StubBEAR01().run(state.candidate)]
-        summary, premortem = StubMOD01().run(turns)
-        for t in turns:
+    def debate(state: CycleState) -> dict:  # P4 — injected implementation (WP3 CP2, R2)
+        if debate_impl is None:
+            raise RuntimeError(
+                "no debate implementation wired: the WP1 debate stubs were removed in WP3 CP2 "
+                "(R2). Inject debate_impl (production: graphs.debate; tests: a double). Fail-closed."
+            )
+        updates = debate_impl(state)
+        for t in updates.get("debate_turns", []):
             event_log.append(event_type="debate_turn", cycle_id=state.cycle_id, agent_id=t.agent_id,
                              payload=_replay_payload(state, t.agent_id, {"position": t.position}))
-        return {"debate_turns": turns, "debate_summary": summary, "premortem_top_risks": premortem}
+        return updates
 
-    def ballot(state: CycleState) -> dict:  # P5 sealed
-        pm = StubPM01()
-        votes = pm.ballot(["TECH-01", "SENT-01", "PM-01"])
+    def ballot(state: CycleState) -> dict:  # P5 sealed — REAL tally (WP3 CP2, R3)
+        votes = StubVoters().cast()  # skeleton votes (real casting = graphs/debate.cast_votes)
         for v in votes:
             event_log.append(event_type="ballot_cast", cycle_id=state.cycle_id, agent_id=v.voter,
                              payload=_replay_payload(state, v.voter, {"sealed": True}))
-        summary = BallotSummary(weighted_score=0.5, margin=0.2, dissent_summary="stub", contested=False)
+        # the P5 tally is computed from the sealed votes — the WP1 hardcode is gone (R3)
+        summary, _direction = tally(votes, margin_threshold=BALLOT_MARGIN_THRESHOLD)
         return {"ballot": votes, "ballot_summary": summary}
 
     def pm(state: CycleState) -> dict:  # P6
@@ -193,9 +213,11 @@ def new_cycle_state(config_version: str = "stub_cfg", code_version: str = "wp1")
 
 def run_cycle(event_log: EventLog, fault: Optional[FaultInjector] = None,
               checkpoint_path: Path = CHECKPOINT_PATH,
-              initial: Optional[CycleState] = None) -> CycleState:
-    """Run one deep-loop cycle on stubs; returns the final CycleState."""
-    app = build_deep_loop(event_log, fault, checkpoint_path)
+              initial: Optional[CycleState] = None,
+              *, debate_impl: Optional[DebateImpl] = None) -> CycleState:
+    """Run one deep-loop cycle; returns the final CycleState. `debate_impl` is required for a
+    cycle to pass the debate node (WP3 CP2) — tests inject a double, production the real machinery."""
+    app = build_deep_loop(event_log, fault, checkpoint_path, debate_impl=debate_impl)
     state = initial or new_cycle_state()
     config = {"configurable": {"thread_id": state.cycle_id}}
     final = app.invoke(state, config=config)

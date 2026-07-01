@@ -123,7 +123,7 @@ def run_fund_tech(
     max_tokens: int = 8000,
 ) -> AgentRun:
     """Run FUND-TECH on one fixture candidate. Returns the validated, metered, replay-stamped run."""
-    spec = manifest.resolve(ROLE)
+    spec = manifest.resolve_runtime(ROLE)  # runtime path — a validation-scoped role fail-closes (CP2 S1)
     data_block, _doc_ids = _candidate_doc_block(fixture, candidate)
     messages = [
         {"role": "system", "content": SYSTEM},
