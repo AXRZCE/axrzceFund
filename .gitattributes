@@ -2,3 +2,4 @@
 # checkout/edit can't break the shebang or the git filter-repo / systemd scripts with CRLF.
 *.sh        text eol=lf
 ops/git-hooks/* text eol=lf
+deploy/systemd/* text eol=lf

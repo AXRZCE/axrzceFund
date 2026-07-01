@@ -1,0 +1,12 @@
+[Unit]
+Description=axrzceFund G0.5 broker round-trip drill (on-demand; already passed 2026-06-16)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/hedgefund
+ExecStartPre=/usr/bin/env bash ops/vm_git_sync.sh
+ExecStart=/root/hedgefund/.venv/bin/python ops/broker_roundtrip.py
+ExecStopPost=/usr/bin/env bash ops/vm_commit_results.sh g05
+TimeoutStartSec=1800

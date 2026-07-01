@@ -1,10 +1,10 @@
 """Nightly ingestion runner — G0.3 soak driver.
 
 Runs all five ingestion jobs, reconciles row counts against the previous night,
-persists a JSON summary per night to var/ingestion_logs/, and prints an ASCII
+persists a JSON summary per night to results/soak/ (tracked — the VM commits it), and prints an ASCII
 report. G0.3 = 5 consecutive nights, zero unexplained row-count deviations.
 
-Scheduled via Windows Task Scheduler (ops/nightly_ingest.ps1). Manual run:
+Scheduled via systemd on the VM (deploy/systemd/hedgefund-soak.*). Manual run:
     python ops/nightly_ingest.py
 """
 import json
@@ -24,7 +24,7 @@ from core.event_log import EventLog
 from data.ingestion import run_nightly
 from data.pit_store import PITStore
 
-LOG_DIR = Path("var/ingestion_logs")
+LOG_DIR = Path("results/soak")  # tracked: our G0.3 stats (row counts/flags), committed off-box
 
 # Reconciliation tolerance: fractional deviation vs the previous night above which
 # a job's row count is flagged for explanation (vendor revision, holiday, etc.).

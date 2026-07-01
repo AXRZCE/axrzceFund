@@ -1,0 +1,10 @@
+[Unit]
+Description=axrzceFund G0.5 broker drill — NOT enabled by default (already passed). Enable only to re-drill.
+
+[Timer]
+# On-demand only. The bootstrap does NOT enable this timer. If you enable it, it fires at the next
+# 10:00 ET; there is no Persistent=, so enabling does NOT retroactively place paper orders.
+OnCalendar=*-*-* 10:00:00 America/New_York
+
+[Install]
+WantedBy=timers.target

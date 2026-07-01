@@ -1,0 +1,12 @@
+[Unit]
+Description=axrzceFund nightly soak ingest — 21:30 America/New_York (after Sharadar EOD)
+
+[Timer]
+# Named TZ is load-bearing (validation-criteria.md): schedule against US/Eastern regardless of
+# the VM's physical clock. systemd resolves named-TZ + DST correctly (verify: systemd-analyze calendar).
+OnCalendar=*-*-* 21:30:00 America/New_York
+# Reboot/downtime catch-up counts toward G0.3.
+Persistent=true
+
+[Install]
+WantedBy=timers.target
