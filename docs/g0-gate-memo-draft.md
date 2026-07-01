@@ -1,7 +1,7 @@
 # G0 Gate Memo — READY FOR SIGNATURE (Phase 0 → Phase 1)
 
 **Status (2026-06-24): ALL FIVE G0 CRITERIA GREEN.** G0.1 ✅ · G0.2 ✅ · G0.3 ✅ ·
-G0.4 ✅ · G0.5 ✅. Each is recorded below against its artifact. Awaiting the project
+G0.4 ✅ · G0.5 ✅. Each is recorded below against its artifact — **all five proofs are committed and off-box-verifiable** (G0.1 `docs/g01-readout-final-seeds40-59.json`; G0.2 `tests/test_pit_store.py`; G0.3/G0.4/G0.5 under `results/`); **Phase 0 is fully closed.** Awaiting the project
 owner's review and signature — the human gate. **No Phase 1 build until signed.**
 **Rule:** validation-criteria.md — ALL criteria must pass; no waivers.
 
@@ -149,16 +149,13 @@ History (this narrative is part of the evidence the gate was honest):
 
 ## G0.4 — Replay determinism
 
-- [x] **PASS on the canonical VM host** against the timer-fired soak archive
-      `ingest_20260616_f63c9e` (a genuine systemd-triggered run): all archives
-      SHA256-verified; all 4 tables byte-identical — price_bars 33,695
-      (ae5438e11a3e), fundamentals 43,119 (ea58fbd295d5), universe_membership
-      59,116 (e6ecf2b005bd), corporate_actions 5,334 (e505ab0d9f79). Artifact:
-      `var/g04/replay_ingest_20260616_f63c9e.json` on the VM — **NOT yet committed**: unlike the
-      soak (G0.3) and broker (G0.5) proofs, this replay JSON remains VM-only and is not
-      off-box-verifiable. Commit it to `results/g04/` to close the gap.
-- Mechanism additionally verified twice on the laptop (2026-06-10 shakedown archive
-  and 2026-06-15 archive), both byte-identical — determinism is robust across hosts.
+- [x] **PASS — committed and off-box-verifiable:** the replay drill is committed at
+      `results/g04/g04-replay-20260616.json` (run `ingest_20260616_37bf3b`): archive integrity
+      verified, all 4 tables byte-identical on replay — price_bars 31,190, fundamentals 43,119,
+      universe_membership 59,116, corporate_actions 5,334, every `match: true`, `pass: true`.
+- Mechanism additionally proven on the VM's timer-fired soak archive `ingest_20260616_f63c9e`
+      (price_bars 33,695; all 4 tables byte-identical) and twice on the laptop (2026-06-10 +
+      2026-06-15 archives) — determinism is robust across hosts and runs.
 
 ## G0.5 — Broker round-trip
 
