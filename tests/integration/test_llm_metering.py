@@ -17,12 +17,16 @@ load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 from core.llm import LLMUsage, OpenRouterClient  # noqa: E402
 
-pytestmark = pytest.mark.skipif(
+# Only the LIVE call is integration + key-gated, so a default `-m 'not integration'` run never
+# fires it; the pure-unit is_metered test below is NOT gated and always runs.
+_needs_key = pytest.mark.skipif(
     not os.getenv("OPENROUTER_API_KEY"),
     reason="OPENROUTER_API_KEY not set — live OpenRouter metering test skipped",
 )
 
 
+@pytest.mark.integration
+@_needs_key
 def test_metered_call_records_real_cost():
     client = OpenRouterClient()
     r = client.call(

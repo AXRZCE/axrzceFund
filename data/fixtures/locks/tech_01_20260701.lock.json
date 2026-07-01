@@ -1,0 +1,17 @@
+{
+  "fixture_id": "tech_01_20260701",
+  "decision_ts": "2026-07-01T23:59:59+00:00",
+  "tickers": [
+    "AAPL",
+    "MSFT",
+    "NVDA"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-07-01T15:33:04.276454+00:00",
+  "content_hash": "1739d52198c9eba2",
+  "payload_summary": {
+    "price_bars": 963,
+    "fundamentals": {}
+  },
+  "note": "Vendor (Sharadar SEP) data is NOT committed. Re-record from the canonical pit_store with these params (targeted SEP backfill window_days>=450 for these tickers); content_hash must match for replay/reproducibility."
+}

@@ -235,11 +235,18 @@ def _run_job(store: PITStore, run_id: str, job: str, source: str,
 
 # ── Jobs ───────────────────────────────────────────────────────────────────────
 
-def ingest_sep(store: PITStore, run_id: str, window_days: int = 7) -> JobResult:
-    """SEP daily bars (backtest/historical price series) — trailing window, all tickers."""
+def ingest_sep(store: PITStore, run_id: str, window_days: int = 7,
+               tickers: list[str] | None = None) -> JobResult:
+    """SEP daily bars (backtest/historical price series) — trailing window.
+
+    tickers=None pulls the full survivorship-free universe (the production soak). Passing a ticker
+    list scopes a TARGETED backfill server-side (SHARADAR/SEP `ticker=` filter) — a small, reliable
+    pull for deep history on a few names (a full-universe wide-window pull ends the response
+    prematurely). Same archive→transform→insert→audit pipeline either way.
+    """
     return _run_job(
         store, run_id, "sep_daily_bars", "sep", "price_bars(sep)",
-        lambda: _sharadar_adapter().get_daily_bars(window_days=window_days),
+        lambda: _sharadar_adapter().get_daily_bars(tickers=tickers, window_days=window_days),
     )
 
 
