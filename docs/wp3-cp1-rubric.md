@@ -132,6 +132,17 @@ BEAR (OpenAI) or PM/MOD (Google), violating `family(BULL) ≠ family(BEAR)` or
 decorrelation to two families, or requires re-introducing a 4th family** (e.g. the ADR-2-dropped
 Anthropic as the optional 4th). Flagged now; resolved only if CP1b returns a fallback.
 
+**§7 addendum — fallback PRE-COMMITTED (CP1b-PRE step 2; Akshar, 2026-07-01).** If **both** Chinese
+candidates fail the §5 bar, the BULL seat falls back to **xAI Grok (family `xai`)** — a distinct 4th
+family, so `family(BULL) ≠ family(BEAR)=openai ≠ family(PM/MOD)=google` is preserved. Provider-pinned to
+a Western host, `allow_fallbacks: false` (fail-closed replay), per standing discipline. **Accepted
+tradeoff (recorded honestly):** Grok is a **closed API**, so a fallback roster **loses the open-weight /
+pinnable / self-hostable replay property** that motivated the Chinese pick — the BULL seat would then
+carry closed-API drift risk. Accepted knowingly. The Grok manifest role is added **only if the fallback
+fires** (CP2 setup), not now; its exact OpenRouter slug + `created` availability date are confirmed at
+that point (spend-free), the same way CP1b-PRE confirmed the Chinese dates. Fixed **before** the run so
+the verdict is honest either way; the primary path (seat a passing Chinese model) is untouched.
+
 ## 8. Anti-hoax commitments
 
 - The bar (§5) is **committed before results** and applied **unchanged**; no threshold is moved to fit an
