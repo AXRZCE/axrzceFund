@@ -1,0 +1,14 @@
+#!/bin/sh
+# Vendor-data commit guard (WP2 leak fix). Blocks licensed vendor data (Sharadar/Alpaca/Benzinga)
+# from being committed; reports/orders/fills pass. Activate on each clone with:
+#     git config core.hooksPath ops/git-hooks
+# Bypassable with --no-verify (a local guard, not a server-side gate — see ops/precommit_guard.py).
+# Find a REAL python (skip the Windows App-Execution-Alias stub, which fails `import sys`).
+# Prefer the project venv, then system python3/python.
+for PY in ".venv/Scripts/python.exe" ".venv/bin/python" python3 python; do
+  if "$PY" -c "import sys" >/dev/null 2>&1; then
+    exec "$PY" ops/precommit_guard.py
+  fi
+done
+echo "pre-commit: no working python found to run the vendor-data guard (ops/precommit_guard.py)" >&2
+exit 1
