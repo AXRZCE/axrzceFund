@@ -182,6 +182,7 @@ def run_tech_01(
     resp = client.call(
         model_version=spec.model_version, messages=messages, provider=spec.provider,
         response_format={"type": "json_object"}, max_tokens=max_tokens,
+        event_log=event_log, cycle_id=cycle_id,
     )
     if resp.finish_reason == "length":
         raise ValueError(

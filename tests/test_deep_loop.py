@@ -56,6 +56,22 @@ def test_fail_closed_at_terminal_emits_no_order(tmp_path):
     assert "intended_order" not in _types(el, final.cycle_id)
 
 
+def test_llm_error_from_agent_fails_closed(tmp_path):
+    """An agent's LLMError (e.g. after the metered client exhausts retries on empty/degenerate
+    responses) propagates to the deep-loop's fail-closed router exactly like any node exception:
+    the cycle halts, logs cycle_failed, runs no downstream node, and emits NO decision — no trade
+    that cycle, no crash."""
+    from core.llm import LLMError
+    el = EventLog(tmp_path / "ev.db")
+    final = run_cycle(el, fault=FaultInjector("research", exc=LLMError),
+                      checkpoint_path=tmp_path / "ck.sqlite")
+    assert final.halted and final.failure["node"] == "research"
+    assert final.decision is None  # no trade this cycle
+    types = _types(el, final.cycle_id)
+    assert "cycle_failed" in types and "intended_order" not in types
+    assert "verify" not in final.completed_nodes and "terminal" not in final.completed_nodes
+
+
 def test_stubs_confined_to_quarantine():
     """R6/§0: graphs.stubs is imported only in graphs/stubs/ and graphs/deep_loop.py."""
     pat = re.compile(r"^[ \t]*(?:from|import)[ \t]+graphs\.stubs\b", re.M)
