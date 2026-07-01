@@ -172,7 +172,7 @@ def run_tech_01(
 ) -> AgentRun:
     """Run TECH-01 on one fixture candidate. Returns the validated, metered, replay-stamped run."""
     spec = manifest.resolve(ROLE)
-    data_block, _doc_ids, _computed = _price_doc_block(fixture, candidate)
+    data_block, _doc_ids, computed = _price_doc_block(fixture, candidate)
     messages = [
         {"role": "system", "content": SYSTEM},
         {"role": "user", "content": f"Candidate ticker: {candidate}\n\n{data_block}\n\n"
@@ -196,6 +196,12 @@ def run_tech_01(
     memo, _end = json.JSONDecoder().raw_decode(text[start:])
     memo.setdefault("agent_id", ROLE)
     memo.setdefault("ticker", candidate)
+    # The technical_block is OBJECTIVE arithmetic (§3.4), not model judgment: make it AUTHORITATIVE
+    # rather than trusting the model to echo the pre-computed values — overwrite with the block
+    # computed from the fixture's own bars, so a mis-echo (or a gutted canned memo) cannot slip a
+    # fabricated trend/level/ADV/abnormal-volume past validation. The model's judgment is the
+    # thesis / stance / key_claims, which it still owns.
+    memo["technical_block"] = computed
 
     verification = verify_memo(memo, agent_role=ROLE)
 

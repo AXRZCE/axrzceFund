@@ -25,7 +25,7 @@ from core.event_log import EventLog  # noqa: E402
 from core.llm import OpenRouterClient  # noqa: E402
 from core.manifest import load_manifest  # noqa: E402
 from data.fixtures.harness import load_fixture  # noqa: E402
-from graphs.agents.tech_01 import run_tech_01  # noqa: E402
+from graphs.agents.tech_01 import _price_doc_block, run_tech_01  # noqa: E402
 
 GOLDEN = Path("data/fixtures/golden/tech_01_20260701.json")  # gitignored (licensed SEP data)
 LOCK = Path("data/fixtures/locks/tech_01_20260701.lock.json")  # tracked: hash + metadata
@@ -63,14 +63,25 @@ def test_tech_01_grounded_validated_metered_replay(tmp_path):
     assert isinstance(tb["adv_pct_at_proposed_size"], (int, float))
     assert 3 <= len(run.memo["key_claims"]) <= 7
 
-    # Grounded — cites THIS fixture's own sep: price doc_ids (a fixture-ignoring memo wouldn't)
-    cited = {e for kc in run.memo["key_claims"] for e in kc.get("evidence", [])}
+    # The technical_block is the fixture's OBJECTIVE structure (not model judgment): assert it equals
+    # the values recomputed from the fixture's bars. run_tech_01 overwrites it authoritatively, so a
+    # gutted canned run (which won't) or a fabricated block goes red here.
+    _txt, _anchor_docs, computed = _price_doc_block(fx, CANDIDATE)
+    assert tb == computed, f"technical_block is not the fixture's computed structure: {tb} != {computed}"
+
+    # Grounded — the memo's FACT claims cite this fixture's REAL sep: bars: >=2 distinct, and no
+    # fabricated dates (every cited sep: doc_id must be an actual bar). A canned memo hardcoding one
+    # guessable date, or citing an invented date, goes red.
     fixture_docs = {
         f"sep:{CANDIDATE}:{str(b['as_of'])[:10]}"
         for b in fx.payload["price_bars"]
         if b.get("ticker") == CANDIDATE and b.get("source") == "sep"
     }
-    assert cited & fixture_docs, f"memo cites no fixture doc_id — not grounded (cited={cited})"
+    fact_cites = {e for kc in run.memo["key_claims"]
+                  if kc.get("claim_type") == "fact" for e in kc.get("evidence", [])}
+    sep_cites = {e for e in fact_cites if e.startswith(f"sep:{CANDIDATE}:")}
+    assert sep_cites <= fixture_docs, f"fact claim cites a fabricated doc_id: {sep_cites - fixture_docs}"
+    assert len(sep_cites) >= 2, f"weak grounding — fact claims cite < 2 real fixture bars: {sep_cites}"
 
     # R4 — real metered cost, recorded into the decision record (event log)
     assert run.usage_cost_usd > 0.0

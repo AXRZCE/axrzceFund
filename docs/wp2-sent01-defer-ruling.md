@@ -19,33 +19,48 @@ milestone would violate the WP2 rulings. The details, so the deferral is auditab
   needs no new code. The manifest pins `SENT-01 → openai/gpt-5.4` (cutoff 2026-03-05,
   provider `only:[openai]`).
 
-## Why it defers (the PIT thorn)
-A WP2 fixture is a **post-cutoff historical decision day**, read through `pit_store` as-of
-`decision_ts`, with every row's `available_at <= decision_ts` (R2). News cannot honestly satisfy
-this for a historical date:
+## Why it defers
+Three independent reasons, in order of force. Any one suffices; together they are decisive.
 
-1. **No PIT news store.** `pit_store` has `price_bars`, `fundamentals`, `universe_membership`,
-   `corporate_actions` — **no news/documents table and no `get_news` read**. `DocumentsInterface`
-   (`data/interfaces/base.py`) is deliberately abstract (an anti-hoax test asserts it stays so).
-   `record_fixture` / `Fixture.audit_lookahead` have no `news` branch. R2 mandates reads flow
-   through `pit_store`; a raw adapter call from the agent would break R2 and the R5 vendor-leakage
-   boundary.
-2. **No honest `available_at` for a past date.** The documented news `available_at` is *ingestion
-   time* — the wall-clock when the fund first saw the article live (`pit_grade='ingestion-stamped'`,
-   forward-only). For a historical/backfilled day the fund never ingested that news at that date, so
-   there is **no honest ingestion-time stamp**. The API offers only *publisher* timestamps
-   (`created_at`, `updated_at`) — not the fund's knowledge time.
-3. **Publisher timestamps leak look-ahead.** Using `created_at` as an `available_at` proxy is a
-   look-ahead risk: `updated_at` is an **unversioned revision** stamp (Benzinga retitles/corrects
-   after publish, overwriting `updated_at`), so a corrected summary would be read as if known at the
-   original time; and `News.symbols` tagging is itself revised, so “news for X” can pull articles
-   tagged to X only *after* the boundary. A `SENT-01` memo built on such data would pass schema/VERIF
-   but **fail the R2 look-ahead audit** — the deferral moves the failure nowhere; it just refuses to
-   hide it.
+### 1. Scope — an honest news path is a data-layer work package, not a WP2 agent patch
+WP2's declared boundary is the in-scope P2 research agents + VERIF-01 + the fixture harness. A
+PIT-correct SENT-01 needs an entire new data subsystem that does not exist:
+- a `news`/`documents` table in `pit_store` + `insert_news`/`get_news` (mirroring `price_bars`);
+- an `AlpacaDocuments(DocumentsInterface).get_news` in `data/interfaces/alpaca.py` — the only
+  R5-legal home for the alpaca SDK (R2 forbids the agent calling the adapter directly);
+- a `news` branch in `record_fixture` **and** `Fixture.audit_lookahead`;
+- and conscious rewrites of two anti-hoax tests that currently *forbid* exactly this
+  (`tests/test_interfaces.py` asserts `DocumentsInterface` stays abstract;
+  `tests/test_no_vendor_leakage.py` polices the SDK boundary).
 
-Verdict: a PIT-correct SENT-01 fixture is **not honestly constructible for a post-cutoff historical
-day** with the current data layer. Faking it (proxy `available_at`, or grounding SENT-01 on
-price/fundamentals it is not meant to read) is exactly the hoax the WP2 anti-hoax contract forbids.
+None of that is a WP2 deliverable. Building it to green one agent is scope creep into a later WP.
+
+### 2. Hollowness — a day-one news fixture cannot do SENT-01's actual job
+SENT-01's §3.5 mandate is **novelty detection** — "new info vs. an already-priced narrative" —
+which requires a **trailing history of prior coverage** to judge what is new. A news store created
+today has no such baseline, so `news_novelty` cannot be honestly computed: the memo would pass
+schema/VERIF but be evidentially empty. This is the identical "greener-than-it-is" hazard that
+Amendment A1 already refused for TECH-01 (which is why TECH-01 needed a ~252-day backfill first). A
+meaningful SENT-01 needs a news history accumulated by forward-only live ingestion over time —
+which by construction cannot exist on the day the table is first created.
+
+### 3. Look-ahead — the only WP2-shaped news fixture is not PIT-safe
+WP2 fixtures are **post-cutoff historical days** (FUND-TECH 2026-06-24; TECH-01 a 450-day SEP
+backfill). The matching news variant is a **backfilled historical news day**, and that is
+look-ahead-unsafe: the documented `available_at` is ingestion time (a forward-only stamp the fund
+never generated for a past date), while the Alpaca API offers only *publisher* `created_at` /
+`updated_at`. `updated_at` is an **unversioned revision** stamp (Benzinga retitles/corrects after
+publish) and `News.symbols` tagging is itself revised — so using `created_at` as an `available_at`
+proxy leaks corrected content and post-hoc symbol tags backward past the boundary. A SENT-01 memo on
+such data would pass schema/VERIF but **fail the R2 look-ahead audit** — the deferral hides nothing;
+it refuses to.
+
+> **Honest caveat (what is *not* the reason):** a **live-forward** fixture — ingest real news *now*,
+> stamp `available_at = now()`, set `decision_ts = today` — *is* PIT-honest: it clears R1 (today >
+> the 2026-03-05 SENT-01 cutoff) and R2 (`now ≤ today`), and a forward-only ingestion stamp is the
+> same grade the store already uses for SEP/IEX bars. So the block is **not** "news can never be
+> PIT-stamped." It is that the live-forward path is precisely the out-of-scope build of reason 1 and
+> would be hollow per reason 2. The defer rests on **scope + hollowness**, not on impossibility.
 
 ## Un-defer condition (what lands SENT-01 later)
 SENT-01 becomes buildable — as its own scoped work, not a WP2 patch — when a **PIT-correct news
