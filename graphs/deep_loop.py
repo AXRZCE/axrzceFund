@@ -44,14 +44,18 @@ NODE_ORDER = [
 
 
 class FaultInjector:
-    """Test hook: makes a named node raise, to exercise fail-closed (R4)."""
+    """Test hook: makes a named node raise a chosen exception, to exercise fail-closed (R4).
 
-    def __init__(self, fail_at_node: Optional[str] = None):
+    `exc` lets a test assert a SPECIFIC failure (e.g. an agent's LLMError) is caught the same
+    fail-closed way as any node exception."""
+
+    def __init__(self, fail_at_node: Optional[str] = None, exc: type[Exception] = RuntimeError):
         self.fail_at_node = fail_at_node
+        self.exc = exc
 
     def check(self, node: str) -> None:
         if node == self.fail_at_node:
-            raise RuntimeError(f"injected fault at node '{node}'")
+            raise self.exc(f"injected fault at node '{node}'")
 
 
 def _replay_payload(state: CycleState, agent_id: str, extra: dict) -> dict:

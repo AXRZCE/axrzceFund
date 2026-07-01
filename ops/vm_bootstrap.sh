@@ -10,6 +10,12 @@
 #   git fetch origin && git reset --hard origin/main
 #   sudo bash ops/vm_bootstrap.sh
 #
+# PREREQ this script does NOT handle — a PUSH CREDENTIAL. The nightly result-commit
+# (vm_commit_results.sh) pushes to origin; that needs, one time on the VM, either a PAT via a
+# credential helper (`git config credential.helper store`, then one authenticated push to cache it)
+# or an SSH deploy key with write access (remote set to the git@github.com: URL). Without it the
+# result-commit is created locally but the push is rejected. See docs/vm-soak-setup.md.
+#
 # Idempotent: safe to re-run (e.g. after a unit-file change lands in git).
 set -uo pipefail
 
@@ -18,6 +24,10 @@ cd "$REPO"
 
 echo "== activate the vendor-data commit guard on the VM =="
 git config core.hooksPath ops/git-hooks
+
+echo "== set the VM bot's repo-local git identity (else result-commits fail: 'Author identity unknown') =="
+git config user.email "vm-bot@axrzcefund.local"
+git config user.name  "axrzceFund VM (clawbot-v2)"
 
 echo "== install systemd units (copy; re-run this bootstrap after a unit-file change) =="
 for u in hedgefund-soak.service hedgefund-soak.timer hedgefund-g05.service hedgefund-g05.timer; do

@@ -15,6 +15,27 @@
 > The **cron sections below are SUPERSEDED** — kept only as the original plan/history.
 > The "prove the scheduler not the manual run" gate was met by a **timer-fired** proof
 > (a throwaway timer triggering the real service), not a cron-fired one.
+>
+> **GIT WIRING (Track A) — read [vm-git-wiring.md](vm-git-wiring.md) alongside this runbook.** The
+> deployed checkout is **`/root/hedgefund`** (the `~/axrzceFund` paths below are the original
+> laptop-era plan; the units use `WorkingDirectory=/root/hedgefund`, or pass `AXRZCE_REPO=/path`).
+> Each service wraps its entrypoint:
+> - `ExecStartPre=/usr/bin/env bash ops/vm_git_sync.sh` — self-update: `git fetch && git reset --hard
+>   origin/main` (only tracked files move; the gitignored `var/` PIT store, `event_log.json`, and
+>   `.env` are untouched; non-blocking, so a network blip never skips a night).
+> - `ExecStopPost=/usr/bin/env bash ops/vm_commit_results.sh <soak|g05>` — commit the proof: stage
+>   **only** `results/`, commit `vm(soak): result artifacts <ts>`, push non-force; runs on any exit
+>   code, so a deviation/failed night still records a proof. Summaries land in tracked
+>   `results/soak/night_*.json` and `results/g05/*.json` (our own counts/orders, not vendor rows).
+>
+> **One-time bootstrap:** `cd /root/hedgefund && git fetch origin && git reset --hard origin/main &&
+> sudo bash ops/vm_bootstrap.sh` — installs the four units, daemon-reloads, sets `core.hooksPath` to
+> the vendor-data commit guard, sets the **VM-bot git identity** (`user.name "axrzceFund VM
+> (clawbot-v2)"`, `user.email vm-bot@axrzcefund.local`), migrates existing `var/` proofs into
+> `results/`, and enables the recurring soak timer (g05 stays on-demand). Idempotent.
+> **One-time PUSH CREDENTIAL (not set by the bootstrap):** the result push needs a PAT via a git
+> credential helper, or an SSH deploy key with write access — else the commit is created locally but
+> the push defers every run.
 
 **Why:** the laptop cannot run the soak unattended (Modern Standby can't timer-wake;
 the never-sleep power setting reverts across Windows updates). The always-on VM is the

@@ -37,7 +37,7 @@ Tier assignments by **family role**, not pinned versions (versions pinned in a d
 - `T3_judge = strongest available family ≠ judged agents per call` → VERIF-01, PMORT-01, META-01; the orchestrator resolves the family at call time to maintain judge ≠ judged.
 - Heterogeneity invariant (restated as config): `family(BULL) ≠ family(BEAR)`, `family(PM) ∉ {family(BULL), family(BEAR)}` where the provider set allows.
 
-> **ADR-2 amendment (2026-06-25): Anthropic dropped from the agent roster; the three families are now Google / OpenAI / Chinese-open-weight.** *Rationale:* on Jun-2026 price-performance, Anthropic wins no value tier (Gemini 3.x and DeepSeek/GLM dominate $/quality), so it is not in the fund's agent roster (it may return later as an optional 4th decorrelation family). The decorrelation **principle is unchanged** — three distinct families so BULL≠BEAR and the referee sits outside both. **WP2 (research only, no debate) runs Western-only** (Google + OpenAI); the Chinese open-weight family (T2_A) is piloted + fixture-validated at WP3, where the debate makes family choice load-bearing. Exact per-role version pins live in `deploy/model_manifest.yaml`. (The Claude Code orchestration/dev layer is a separate tool, **not** part of this roster.)
+> **ADR-2 amendment (2026-06-25): Anthropic dropped from the agent roster; the three families are now Google / OpenAI / Chinese-open-weight.** *Rationale:* on Jun-2026 price-performance, Anthropic wins no value tier (Gemini 3.x and DeepSeek/GLM dominate $/quality), so it is not in the fund's agent roster (it may return later as an optional 4th decorrelation family). The decorrelation **principle is unchanged** — three distinct families so BULL≠BEAR and the referee sits outside both. **WP2 (research only, no debate) runs Western-only** (Google + OpenAI); the Chinese open-weight family (T2_A) is piloted + fixture-validated at WP3 — that financial-fixture validation is WP3's **gating first task** — where the debate makes family choice load-bearing. Exact per-role version pins live in `deploy/model_manifest.yaml`. (The Claude Code orchestration/dev layer is a separate tool, **not** part of this roster.)
 
 Budgets (budget governor, architecture §5):
 - `daily_llm_budget_usd = $50` — Phase 1 ceiling; forces the P3 debate-gate discipline to actually matter. Expect ~$25/day typical at 10 candidates with ~40% debate rate.
@@ -113,7 +113,7 @@ Pod = a sector/strategy bucket once Phase 2 pods exist; Phase 1 treats the whole
 - `storage = DuckDB/Parquet + SQLite event log (Phase 1) → Postgres (Phase 2)` (ADR-7).
 - `event_log_integrity = daily hash chain check` (P10).
 - `timezone = America/New_York for all market logic; UTC in the event log` — one explicit rule now prevents a hundred subtle bugs later.
-- `secrets = environment/secret-manager only; never in config files or prompts` — and never in the event log.
+- `secrets = environment/secret-manager only; never in config files or prompts` — and never in the event log. The vendor-data commit policy (fixtures gitignored + hash-locked, the commit-guard, the public-repo scrub) is in [data-governance.md](data-governance.md).
 
 ## 11. Versioning & Deployment Rules
 
