@@ -61,6 +61,12 @@ event_log.json
 data/fixtures/recorded/
 data/fixtures/golden/
 
+# Agent-output memos quote licensed figures — never commit (WP3 CP1b guard, item 8b). BACKSTOP to the
+# primary structural defense core/agent_output.safe_agent_output_dir: even a stray writer at repo root
+# (the Path("")-is-truthy near-miss) is ignored. Agent memos live in the gitignored var/cp1_memos/.
+/*BULL-0*.json
+var/cp1_memos/
+
 # Secrets (NEVER commit)
 secrets/
 *.key

@@ -222,8 +222,11 @@ Phase-3 believability work). Shadow outputs **never** touch the live decision.
 7. **Shadow-ensemble (R7)** — decorrelation recorded/measured.
 
 ## Done — each demonstrable (not asserted)
-- [ ] **R1** — committed golden-day comparison; Western-host pin enforced; BULL seat filled only on a
-      passing verdict (or Western fallback recorded).
+- [~] **R1** — Western-host pin enforced (✓, red-tested); golden-day comparison committed
+      ([wp3-cp1-comparison.md](wp3-cp1-comparison.md), `results/wp3_cp1/`). CP1b run of record is
+      **INCONCLUSIVE** (no valid Western baseline — harness `max_tokens` truncation — + DeepSeek
+      transport-incomplete); **no seat awarded**. Fixes applied; awaits Akshar's rerun-vs-verdict, then a
+      valid verdict before the seat is used. Bar frozen at CP1a, applied unchanged.
 - [ ] **R2** — bull/bear divergence measured; sycophantic-bear injection voids the debate; same-family
       debaters fail; rounds ≤ 3; MOD-01 pre-mortem has observable indicators.
 - [ ] **R3** — `ballot_summary` computed from the sealed votes; distinct votes ⇒ distinct summary;

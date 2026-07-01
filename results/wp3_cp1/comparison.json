@@ -1,0 +1,525 @@
+{
+  "bar_as_declared": {
+    "G1_schema_min": 0.9,
+    "G2_abs_floor": 0.7,
+    "G3_parity_margin": 0.05,
+    "west_baseline_mean": 0.0,
+    "west_baseline_status": "INVALID_LOWYIELD"
+  },
+  "per_model": {
+    "BULL-01-CAND-DEEPSEEK": {
+      "status": "INCOMPLETE_TRANSPORT",
+      "disqualified_c3": false,
+      "mean_composite": 0.0,
+      "grounding_mean": 0.0,
+      "schema_valid_rate": 0.0,
+      "n_scored": 0,
+      "transport_failures": 15,
+      "cost_usd": 0.024784,
+      "tokens": {
+        "prompt": 4609,
+        "completion": 6400
+      }
+    },
+    "BULL-01-CAND-GLM": {
+      "status": "OK",
+      "disqualified_c3": false,
+      "mean_composite": 0.7227,
+      "grounding_mean": 2.8125,
+      "schema_valid_rate": 1.0,
+      "n_scored": 16,
+      "transport_failures": 0,
+      "cost_usd": 0.092266,
+      "tokens": {
+        "prompt": 19661,
+        "completion": 15460
+      }
+    },
+    "BULL-01-BASELINE-WEST": {
+      "status": "INVALID_LOWYIELD",
+      "disqualified_c3": false,
+      "mean_composite": 0.0,
+      "grounding_mean": 0.0,
+      "schema_valid_rate": 0.0,
+      "n_scored": 0,
+      "transport_failures": 0,
+      "cost_usd": 0.700432,
+      "tokens": {
+        "prompt": 46352,
+        "completion": 50644
+      }
+    }
+  },
+  "verdict": {
+    "outcome": "INCONCLUSIVE",
+    "reason": "no valid Western baseline: BULL-01-BASELINE-WEST status=INVALID_LOWYIELD (n_scored=0/16, transport_failures=0). The G3 parity gate cannot be evaluated, so NO seat can be awarded. Do not seat. Akshar decides rerun-vs-verdict.",
+    "bull_seat": null,
+    "model_status": {
+      "BULL-01-CAND-DEEPSEEK": "INCOMPLETE_TRANSPORT",
+      "BULL-01-CAND-GLM": "OK",
+      "BULL-01-BASELINE-WEST": "INVALID_LOWYIELD"
+    }
+  },
+  "total_cost_usd": 0.940477,
+  "hard_cap_usd": 15.0,
+  "degrade_stop_usd": 12.0,
+  "cells_completed": 16,
+  "usage_by_model": {
+    "BULL-01-CAND-DEEPSEEK": {
+      "cost_usd": 0.024784125,
+      "prompt_tokens": 4609,
+      "completion_tokens": 6400,
+      "calls": 4
+    },
+    "BULL-01-CAND-GLM": {
+      "cost_usd": 0.09226619999999999,
+      "prompt_tokens": 19661,
+      "completion_tokens": 15460,
+      "calls": 17
+    },
+    "BULL-01-BASELINE-WEST": {
+      "cost_usd": 0.700432,
+      "prompt_tokens": 46352,
+      "completion_tokens": 50644,
+      "calls": 32
+    },
+    "VERIF-CP1-JUDGE": {
+      "cost_usd": 0.12299500000000001,
+      "prompt_tokens": 33556,
+      "completion_tokens": 2607,
+      "calls": 16
+    }
+  },
+  "fixture_hash_verified": {
+    "wp3_cp1_20260623": true,
+    "wp3_cp1_20260624": true,
+    "wp3_cp1_20260625": true,
+    "wp3_cp1_20260626": true
+  },
+  "incomplete_cells": {
+    "BULL-01-CAND-DEEPSEEK": 15,
+    "BULL-01-CAND-GLM": 0,
+    "BULL-01-BASELINE-WEST": 0
+  },
+  "manifest_version": "4f34593c18b7",
+  "code_version": "530744c",
+  "per_cell": [
+    {
+      "day": "20260623",
+      "ticker": "AVGO",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 3,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.8125
+        }
+      }
+    },
+    {
+      "day": "20260623",
+      "ticker": "COST",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        }
+      }
+    },
+    {
+      "day": "20260623",
+      "ticker": "MDT",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        }
+      }
+    },
+    {
+      "day": "20260623",
+      "ticker": "LULU",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        }
+      }
+    },
+    {
+      "day": "20260624",
+      "ticker": "AVGO",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 3,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.8125
+        }
+      }
+    },
+    {
+      "day": "20260624",
+      "ticker": "COST",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 3,
+          "D2": 3,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.75
+        }
+      }
+    },
+    {
+      "day": "20260624",
+      "ticker": "MDT",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 1,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 3,
+          "D2": 3,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.75
+        }
+      }
+    },
+    {
+      "day": "20260624",
+      "ticker": "LULU",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 2,
+          "D4": 2,
+          "composite": 0.5
+        }
+      }
+    },
+    {
+      "day": "20260625",
+      "ticker": "AVGO",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 1,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        }
+      }
+    },
+    {
+      "day": "20260625",
+      "ticker": "COST",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        }
+      }
+    },
+    {
+      "day": "20260625",
+      "ticker": "MDT",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        }
+      }
+    },
+    {
+      "day": "20260625",
+      "ticker": "LULU",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 2,
+          "composite": 0.5625
+        }
+      }
+    },
+    {
+      "day": "20260626",
+      "ticker": "AVGO",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 3,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.8125
+        }
+      }
+    },
+    {
+      "day": "20260626",
+      "ticker": "COST",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 3,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.6875
+        }
+      }
+    },
+    {
+      "day": "20260626",
+      "ticker": "MDT",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 3,
+          "D2": 3,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.75
+        }
+      }
+    },
+    {
+      "day": "20260626",
+      "ticker": "LULU",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": false,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": false
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 1
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM"
+      },
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        }
+      }
+    }
+  ],
+  "fail_reasons": {}
+}
