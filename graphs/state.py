@@ -44,6 +44,50 @@ class ResearchMemo(BaseModel):
     what_would_change_my_mind: str
 
 
+# ── §3 per-agent memo extensions: base ResearchMemo + the agent's typed block ─────
+# An agent's full output = §2.1 ResearchMemo + the §3 block for its role. `extra: forbid`
+# so VERIF-01 catches a stray/misnamed field; the block is required (a FUND memo without a
+# valuation_block is invalid per §3.2). WP2's three research roles only; others land later.
+class TechnicalBlock(BaseModel):  # §3.4 TECH-01
+    trend: Literal["up", "down", "range"]
+    key_levels: list[float] = Field(default_factory=list)
+    adv_pct_at_proposed_size: float
+    abnormal_volume: bool
+
+
+class ValuationBlock(BaseModel):  # §3.2 FUND-{SECTOR}
+    method: Literal["dcf", "multiples", "sotp"]
+    fair_value_range: tuple[float, float]  # [low, high]
+    key_assumptions: list[str] = Field(default_factory=list)
+
+
+class EventRisk(BaseModel):
+    event: str
+    date: str  # ISO date or date-range
+
+
+class SentimentBlock(BaseModel):  # §3.5 SENT-01
+    news_novelty: Literal["new_info", "rehash", "mixed"]
+    tone_trend: Literal["improving", "deteriorating", "stable"]
+    event_risk_next_10d: list[EventRisk] = Field(default_factory=list)
+    crowding_anecdotes: list[str] = Field(default_factory=list)  # doc_ids
+
+
+class TechMemo(ResearchMemo):   # TECH-01 output
+    model_config = {"extra": "forbid"}
+    technical_block: TechnicalBlock
+
+
+class FundMemo(ResearchMemo):   # FUND-{SECTOR} output
+    model_config = {"extra": "forbid"}
+    valuation_block: ValuationBlock
+
+
+class SentMemo(ResearchMemo):   # SENT-01 output
+    model_config = {"extra": "forbid"}
+    sentiment_block: SentimentBlock
+
+
 # ── §2.2 DebateTurn ─────────────────────────────────────────────────────────────
 class Argument(BaseModel):
     point: str
