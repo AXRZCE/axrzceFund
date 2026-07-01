@@ -138,6 +138,10 @@ Both fire; the cap binds even after the haircut. A non-contested ballot applies 
   **both** halved from its base **and** ≤ 0.5% NAV; gut either the haircut or the cap → the contested
   name is sized above 0.5% (or un-halved) → **red**. A borderline case at `margin = 0.20` exactly is
   pinned by an explicit boundary test (≥ threshold ⇒ not contested, per P5.3).
+- **Margin-denominator ruling (R4-PRE, Akshar 2026-07-01):** `margin` is normalized by **total cast
+  weight = Σ w_i·conviction_i over all ballots** (P5.3 as amended — decision-protocols.md owns the
+  mechanics). Motivated by the CP2 smoke's three-way divergence (0.2637 / 0.48 / 0.16 under the three
+  candidate readings). This is the reading `graphs/ballot.py` implements; no code change required.
 
 ### R5 — PM-01 is replay-reproducible **and** grounded in `ballot_summary` (a canned PM fails).
 PM-01 (Google / T2_C, third family) consumes the ballot and makes the final `TradeProposal` (§2.3):
