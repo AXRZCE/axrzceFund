@@ -1,0 +1,129 @@
+{
+  "run_id": "g05_20260625_28e7af",
+  "orders": [
+    {
+      "symbol": "AAPL",
+      "side": "buy",
+      "order_id": "4ac8ef5f-75b2-4030-9e5d-26dcee381724",
+      "submitted_at": "2026-06-25T14:00:06.299077+00:00",
+      "latest_trade_at_submit": 279.28,
+      "modeled_fill": 279.30792799999995,
+      "broker_fill": 279.36,
+      "filled_qty": 1.0,
+      "status": "OrderStatus.FILLED",
+      "divergence_bps": 1.8643223045235766
+    },
+    {
+      "symbol": "MSFT",
+      "side": "buy",
+      "order_id": "875ab8f6-cce3-4e79-8bef-3f7604b11591",
+      "submitted_at": "2026-06-25T14:00:06.515023+00:00",
+      "latest_trade_at_submit": 357.4,
+      "modeled_fill": 357.43573999999995,
+      "broker_fill": 357.5,
+      "filled_qty": 1.0,
+      "status": "OrderStatus.FILLED",
+      "divergence_bps": 1.7978056699099834
+    },
+    {
+      "symbol": "NVDA",
+      "side": "buy",
+      "order_id": "af17994a-77b1-452d-8ef0-65eb704de9c1",
+      "submitted_at": "2026-06-25T14:00:06.764046+00:00",
+      "latest_trade_at_submit": 192.775,
+      "modeled_fill": 192.7942775,
+      "broker_fill": 192.84,
+      "filled_qty": 1.0,
+      "status": "OrderStatus.FILLED",
+      "divergence_bps": 2.371569353245496
+    },
+    {
+      "symbol": "AMZN",
+      "side": "buy",
+      "order_id": "bafd4bb2-cb31-42bd-a88a-26ff49e49745",
+      "submitted_at": "2026-06-25T14:00:07.036672+00:00",
+      "latest_trade_at_submit": 227.695,
+      "modeled_fill": 227.7177695,
+      "broker_fill": 227.73,
+      "filled_qty": 1.0,
+      "status": "OrderStatus.FILLED",
+      "divergence_bps": 0.5370902774448145
+    },
+    {
+      "symbol": "GOOGL",
+      "side": "buy",
+      "order_id": "a598df4c-d4e9-4104-91d6-45395bc42907",
+      "submitted_at": "2026-06-25T14:00:07.456587+00:00",
+      "latest_trade_at_submit": 339.405,
+      "modeled_fill": 339.4389405,
+      "broker_fill": 339.4,
+      "filled_qty": 1.0,
+      "status": "OrderStatus.FILLED",
+      "divergence_bps": -1.1472019074377178
+    },
+    {
+      "symbol": "AAPL",
+      "side": "sell",
+      "order_id": "c3767463-850f-4375-a8b2-03ab5e670039",
+      "submitted_at": "2026-06-25T14:00:09.787211+00:00",
+      "latest_trade_at_submit": 279.21,
+      "modeled_fill": 279.182079,
+      "broker_fill": 279.13,
+      "filled_qty": 1.0,
+      "status": "OrderStatus.FILLED",
+      "divergence_bps": -1.8654134314972273
+    },
+    {
+      "symbol": "MSFT",
+      "side": "sell",
+      "order_id": "c1683fa9-1ec5-4902-bd00-2f6c7acf2ae5",
+      "submitted_at": "2026-06-25T14:00:09.864227+00:00",
+      "latest_trade_at_submit": 357.55,
+      "modeled_fill": 357.514245,
+      "broker_fill": 357.48,
+      "filled_qty": 1.0,
+      "status": "OrderStatus.FILLED",
+      "divergence_bps": -0.95786393070851
+    },
+    {
+      "symbol": "NVDA",
+      "side": "sell",
+      "order_id": "fb36f2d8-5523-4951-8970-6ba14abd7a39",
+      "submitted_at": "2026-06-25T14:00:09.953480+00:00",
+      "latest_trade_at_submit": 192.825,
+      "modeled_fill": 192.8057175,
+      "broker_fill": 192.8,
+      "filled_qty": 1.0,
+      "status": "OrderStatus.FILLED",
+      "divergence_bps": -0.29654203589551265
+    },
+    {
+      "symbol": "AMZN",
+      "side": "sell",
+      "order_id": "8d073a81-220d-4ad2-b16b-bb9acad09a2f",
+      "submitted_at": "2026-06-25T14:00:10.074804+00:00",
+      "latest_trade_at_submit": 227.68,
+      "modeled_fill": 227.657232,
+      "broker_fill": 227.66,
+      "filled_qty": 1.0,
+      "status": "OrderStatus.FILLED",
+      "divergence_bps": 0.12158629777257472
+    },
+    {
+      "symbol": "GOOGL",
+      "side": "sell",
+      "order_id": "6a3a7a39-dcb0-4064-b0b5-2d17bcdf7106",
+      "submitted_at": "2026-06-25T14:00:10.175950+00:00",
+      "latest_trade_at_submit": 339.335,
+      "modeled_fill": 339.3010665,
+      "broker_fill": 339.3,
+      "filled_qty": 1.0,
+      "status": "OrderStatus.FILLED",
+      "divergence_bps": -0.031432261943066635
+    }
+  ],
+  "mismatches": [],
+  "n_orders": 10,
+  "modeled_fill_logged_on_all": true,
+  "pass": true
+}

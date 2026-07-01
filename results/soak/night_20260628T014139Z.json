@@ -1,0 +1,72 @@
+{
+  "run_id": "ingest_20260628_761928",
+  "started": "2026-06-28T01:30:04.069054+00:00",
+  "finished": "2026-06-28T01:41:39.290589+00:00",
+  "jobs": [
+    {
+      "job": "sep_daily_bars",
+      "source": "sep",
+      "rows": 31356,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "job": "sf1_fundamentals",
+      "source": "sharadar_sf1",
+      "rows": 31838,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "job": "sp500_universe",
+      "source": "sharadar_sp500",
+      "rows": 59164,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "job": "corporate_actions",
+      "source": "sharadar_actions",
+      "rows": 6273,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "job": "iex_daily_bars",
+      "source": "iex",
+      "rows": 2520,
+      "status": "ok",
+      "error": null
+    }
+  ],
+  "pit_audit_violations": [],
+  "staleness": {
+    "price_bars": {
+      "table": "price_bars",
+      "latest_available_at": "2026-06-28T01:41:21.795553+00:00",
+      "age_hours": 0.0,
+      "is_stale": false
+    },
+    "fundamentals": {
+      "table": "fundamentals",
+      "latest_available_at": "2026-06-26T00:00:00.000000+00:00",
+      "age_hours": 49.7,
+      "is_stale": true
+    },
+    "universe_membership": {
+      "table": "universe_membership",
+      "latest_available_at": "2026-06-27T00:00:00.000000+00:00",
+      "age_hours": 25.7,
+      "is_stale": false
+    },
+    "corporate_actions": {
+      "table": "corporate_actions",
+      "latest_available_at": "2026-06-28T01:40:44.500716+00:00",
+      "age_hours": 0.0,
+      "is_stale": false
+    }
+  },
+  "raw_archive": "var/raw_archive/ingest_20260628_761928",
+  "all_ok": true,
+  "reconciliation_flags": []
+}
