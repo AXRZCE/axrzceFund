@@ -175,6 +175,27 @@ post-mortem, captured per R3, retrievable per R4, rendered per R5. Committed art
 6. Red tests + gut demos (standing practice), full suite, vendor scan.
 7. Smoke (R7 + R6a) [paid, ≤$2] → readout → PR.
 
+## Done — each demonstrable (closed at CP1/CP2; artifacts linked)
+- [x] **R1** — family-disjoint at call time (reused primitive; forced same-family gut-demoed red);
+      grounded (canned → PMORTError). Smoke seat: decided=google → `VERIF-01-JUDGE-CHINESE`
+      (`results/wp5/pmort_smoke.json`).
+- [x] **R2** — §6.3 schema with both guards required; process 3 / outcome 2 separation used on a
+      REAL record (the −118.65 bps interim window).
+- [x] **R3** — append-only event-log capture, `manifest_version` stamped, byte-equal rebuild
+      (corruption-recovering; sort-gut red); THE BOUNDARY TEST FIRST — zero weight-like fields
+      (weight-gut red).
+- [x] **R4** — retrieval by ticker/direction/tags/date; AST isolation both ways (import-gut red);
+      §3.2 injection deferred by citation.
+- [x] **R5** — dashboard v1 committed (`results/dashboard/index.html`); missing artifact fails the
+      build (fallback-gut red); 7 artifact-read spot-values incl. cost 4.2153 bps + margin
+      0.061033; committed output == regeneration.
+- [x] **R6** — a) COST no_trade captured (counterfactual short +292.59 bps — an honest
+      passed-on-a-winner record); b) interim rules schema-enforced; c) pmort_pending queue
+      log-derived + drain (down-then-good client red tests).
+- [x] **R7** — the smoke: two real interim post-mortems on stored decisions with real backfilled
+      marks (SEP 25→31 bars/ticker through 2026-07-01); spend $0.0069 recorded + ~$0.01 discard
+      (retry-loop fix applied) vs the $2 cap.
+
 ## Standing rules (unchanged)
 Committed re-runnable tests; gut-demos red-then-restored; fixtures/licensed data never committed
 (backfill marks live in the pit_store; only derived/locked evidence commits); vendor scan every

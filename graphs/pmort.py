@@ -141,31 +141,41 @@ def run_pmort(
     cost = 0.0
     try:
         last: Exception | None = None
-        raw: Optional[dict] = None
+        pm: Optional[PostMortem] = None
+        model_ran = ""
         for _attempt in range(2):
+            # P2 pattern: ONE retry WITH ERROR FEEDBACK — schema/grounding failures are inside
+            # the loop (the first WP5 smoke failed closed because only parse errors retried).
+            ask = user if last is None else (
+                f"{user}\n\nYOUR PREVIOUS REPLY WAS INVALID: {str(last)[:400]}\n"
+                f"Reply again as ONE flat JSON object with ALL required fields at the top level.")
             resp = client.call(model_version=spec.model_version, provider=spec.provider,
                                messages=[{"role": "system", "content": _PMORT_SYS},
-                                         {"role": "user", "content": user}],
+                                         {"role": "user", "content": ask}],
                                response_format={"type": "json_object"}, max_tokens=4096)
             cost += resp.usage.cost_usd
+            model_ran = resp.model_version
             try:
                 if resp.finish_reason == "length":
                     raise ValueError("PMORT reply truncated")
                 s = resp.text.find("{")
                 raw, _ = json.JSONDecoder().raw_decode(resp.text[s:])
+                if not isinstance(raw, dict):
+                    raise ValueError("top-level JSON is not an object")
+                # unwrap a single-key envelope like {"post_mortem": {...}} (observed model habit)
+                if len(raw) == 1 and isinstance(next(iter(raw.values())), dict):
+                    raw = next(iter(raw.values()))
+                raw.update(trade_id=trade_id, ticker=ticker, interim=interim,
+                           window_days=window_days)
+                pm = PostMortem.model_validate(raw)
+                check_pmort_grounding(pm, decision_record)
                 break
-            except ValueError as e:
+            except (ValueError, ValidationError, PMORTError) as e:
                 last = e
-                raw = None
-        if raw is None:
-            raise PMORTError(f"PMORT-01 failed to produce parseable JSON after retry: {last}")
-
-        raw.update(trade_id=trade_id, ticker=ticker, interim=interim, window_days=window_days)
-        try:
-            pm = PostMortem.model_validate(raw)
-        except ValidationError as e:
-            raise PMORTError(f"PMORT output failed the §6.3 schema: {e}") from e
-        check_pmort_grounding(pm, decision_record)
+                pm = None
+        if pm is None:
+            raise PMORTError(f"PMORT-01 failed to produce a valid, grounded post-mortem "
+                             f"after retry: {last}")
 
         episode = Episode(trade_id=trade_id, cycle_id=cycle_id, ticker=ticker, sector=sector,
                           direction=direction, tags=tags or [],
@@ -175,7 +185,7 @@ def run_pmort(
         stamp = capture_post_mortem(event_log=event_log, post_mortem=pm, episode=episode,
                                     manifest=manifest, cycle_id=cycle_id, decision_ts=decision_ts,
                                     code_version=code_version,
-                                    agent_model_version=resp.model_version)
+                                    agent_model_version=model_ran)
         logger.info("pmort_complete", trade_id=trade_id, verdict=pm.outcome_vs_thesis,
                     process=pm.process_grade, outcome_grade=pm.outcome_grade,
                     interim=interim, cost_usd=round(cost, 6))

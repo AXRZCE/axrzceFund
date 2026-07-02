@@ -1,0 +1,138 @@
+{
+  "mode": "PMORT smoke (2 real T3 calls)",
+  "backfill": {
+    "path": "ingest_sep(tickers=['MDT','COST','AVGO','LULU'], window_days=10) \u2014 the WP2-A1 passthrough",
+    "before": "25 bars/ticker, 2026-06-03..2026-06-24",
+    "after": "31 bars/ticker through 2026-07-01 (32 rows added)",
+    "interim_window_used": {
+      "MDT": [
+        "2026-06-26",
+        "2026-06-29",
+        "2026-06-30",
+        "2026-07-01"
+      ],
+      "COST": [
+        "2026-06-29",
+        "2026-06-30",
+        "2026-07-01"
+      ]
+    }
+  },
+  "seat_served": {
+    "role": "VERIF-01-JUDGE-CHINESE",
+    "model_version": "z-ai/glm-5.2",
+    "family": "chinese",
+    "resolved_from": "decided_family=google at call time"
+  },
+  "mdt_interim": {
+    "status": "captured",
+    "outcome": {
+      "entry": 80.151027,
+      "last_mark": 79.2,
+      "pnl_bps": -118.65,
+      "mae_bps": -239.68,
+      "mfe_bps": 103.43,
+      "window_days": 4,
+      "stop_71_50_breached": false
+    },
+    "post_mortem": {
+      "trade_id": "wp5_mdt_interim",
+      "ticker": "MDT",
+      "outcome_vs_thesis": "unrelated_path",
+      "luck_skill_assessment": "Premature to assess skill vs luck given 4-session interim window; adverse drift with MAE -239bps and MFE +103bps is inconclusive.",
+      "premortem_hit": false,
+      "process_grade": 3,
+      "outcome_grade": 2,
+      "knowable_at_decision_ts": {
+        "answer": true,
+        "citations": [
+          "whether current multiples require near-perfect execution, leaving vulnerability to FCF normalization or margin compression.",
+          "Cash conversion normalizes or deteriorates, neutralizing the core quality argument and causing the stock's 18.8x P/FCF multiple to compress.",
+          "Revenue growth plateaus (ceases sequential acceleration), prompting the market to strip the stock of its quality premium despite technically avoiding the explicit 'revenue decline' invalidation trigger."
+        ]
+      },
+      "observable_that_would_have_changed": "A real-time intraday FCF or margin guidance signal at decision time showing deterioration would have changed conviction.",
+      "lesson": {
+        "text": "Interim 4-session window is too short to evaluate thesis; premature assessment not generalizable.",
+        "generalizable": false,
+        "tags": [
+          "interim",
+          "inconclusive"
+        ]
+      },
+      "agent_grades": {
+        "FUND-TECH": "Long conviction 0.7, standard size \u2014 reasonable given thesis but interim loss",
+        "BULL-01": "Long conviction 0.6, standard size \u2014 moderate conviction justified by mixed signals",
+        "BEAR-01": "Short conviction 0.62 \u2014 interim PnL of -118bps favors bear view but too early to validate"
+      },
+      "interim": true,
+      "window_days": 4
+    },
+    "stamp": {
+      "trade_id": "wp5_mdt_interim",
+      "cycle_id": "wp5_smoke_mdt",
+      "decision_ts": "2026-07-01T20:00:00+00:00",
+      "agent_id": "PMORT-01",
+      "prompt_version": "wp5-pmort-v1",
+      "model_version": "z-ai/glm-5.2-20260616",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "2538cad3431f",
+      "code_version": "wp5-cp2-smoke"
+    }
+  },
+  "cost_notrade": {
+    "status": "captured",
+    "counterfactual": {
+      "declined_direction": "short",
+      "entry_close": 952.54,
+      "last_mark": 924.67,
+      "counterfactual_short_pnl_bps": 292.59,
+      "sign_convention": "positive = the declined short would have profited",
+      "what_would_reopen": "A broader market rotation that compresses the P/E multiple below 35x ($650-$750 range) to set up a long, or Q4 evidence of declining membership renewal rates to justify a short."
+    },
+    "post_mortem": {
+      "trade_id": "wp5_cost_notrade",
+      "ticker": "COST",
+      "outcome_vs_thesis": "unrelated_path",
+      "luck_skill_assessment": "The decision was to take no trade, but the counterfactual short direction generated 292.59 bps in 3 sessions. This was a missed opportunity rather than skillful avoidance; the no-trade outcome reflects caution that happened to leave gains on the table.",
+      "premortem_hit": false,
+      "process_grade": 2,
+      "outcome_grade": 0,
+      "knowable_at_decision_ts": {
+        "answer": false,
+        "citations": [
+          "shorting high-quality compounders purely on valuation without a tangible negative catalyst is dangerous",
+          "A broader market rotation that compresses the P/E multiple below 35x ($650-$750 range) to set up a long, or Q4 evidence of declining membership renewal rates to justify a short"
+        ]
+      },
+      "observable_that_would_have_changed": "A tangible negative catalyst such as preliminary signs of declining membership renewal rates visible at decision time would have justified the short.",
+      "lesson": null,
+      "agent_grades": {
+        "FUND-TECH": "Correct caution in no_position but missed the directional move",
+        "BULL-01": "Wrong direction vote; the short thesis played out",
+        "BEAR-01": "Correct directional call on short but conviction moderate; the compression materialized without a specific catalyst"
+      },
+      "interim": true,
+      "window_days": 3
+    },
+    "stamp": {
+      "trade_id": "wp5_cost_notrade",
+      "cycle_id": "wp5_smoke_cost",
+      "decision_ts": "2026-07-01T20:00:00+00:00",
+      "agent_id": "PMORT-01",
+      "prompt_version": "wp5-pmort-v1",
+      "model_version": "z-ai/glm-5.2-20260616",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "2538cad3431f",
+      "code_version": "wp5-cp2-smoke"
+    }
+  },
+  "pending_queue_after": [],
+  "rebuild_byte_equal_with_new_events": true,
+  "manifest_version": "bf388c33e0d1",
+  "spend": {
+    "smoke_usd": 0.006942,
+    "cap_usd": 2.0,
+    "cumulative_ledger_usd": 4.4169
+  }
+}
