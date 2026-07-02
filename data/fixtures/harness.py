@@ -137,6 +137,20 @@ def record_fixture(
     return fx
 
 
+def adv_usd_20d(fx: Fixture, ticker: str) -> float:
+    """Dollar ADV over the fixture's trailing bars (≤20 most recent) for `ticker` — the liquidity
+    input to the WP4 cost model and gate. Fail-closed on no usable bars."""
+    bars = sorted(
+        (b for b in fx.payload.get("price_bars", []) if b.get("ticker") == ticker),
+        key=lambda b: str(b.get("as_of", "")),
+    )
+    dvs = [float(b["close"]) * float(b["volume"])
+           for b in bars if b.get("close") is not None and b.get("volume")][-20:]
+    if not dvs:
+        raise ValueError(f"no usable price bars for {ticker!r} in fixture {fx.fixture_id!r}")
+    return sum(dvs) / len(dvs)
+
+
 def lock_from_fixture(fx: Fixture) -> dict[str, Any]:
     """The committed hash-lock for a fixture: identity + `content_hash` + payload SIZES only (never
     the licensed rows), so a reviewer can verify the same frozen inputs without the vendor data.

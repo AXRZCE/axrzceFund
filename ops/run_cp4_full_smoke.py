@@ -19,7 +19,7 @@ from core.config import param_number
 from core.event_log import EventLog
 from core.llm import OpenRouterClient
 from core.manifest import load_manifest
-from data.fixtures.harness import DEFAULT_FIXTURE_DIR, load_fixture
+from data.fixtures.harness import DEFAULT_FIXTURE_DIR, adv_usd_20d, load_fixture
 from graphs.agents.fund_tech import run_fund_tech
 from graphs.ballot import tally
 from graphs.debate import cast_votes, preflight, run_debate
@@ -93,6 +93,7 @@ def main() -> None:
                 premortem_top_risks=result.premortem_top_risks, ballot_summary=summary,
                 ballot_direction=direction, debate_failed=False, client=client, manifest=man,
                 cycle_id=cycle_id, decision_ts=fx.decision_ts, code_version=code_version,
+                nav_usd=1_000_000, adv_usd_20d=adv_usd_20d(fx, CANDIDATE),
                 event_log=el, prior_overrides_this_month=0)
     spent += pm.cost_usd
     _cap(spent, "post-pm")
