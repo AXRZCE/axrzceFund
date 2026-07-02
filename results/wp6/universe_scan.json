@@ -1,0 +1,37 @@
+{
+  "scanned_at": "20260702",
+  "backfill": {
+    "targets": [
+      "AVGO",
+      "MU"
+    ],
+    "window_days": 380,
+    "job": {
+      "status": "ok",
+      "rows": 522,
+      "error": null
+    }
+  },
+  "screen": {
+    "new_candidates": [
+      "MU",
+      "AVGO"
+    ],
+    "held": [],
+    "ranks": [
+      {
+        "ticker": "MU",
+        "adv_usd_20d": 36299331093.11,
+        "last_close": 1032.64
+      },
+      {
+        "ticker": "AVGO",
+        "adv_usd_20d": 8208237049.93,
+        "last_close": 369.33
+      }
+    ],
+    "floors": "SP500-PIT \u2229 fundamentals>=6 \u2229 ADV>=$20M \u2229 price>=$5",
+    "excluded_count": 6316,
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2."
+  }
+}
