@@ -74,10 +74,10 @@ Budgets (budget governor, architecture §5):
 - `max_adv_participation_pct = 2%` of 20-day ADV per day per name — keeps the slippage model honest; with $1M NAV and $20M+ ADV names this should never bind, which is intentional (binding liquidity constraints would mean our paper fund is simulating a fund we aren't).
 - `factor_exposure_caps = |beta-adjusted net| ≤ 0.4, |size/value/momentum z| ≤ 1.0 each` — Phase 2+ when the factor model lands; Phase 1 proxies with the net band.
 - `min_clamp_ratio = 0.8` — the gate may trim a proposal by up to 20%; needing more means the proposal was wrong → reject with reason. (P7)
-- Cost model (WP4 R6 — INTERIM; **mandatory recalibration at WP6** from logged IEX quotes, then WP7 paper fills):
-- `cost_half_spread_bps = 2` — ≈1.0× the G0.5 measured mean-abs modeled-vs-fill divergence (1.94 bps, n=20; the +10.4 bps outlier is known tail risk the floor below partially covers). (P6/P7)
-- `cost_impact_coeff_bps = 25` — linear impact per unit of ADV-participation fraction; negligible at Phase-1 sizes (~1e-4 participation). (P6/P7)
-- `cost_floor_round_trip_bps = 6` — keeps the P6 edge gate (3×) demanding ≥18 bps of expected edge. (P6/P7)
+- Cost model (WP4 R6 as AMENDED — square-root impact law; INTERIM: **mandatory recalibration at WP6** from logged IEX quotes, then WP7 paper fills). `round_trip = max(2·half_spread + η·√participation, floor)`:
+- `cost_half_spread_bps = 2` — ≈1.0× the G0.5 measured mean-abs modeled-vs-fill divergence (1.94 bps, n=20; the +10.4 bps outlier is the tail the η-anchor below targets). (P6/P7)
+- `cost_impact_eta_bps = 50` — √-law impact coefficient, anchored so model(participation = 0.02, the ADV-cap boundary) ≈ the G0.5 tail (~11 bps): η = (11−4)/√0.02 = 49.5 → 50. Varies genuinely in-universe: 4.5 bps @ 1e-4 → 11.1 bps @ 0.02 (Akshar's R6 re-ratification — the prior linear model was degenerate below 8% participation). (P6/P7)
+- `cost_floor_round_trip_bps = 4` — the pure double-spread: a degenerate-input guard BELOW the in-universe range (any participation > 0 prices above it); it must never bind a real trade. (P6/P7)
 - `recon_tolerance = $0.01 per position, 1 share quantity` — paper brokers should reconcile exactly; any persistent mismatch is a bug, and bugs get exit-only mode. (P10)
 
 ## 7. Drawdown Breakers (P8) — the Millennium discipline, scaled to us
