@@ -19,7 +19,9 @@ LABEL="${1:-run}"
 cd "$REPO" || { echo "[vm-commit-results] repo $REPO missing"; exit 0; }
 git config core.hooksPath ops/git-hooks 2>/dev/null || true
 
-git add results/ 2>/dev/null || true
+# results/ + the fixture hash-locks (committed-by-design metadata; WP6 clean-week criterion 3).
+# The vendor guard remains the backstop for anything mis-shaped.
+git add results/ data/fixtures/locks/ 2>/dev/null || true
 if git diff --cached --quiet 2>/dev/null; then
   echo "[vm-commit-results] nothing new in results/ — no-op"
   exit 0

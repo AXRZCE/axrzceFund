@@ -1,0 +1,13 @@
+[Unit]
+Description=axrzceFund daily cycle — 22:15 America/New_York (post-close, after the 21:30 soak ingest)
+
+[Timer]
+# Named TZ is load-bearing: schedule against US/Eastern regardless of the VM clock. Runs EVERY
+# day — closed days produce cheap `market_closed` records (R9 observations, zero LLM).
+OnCalendar=*-*-* 22:15:00 America/New_York
+# Reboot/downtime catch-up: a late run still records its session (a same-night catch-up); a
+# fully missed session is a MISSED record derived by the audit (R6) — never backfilled.
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,17 @@
+[Unit]
+Description=axrzceFund daily dry-run decision cycle (WP6 — orders MODELED, never submitted)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/hedgefund
+# Self-update to the gated remote head (main) before running — the WP6 PR must therefore be
+# MERGED before the timer is enabled (done-criteria R10).
+ExecStartPre=/usr/bin/env bash ops/vm_git_sync.sh
+ExecStart=/root/hedgefund/.venv/bin/python ops/run_daily_cycle_vm.py
+# Commit + push the cycle artifacts (results/wp6/ + fixture locks) even on a fail-closed day —
+# the record IS the outcome (R7).
+ExecStopPost=/usr/bin/env bash ops/vm_commit_results.sh wp6-cycle
+# A hung cycle self-heals; the resulting gap is a MISSED/failed record, never a silent skip (R6).
+TimeoutStartSec=2700
