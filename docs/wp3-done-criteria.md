@@ -259,8 +259,23 @@ Phase-3 believability work). Shadow outputs **never** touch the live decision.
       structurally client-free; `manifest_version` in every stamp (CP0 red test pins the
       manifest-swap identity). Smoke: PM traded long with the ballot, bear-crux haircut ×0.7 fired
       → 0.735% NAV, replay reconstructed == stored.
-- [ ] **R6** — judge family ≠ judged family, enforced in code, fail-closed; forced collision raises.
-- [ ] **R7** — shadow decisions logged, distinct, measured for decorrelation, zero live effect.
+- [x] **R6** — built at CP4 ([graphs/judge.py](../graphs/judge.py); WP2 deterministic validator
+      retained unchanged). Judge FAMILY resolved at call time (`judge_family_for` → per-family
+      manifest seats VERIF-01-JUDGE-*), disjointness enforced AT THE CALL SITE
+      (gut-demo: loop disabled → forced same-family `DID NOT RAISE` → red; restored);
+      no-alternative logged, never silent. Masked A/B + seed-randomized transcript; verdicts must
+      cite real transcript claims (`check_judge_grounding` — canned verdict red-tested; the CP4
+      smoke's fail-closed catch led to the corpus covering all judge-visible fields). Smoke: google
+      judge (disjoint from chinese+openai), grounded verdict on record
+      (`results/wp3_cp4/full_smoke.json`).
+- [x] **R7** — built at CP4 ([graphs/shadow.py](../graphs/shadow.py)): shadow votes from the CP1
+      validation-scoped families (DeepSeek + West baseline; runtime seating still fail-closed),
+      LOGGED (`shadow_vote` events + artifact), decorrelation COMPUTED from the logs
+      (gut-demos: empty-log tolerance → red; hardcoded-metric detector; live-state import →
+      AST-scan red; all restored). Isolation STRUCTURAL: graphs/shadow.py imports no live-state
+      module (test-enforced); shadows run after the live decision. Smoke: DeepSeek + West both
+      no_position vs a split live ballot → stance-agreement rate 0.30 over 5 voters/10 pairs
+      (N=1 cycle; matures at WP6). Shadow-budget/sampling decision flagged for WP6 open.
 
 ## Anti-hoax checks (the human audits against these)
 - **The gutting test, per ruling:** each ruling's "Red test" above is a committed, re-runnable test;

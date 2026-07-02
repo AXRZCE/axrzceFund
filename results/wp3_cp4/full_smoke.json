@@ -1,0 +1,448 @@
+{
+  "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+  "fixture_id": "wp3_cp1_20260626",
+  "candidate": "COST",
+  "fixture_hash_verified": true,
+  "content_hash": "3639eb701dd1beb8",
+  "manifest_version": "bf388c33e0d1",
+  "ballot": {
+    "votes": [
+      {
+        "voter": "FUND-TECH",
+        "stance": "no_position",
+        "conviction": 0.7,
+        "size_inclination": "small"
+      },
+      {
+        "voter": "BULL-01",
+        "stance": "long",
+        "conviction": 0.65,
+        "size_inclination": "small"
+      },
+      {
+        "voter": "BEAR-01",
+        "stance": "short",
+        "conviction": 0.78,
+        "size_inclination": "standard"
+      }
+    ],
+    "summary": {
+      "weighted_score": 0.78,
+      "margin": 0.061033,
+      "dissent_summary": "FUND-TECH voted no_position (conviction 0.70); BULL-01 voted long (conviction 0.65)",
+      "contested": true
+    },
+    "direction": "short"
+  },
+  "judge": {
+    "family": "google",
+    "role": "VERIF-01-JUDGE-GOOGLE",
+    "judged_families": [
+      "chinese",
+      "openai"
+    ],
+    "scores": {
+      "bull": {
+        "evidence": 4,
+        "attack_relevance": 4,
+        "concession_honesty": 4,
+        "claims_scored": [
+          "COST's near-perfect FCF-to-Net-Income conversion (~1:1) signals best-in-class earnings quality, not a fragile premium \u2014 the $8.806B TTM FCF and $8.838B Net Income demonstrate a cash-generating machine",
+          "The bear's own $650-$750 'fair value' uses 32-35x, but that range still admits COST is worth a premium \u2014 the disagreement is about degree, not direction.",
+          "If COST grows EPS even 10-12% annually through the combination of fee hikes, club openings, and modest same-store growth, then within the 365-day horizon the forward P/E already compresses toward the low-40s organically."
+        ]
+      },
+      "bear": {
+        "evidence": 4,
+        "attack_relevance": 4,
+        "concession_honesty": 4,
+        "claims_scored": [
+          "The verified record supports elite earnings quality, with TTM FCF of $8.806B versus net income of $8.838B. But that strengthens, not weakens, the bear case: when a mature retailer already shows near-perfect cash conversion and still trades at ~48.2x trailing EPS at $960.73, most of the quality is already capitalized into the stock.",
+          "The verified data show TTM revenue of $293.6B and asset growth from $77.1B to $86.4B, yet nothing in that record demonstrates the kind of upside surprise required to grow into 48x quickly."
+        ]
+      }
+    }
+  },
+  "pm_decision": {
+    "action": "no_trade",
+    "proposal": null,
+    "no_trade": {
+      "ticker": "COST",
+      "reason": "COST is a flawless operator with near 1:1 FCF-to-net-income conversion, but its 48x trailing P/E prices in structural margin expansion that contradicts its core model. Despite clear multiple compression risks, shorting high-quality compounders purely on valuation without a tangible negative catalyst is dangerous.",
+      "what_would_reopen": "A broader market rotation that compresses the P/E multiple below 35x ($650-$750 range) to set up a long, or Q4 evidence of declining membership renewal rates to justify a short."
+    },
+    "is_override": false,
+    "sizing_audit": null
+  },
+  "replay_check": {
+    "reconstructed_equals_stored": true,
+    "reads_event_log_only": true
+  },
+  "shadow": {
+    "votes": [
+      {
+        "role": "BULL-01-CAND-DEEPSEEK",
+        "family": "chinese",
+        "stance": "no_position",
+        "conviction": 0.7
+      },
+      {
+        "role": "BULL-01-BASELINE-WEST",
+        "family": "google",
+        "stance": "no_position",
+        "conviction": 0.7
+      }
+    ],
+    "decorrelation": {
+      "n_voters": 5,
+      "n_pairs": 10,
+      "pairs": [
+        {
+          "a": "BEAR-01(openai)",
+          "b": "BULL-01(chinese)",
+          "agree": false
+        },
+        {
+          "a": "BEAR-01(openai)",
+          "b": "FUND-TECH(google)",
+          "agree": false
+        },
+        {
+          "a": "BEAR-01(openai)",
+          "b": "SHADOW:BULL-01-BASELINE-WEST(google)",
+          "agree": false
+        },
+        {
+          "a": "BEAR-01(openai)",
+          "b": "SHADOW:BULL-01-CAND-DEEPSEEK(chinese)",
+          "agree": false
+        },
+        {
+          "a": "BULL-01(chinese)",
+          "b": "FUND-TECH(google)",
+          "agree": false
+        },
+        {
+          "a": "BULL-01(chinese)",
+          "b": "SHADOW:BULL-01-BASELINE-WEST(google)",
+          "agree": false
+        },
+        {
+          "a": "BULL-01(chinese)",
+          "b": "SHADOW:BULL-01-CAND-DEEPSEEK(chinese)",
+          "agree": false
+        },
+        {
+          "a": "FUND-TECH(google)",
+          "b": "SHADOW:BULL-01-BASELINE-WEST(google)",
+          "agree": true
+        },
+        {
+          "a": "FUND-TECH(google)",
+          "b": "SHADOW:BULL-01-CAND-DEEPSEEK(chinese)",
+          "agree": true
+        },
+        {
+          "a": "SHADOW:BULL-01-BASELINE-WEST(google)",
+          "b": "SHADOW:BULL-01-CAND-DEEPSEEK(chinese)",
+          "agree": true
+        }
+      ],
+      "stance_agreement_rate": 0.3,
+      "note": "N=1 cycle at WP3 \u2014 the metric matures over WP6's daily cycles"
+    },
+    "isolation": "structural \u2014 graphs/shadow.py imports no live-state module (AST-scanned test); shadows ran AFTER the live decision"
+  },
+  "replay_stamps": [
+    {
+      "trade_id": "trade_374e28aecd9b",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "FUND-TECH",
+      "prompt_version": "fund-tech-v1",
+      "model_version": "google/gemini-3.1-pro-preview-20260219",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "cost_usd": 0.04513
+      }
+    },
+    {
+      "trade_id": "trade_67160896c2c6",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "BULL-01",
+      "prompt_version": "cp2-debate-v1",
+      "model_version": "z-ai/glm-5.2-20260616",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 1175,
+        "completion_tokens": 2,
+        "cost_usd": 0.00150788
+      }
+    },
+    {
+      "trade_id": "trade_0d9b6aee5646",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "BULL-01",
+      "prompt_version": "cp2-debate-v1",
+      "model_version": "z-ai/glm-5.2-20260616",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 1274,
+        "completion_tokens": 1120,
+        "cost_usd": 0.00539832
+      }
+    },
+    {
+      "trade_id": "trade_0c768c5d67b0",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "BEAR-01",
+      "prompt_version": "cp2-debate-v1",
+      "model_version": "openai/gpt-5.4-20260305",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 2221,
+        "completion_tokens": 1305,
+        "cost_usd": 0.0251275
+      }
+    },
+    {
+      "trade_id": "trade_62e6fe270085",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "BULL-01",
+      "prompt_version": "cp2-debate-v1",
+      "model_version": "z-ai/glm-5.2-20260616",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 2474,
+        "completion_tokens": 2,
+        "cost_usd": 0.00332648
+      }
+    },
+    {
+      "trade_id": "trade_988bb66fd882",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "BULL-01",
+      "prompt_version": "cp2-debate-v1",
+      "model_version": "z-ai/glm-5.2-20260616",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 2573,
+        "completion_tokens": 1601,
+        "cost_usd": 0.00787412
+      }
+    },
+    {
+      "trade_id": "trade_b12fb620b249",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "BEAR-01",
+      "prompt_version": "cp2-debate-v1",
+      "model_version": "openai/gpt-5.4-20260305",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 3773,
+        "completion_tokens": 2030,
+        "cost_usd": 0.0398825
+      }
+    },
+    {
+      "trade_id": "trade_77772af9a1df",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "BULL-01",
+      "prompt_version": "cp2-debate-v1",
+      "model_version": "z-ai/glm-5.2-20260616",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 4610,
+        "completion_tokens": 2342,
+        "cost_usd": 0.01668584
+      }
+    },
+    {
+      "trade_id": "trade_92ff33263a62",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "BEAR-01",
+      "prompt_version": "cp2-debate-v1",
+      "model_version": "openai/gpt-5.4-20260305",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 5931,
+        "completion_tokens": 1770,
+        "cost_usd": 0.0413775
+      }
+    },
+    {
+      "trade_id": "trade_c6feafbf5162",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "MOD-01",
+      "prompt_version": "cp2-debate-v1",
+      "model_version": "google/gemini-3.1-pro-preview-20260219",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 11907,
+        "completion_tokens": 2096,
+        "cost_usd": 0.048966
+      }
+    },
+    {
+      "trade_id": "trade_1d1616da907b",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "VERIF-01-JUDGE-GOOGLE",
+      "prompt_version": "cp4-judge-v1",
+      "model_version": "google/gemini-3.1-pro-preview-20260219",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 12372,
+        "completion_tokens": 1665,
+        "cost_usd": 0.044724
+      }
+    },
+    {
+      "trade_id": "trade_1c67d118a90e",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "FUND-TECH",
+      "prompt_version": "cp2-debate-v1",
+      "model_version": "google/gemini-3.1-pro-preview-20260219",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 1793,
+        "completion_tokens": 473,
+        "cost_usd": 0.009262
+      }
+    },
+    {
+      "trade_id": "trade_5b9f9625b754",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "BULL-01",
+      "prompt_version": "cp2-debate-v1",
+      "model_version": "z-ai/glm-5.2-20260616",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 1683,
+        "completion_tokens": 25,
+        "cost_usd": 0.0024662
+      }
+    },
+    {
+      "trade_id": "trade_c762cc1019a2",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "BEAR-01",
+      "prompt_version": "cp2-debate-v1",
+      "model_version": "openai/gpt-5.4-20260305",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 1655,
+        "completion_tokens": 26,
+        "cost_usd": 0.0045275
+      }
+    },
+    {
+      "trade_id": "trade_e9c7b4e5399f",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "PM-01",
+      "prompt_version": "cp3-pm-v1",
+      "model_version": "google/gemini-3.1-pro-preview-20260219",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 2050,
+        "completion_tokens": 1481,
+        "cost_usd": 0.021872
+      }
+    },
+    {
+      "trade_id": "trade_f6d1c81286b8",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "SHADOW:BULL-01-CAND-DEEPSEEK",
+      "prompt_version": "cp4-shadow-v1",
+      "model_version": "deepseek/deepseek-v4-pro-20260423",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 1699,
+        "completion_tokens": 485,
+        "cost_usd": 0.00464406
+      }
+    },
+    {
+      "trade_id": "trade_2a6807a94bff",
+      "cycle_id": "cp4_smoke_wp3_cp1_20260626_COST",
+      "decision_ts": "2026-06-26T20:00:00+00:00",
+      "agent_id": "SHADOW:BULL-01-BASELINE-WEST",
+      "prompt_version": "cp4-shadow-v1",
+      "model_version": "google/gemini-3.1-pro-preview-20260219",
+      "manifest_version": "bf388c33e0d1",
+      "config_version": "4190e44258ba",
+      "code_version": "cp4-smoke",
+      "usage": {
+        "prompt_tokens": 1769,
+        "completion_tokens": 528,
+        "cost_usd": 0.009874
+      }
+    }
+  ],
+  "spend": {
+    "smoke_recorded_usd": 0.332646,
+    "discarded_attempts_est_usd": 0.5,
+    "discarded_attempts": [
+      {
+        "n": 1,
+        "fate": "fail-closed: judge grounding check rejected a legitimate concession quote (corpus was points+attacks only; widened to all judge-visible fields + windowed/Jaccard matching)",
+        "est_usd": 0.25
+      },
+      {
+        "n": 2,
+        "fate": "fail-closed: GLM round-3 emitted only the closing twice (turn fields missing); fixed with explicit final-round instruction + P2 corrective retry (error feedback)",
+        "est_usd": 0.25
+      }
+    ],
+    "smoke_total_est_usd": 0.83,
+    "cap_usd": 3.0,
+    "cumulative_ledger_usd_est": 4.41,
+    "note": "attempts 1-2 failed closed before artifacts; costs estimated from attempt-3 per-call actuals and counted honestly."
+  }
+}

@@ -304,7 +304,10 @@ def _debater_turn(mx: _Metered, role: str, spec: ModelSpec, system: str, candida
     """One debater turn (isolation: memos + opponent turns ONLY), one P2-style retry."""
     position = "bull" if role == BULL_ROLE else "bear"
     closing_ask = (
-        f'\nThis is the FINAL round: also include "closing": {_CLOSING_SCHEMA} arguing YOUR side.'
+        f'\nThis is the FINAL round. Your JSON must contain BOTH (a) ALL DebateTurn fields '
+        f'(position, arguments, concessions, steelman_of_opponent — the closing round still '
+        f'argues) AND (b) an ADDITIONAL top-level "closing" key: {_CLOSING_SCHEMA} arguing YOUR '
+        f'side. A reply containing only "closing" is INVALID.'
         if want_closing else ""
     )
     user = (
@@ -317,7 +320,12 @@ def _debater_turn(mx: _Metered, role: str, spec: ModelSpec, system: str, candida
     last: Exception | None = None
     for _attempt in range(2):
         try:
-            raw = _extract_json(mx.call(role, spec, system, user, max_tokens=4096))
+            # P2 pattern: ONE retry WITH ERROR FEEDBACK — the CP4 smoke showed a bare resend just
+            # reproduces the same malformed reply (GLM round-3 emitted only "closing" twice).
+            ask = user if last is None else (
+                f"{user}\n\nYOUR PREVIOUS REPLY WAS INVALID: {str(last)[:300]}\n"
+                f"Reply again with ALL required fields present.")
+            raw = _extract_json(mx.call(role, spec, system, ask, max_tokens=4096))
             closing_raw = raw.pop("closing", None)
             raw.setdefault("agent_id", role)
             raw["round"] = rnd
