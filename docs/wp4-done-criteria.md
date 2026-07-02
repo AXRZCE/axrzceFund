@@ -49,7 +49,7 @@ divergence; config §5/§6 standing values.
 | `min_clamp_ratio` | **0.8** — keep §6 | Behavior pinned by R1's boundary test (trim to ≥80% ⇒ clamp; needing more ⇒ reject). |
 | Breakers §7 | **pod −5%/−7.5%; fund −6% (derisk to 75%)/−10% HALT; cooldown 3** — keep | Frozen-Set §9.3 (tighten-only); at $1M NAV the fund trips are −$60k/−$100k; no P&L history yet to justify tightening. ⚠️ THIN by construction — first exercised via R4's injected breaches, then WP6. |
 | `escalation_timeout` / `default_derisk_pct` | **10 min / 50%** — keep §8 | Red-tested at R5; no latency evidence yet to move them. |
-| **Cost model (NEW — replaces the 20 bps placeholder)** | `round_trip_cost_bps = max(2 × half_spread_bps + impact_bps, 6)` with `half_spread_bps = 2`, `impact_bps = 25 × participation_fraction` | **Measured (G0.5 artifacts, n=20):** modeled-vs-broker divergence mean_abs **1.94 bps**, median **1.07 bps**, **max +10.4 bps**. 2 bps/side ≈ **1.0× the measured mean** (it is ~2× only vs the WP0 model's 1 bp/side floor); the **+10.4 bps outlier is known tail risk** the 6 bps round-trip floor only PARTIALLY covers — accepted for Phase 1, monitored. Impact linear in participation (negligible at our ~1e-4 participation). Floor 6 bps ⇒ the edge gate (3×) demands ≥18 bps edge. ⚠️ Materially LOWER than the 20 bps placeholder (edge bar drops 60→18 bps) — honest number, flagged since it loosens P6. |
+| **Cost model (AMENDED at CP1-retune — Akshar's R6 re-ratification)** | `round_trip_cost_bps = max(2 × half_spread_bps + η × √participation_fraction, floor)` with `half_spread_bps = 2`, **`η = 50`**, **`floor = 4`** | **The finding (recorded):** the first-ratified LINEAR model (`25 × participation`, floor 6) was **degenerate in the gate-reachable universe** — its variable region began above ~8% participation while the gate caps at 2%, so in-universe the cost was ALWAYS the 6 bps floor. **Akshar's ruling:** the model must genuinely vary per trade within the reachable universe; paper account = exercise the intended design from the get-go; degenerate-in-practice implementations don't get grandfathered. **Amended:** square-root impact law. `half_spread_bps = 2` unchanged (≈1.0× the G0.5 measured mean_abs 1.94 bps, n=20). **η derivation (stated anchor):** at the ADV-cap boundary (participation = 0.02) the modeled round-trip should ≈ the observed G0.5 tail (~11 bps): η = (11 − 4)/√0.02 = 49.5 → **η = 50** (mid-band of the 45–55 proposal). **Floor repositioned to 4** = the pure double-spread — a true degenerate-input guard BELOW the in-universe range (any p>0 exceeds it). **In-universe span (visible on paper):** p=1e-4 → 4.5 bps · p=1e-3 → 5.6 · p=0.01 → 9.0 · p=0.02 → 11.1. **Honest note:** small liquid trades now carry a LOWER edge bar (3× ⇒ ~13–14 bps vs the old constant 18) while big/thin trades carry a HIGHER one (up to ~33 bps at the cap) — the intended per-trade discipline. |
 
 ---
 
@@ -113,22 +113,27 @@ never new entries, never size increases (Frozen-Set §9.5).
   timeout (gut the timeout → the position hangs unmanaged → red); an escalation output of
   "increase" is rejected as a protocol violation.
 
-### R6 — The real cost model replaces the 20 bps placeholder this WP.
-`round_trip_cost_bps(order_notional, adv_usd_20d) = max(2·half_spread_bps + impact_bps, floor)`
-with the ratified parameters (table above): half_spread 2 bps (≈1.0× the G0.5 measured mean_abs of
-1.94 bps, n=20; the +10.4 bps outlier is known tail risk the floor partially covers),
-`impact_bps = 25 × participation_fraction`, floor 6 bps. `graphs/pm.py` consumes it (the flagged
-`ASSUMED_ROUND_TRIP_COST_BPS` constant is deleted); the P6 edge check (`expected_edge_bps ≥ 3×
-cost`) now runs against the modeled cost of THIS order in THIS name.
+### R6 — The real cost model replaces the 20 bps placeholder this WP. *(AMENDED at CP1-retune.)*
+`round_trip_cost_bps(order_notional, adv_usd_20d) = max(2·half_spread_bps + η·√participation, floor)`
+with the re-ratified parameters (table above): half_spread 2 bps (≈1.0× the G0.5 measured mean_abs
+of 1.94 bps, n=20; the +10.4 bps outlier remains known tail risk — the sqrt law now REACHES ~11 bps
+at the ADV cap by construction), **η = 50** (anchored: model(p=0.02) ≈ the G0.5 tail), **floor = 4**
+(the pure double-spread — a degenerate-input guard below the in-universe range, so it never binds a
+real trade). *Amendment history:* the first-ratified linear model (25×p, floor 6) was found
+degenerate in the gate-reachable universe (variable only above ~8% participation vs the 2% gate
+cap) — REJECTED by Akshar's ruling: the model must genuinely vary per trade in-universe;
+degenerate-in-practice implementations don't get grandfathered. `graphs/pm.py` consumes the model
+(the flagged `ASSUMED_ROUND_TRIP_COST_BPS` constant is deleted); the P6 edge check
+(`expected_edge_bps ≥ 3× cost`) runs against the modeled cost of THIS order in THIS name.
 - **MANDATORY recalibration checkpoint (committed here as part of this ruling, ratified by Akshar):**
-  the cost parameters are **re-derived at WP6 from the dry-run week's logged IEX quotes** (measured
+  **η and half_spread are re-derived at WP6 from the dry-run week's logged IEX quotes** (measured
   spreads), and again at WP7 from real paper fills — this is a **WP6 gate item**, not a hope. The
   Phase-1 parameters above are explicitly interim.
-- **Red tests:** the model is size- and liquidity-sensitive — a larger order in a thinner name
-  costs strictly more (gut to a constant → the monotonicity test red); the floor binds at megacap
-  sizes (6 bps, so required edge 18 bps); the placeholder constant is GONE from graphs/pm.py
-  (grep-test); pm.py's edge check consumes the model (a proposal failing 3× the modeled cost is
-  rejected).
+- **Red tests (in-universe by construction):** two orders BOTH passing the gate (participation ≤
+  0.02) — a larger order in a thinner name costs strictly more than a smaller order in a thicker
+  name (flat model → red); every real trade prices ABOVE the floor (the floor is reachable only by
+  degenerate inputs); the placeholder constant is GONE from graphs/pm.py (grep-test); pm.py's edge
+  check consumes the model and the per-trade cost is visible in the sizing audit.
 
 ### R7 — Edge-case rulings, pre-committed (the WP0–WP3 pattern: decide now, not mid-incident).
 1. **Market closed:** the order manager models fills ONLY against a fresh market state; when the
