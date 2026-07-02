@@ -21,15 +21,16 @@ from graphs.screen import scan_universe, screen_candidates  # noqa: E402
 
 
 def main() -> None:
-    store = PITStore()
     ts = _dt.datetime.now(ZoneInfo("America/New_York")).strftime("%Y%m%d")
 
-    rows = scan_universe()
+    rows = scan_universe()  # read-only pass; closes its connection before the store opens
     pre = screen_candidates(rows, held=[])
     targets = sorted(set(pre.new_candidates) | set(pre.held_candidates))
     print(f"pre-scan: new={pre.new_candidates} held={pre.held_candidates} -> backfill {targets}")
 
+    store = PITStore()
     job = ingest_sep(store, run_id=f"wp6_backfill_{ts}", window_days=380, tickers=targets)
+    store.conn.close()  # release before the read-only re-scan
     print("backfill job:", job)
 
     rows2 = scan_universe()

@@ -114,6 +114,7 @@ def scan_universe(db_path: str = "var/pit_store.duckdb",
     from px left join fund using (ticker) left join spx using (ticker)
     """
     rows = c.execute(q, [boundary, boundary, boundary, boundary]).fetchall()
+    c.close()  # same-process PITStore opens (read-write) need the file released
     return [ScreenRow(ticker=t, in_sp500=bool(s), n_fund_indicators=int(n),
                       adv_usd_20d=float(a or 0.0), last_close=float(p or 0.0))
             for t, s, n, a, p in rows]
