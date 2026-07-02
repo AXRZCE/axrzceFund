@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>axrzceFund — decision record v1</title>
+<style>body{font-family:system-ui,sans-serif;margin:2rem;color:#111}
+table{border-collapse:collapse;margin:0.8rem 0}td,th{border:1px solid #bbb;padding:4px 10px;font-size:14px}
+th{background:#eee}h2{margin-top:1.6rem}.k{color:#666;font-size:13px}</style></head><body>
+<h1>axrzceFund — decision record (dashboard v1)</h1>
+<p class="k">Every value on this page is read from a committed results/ artifact. A missing artifact fails the build; no sample data exists.</p>
+
+<h2>BULL seat (WP3 R1 — run of record)</h2>
+<table><tr><th>model</th><th>mean_composite</th><th>schema_valid_rate</th><th>verdict</th></tr>
+<tr><td>z-ai/glm-5.2 (seated)</td><td>0.7383</td><td>1.0</td>
+<td>SEAT_CHINESE</td></tr>
+<tr><td>gemini-3.1-pro (baseline)</td><td>0.7188</td><td>1.0</td><td>baseline</td></tr></table>
+
+<h2>Decisions (WP3 smokes)</h2>
+<table><tr><th>cycle</th><th>candidate</th><th>weighted_score</th><th>margin</th><th>ballot</th><th>PM action</th><th>size %NAV</th></tr>
+<tr><td>WP3-CP2 debate</td><td>AVGO</td><td>1.15</td><td>0.263736</td><td>clear</td><td>— (no PM stage)</td><td>—</td></tr><tr><td>WP3-CP3 PM cycle</td><td>MDT</td><td>1.3</td><td>0.354167</td><td>clear</td><td>trade</td><td>0.735</td></tr><tr><td>WP3-CP4 full pipeline</td><td>COST</td><td>0.78</td><td>0.061033</td><td>CONTESTED</td><td>no_trade</td><td>—</td></tr></table>
+<p class="k">WP3-CP4 shadow decorrelation: stance-agreement 0.3
+over 10 pairs. Judge: google (disjoint from [&#x27;chinese&#x27;, &#x27;openai&#x27;]).</p>
+
+<h2>Gate → orders (WP4 replay, per-trade costs)</h2>
+<table><tr><th>case</th><th>cost bps</th><th>edge bar</th><th>gate rule</th><th>order</th><th>modeled fill</th><th>status</th></tr>
+<tr><td>stored_mdt_proposal</td><td>4.2153</td><td>12.6459</td><td>ok</td><td>buy 91 MDT</td><td>80.151027</td><td>modeled_filled</td></tr><tr><td>synthetic_contested_capped</td><td>4.1776</td><td>12.5327</td><td>ok</td><td>buy 62 MDT</td><td>80.151027</td><td>modeled_filled</td></tr></table>
+<p class="k">HALT end-to-end: NAV 1,000,000 → 900,000 (fund −10.0%) → actions [&#x27;fund_halt&#x27;] → breaker
+state <b>halt</b> → re-gated proposal rule <b>breaker_halt</b>.</p>
+
+<h2>Post-mortems (WP5 — interim)</h2>
+<table><tr><th>record</th><th>verdict</th><th>process</th><th>outcome</th><th>pnl bps</th><th>window</th></tr>
+<tr><td>MDT trade (interim)</td><td>unrelated_path</td>
+<td>3</td><td>2</td>
+<td>-118.65</td><td>4 sessions</td></tr>
+<tr><td>COST no_trade (counterfactual short)</td><td>unrelated_path</td>
+<td>2</td><td>0</td>
+<td>292.59</td><td>—</td></tr></table>
+<p class="k">Pending post-mortem queue: empty.
+Lessons are capture-only; believability weighting is Phase 3 (no weights exist anywhere).</p>
+
+<h2>Spend ledger (recorded, per artifact; discards documented in the readouts)</h2>
+<table><tr><th>item</th><th>USD</th></tr><tr><td>WP3 CP1 seat comparison (run3, record)</td><td>$1.1673</td></tr><tr><td>WP3 CP2 debate smoke (recorded)</td><td>$0.2127</td></tr><tr><td>WP3 CP3 PM smoke</td><td>$0.2450</td></tr><tr><td>WP3 CP4 full smoke (recorded)</td><td>$0.3326</td></tr><tr><td>WP4 (LLM-free replay)</td><td>$0.0000</td></tr><tr><td>WP5 PMORT smoke</td><td>$0.0069</td></tr>
+<tr><th>cumulative (incl. estimated discards)</th><th>$4.4169</th></tr></table>
+<p class="k">manifest_version at WP5 smoke: bf388c33e0d1.</p>
+</body></html>
