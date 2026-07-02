@@ -163,6 +163,25 @@ degenerate-in-practice implementations don't get grandfathered. `graphs/pm.py` c
    gate → order manager → modeled fill → monitor with an injected breach; artifact + readout.
    *(If a fresh live-LLM cycle is wanted instead, it is ≤ $0.35 per the WP3 smokes — Akshar's call.)*
 
+## Done — each demonstrable (closed at CP1/CP2; artifacts linked)
+- [x] **R1** — gate built ([graphs/risk_gate.py](../graphs/risk_gate.py)); P7.3 order, 0.8 boundary
+      pinned, poisoned-book exception ⇒ reject; gut → 6 red. Smoke: both stored proposals gated
+      with allowance audits (`results/wp4/replay_smoke.json`).
+- [x] **R2** — THE WALL ([graphs/orders.py](../graphs/orders.py)); `submit_live` raises
+      unconditionally, AST no-broker-import, spy-broker zero calls; gut → `DID NOT RAISE`.
+- [x] **R3** — deterministic stamped modeled orders; rounding pinned; canned-order variation tests.
+      Smoke: 91/62 shares @ modeled fill, `full_fill` explicit.
+- [x] **R4** — monitor + §7 breakers on injected breaches ([graphs/monitor.py](../graphs/monitor.py));
+      HALT blocks gate approvals END-TO-END (test + smoke halt demo); P12 human recovery →
+      3-session cooldown; gut → 3 red.
+- [x] **R5** — escalation timeout (fake clock, boundary exact) ⇒ default 50% de-risk; outputs
+      restricted; gut → red.
+- [x] **R6 (as amended)** — √-impact per-trade cost model ([core/costs.py](../core/costs.py)),
+      η=50 anchored to the G0.5 tail, floor 4 = degenerate-input guard; placeholder deleted from
+      pm.py; in-universe red tests; gut → 4 red. WP6 recalibration checkpoint stands.
+- [x] **R7** — market-closed (no fill, no breaker eval off closed marks), complete-fill rule
+      explicit, stale-held-name ⇒ exit-only (gate blocks adds), watchdog ⇒ HALT end-to-end.
+
 ## Standing rules (unchanged)
 Committed re-runnable tests; gut-demos red-then-restored; fixtures/licensed data never committed;
 vendor scan before every commit; every artifact ReplayTuple-stamped incl. `manifest_version`;

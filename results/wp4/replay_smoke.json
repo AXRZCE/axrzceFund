@@ -1,0 +1,112 @@
+{
+  "mode": "LLM_FREE_REPLAY (zero spend)",
+  "replay_source": "results/wp3_cp3/pm_smoke.json (committed WP3 artifact)",
+  "fixture_id": "wp3_cp1_20260625",
+  "fixture_hash_verified": true,
+  "content_hash": "047b88c04c578d18",
+  "manifest_version": "bf388c33e0d1",
+  "market_inputs": {
+    "price_last_close": 80.135,
+    "adv_usd_20d": 396430281.98
+  },
+  "cases": [
+    {
+      "label": "stored_mdt_proposal",
+      "size_pct_nav": 0.735,
+      "cost_bps": 4.2153,
+      "edge_bar_bps": 12.6459,
+      "stored_expected_edge_bps": 400.0,
+      "edge_check": "PASS",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.735,
+        "allowances": {
+          "position_limit": 5.0,
+          "new_position_limit": 2.5,
+          "sector_cap": 20.0,
+          "gross_cap": 150.0,
+          "net_band": 30.0,
+          "adv_participation": 792.860564
+        }
+      },
+      "order": {
+        "symbol": "MDT",
+        "side": "buy",
+        "qty": 91,
+        "notional_usd": 7292.29,
+        "status": "modeled_filled",
+        "modeled_fill_price": 80.151027,
+        "full_fill": true
+      },
+      "monitor_tick_actions": [],
+      "replay_stamp": {
+        "trade_id": "trade_b17f18444001",
+        "cycle_id": "wp4_replay_stored_mdt_proposal",
+        "decision_ts": "2026-06-25T20:00:00+00:00",
+        "agent_id": "ORDER-MGR",
+        "prompt_version": "none",
+        "model_version": "none",
+        "manifest_version": "bf388c33e0d1",
+        "config_version": "2538cad3431f",
+        "code_version": "wp4-cp2-smoke"
+      }
+    },
+    {
+      "label": "synthetic_contested_capped",
+      "size_pct_nav": 0.5,
+      "cost_bps": 4.1776,
+      "edge_bar_bps": 12.5327,
+      "stored_expected_edge_bps": 400.0,
+      "edge_check": "PASS",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.5,
+        "allowances": {
+          "position_limit": 5.0,
+          "new_position_limit": 2.5,
+          "sector_cap": 20.0,
+          "gross_cap": 150.0,
+          "net_band": 30.0,
+          "adv_participation": 792.860564
+        }
+      },
+      "order": {
+        "symbol": "MDT",
+        "side": "buy",
+        "qty": 62,
+        "notional_usd": 4968.37,
+        "status": "modeled_filled",
+        "modeled_fill_price": 80.151027,
+        "full_fill": true
+      },
+      "monitor_tick_actions": [],
+      "replay_stamp": {
+        "trade_id": "trade_b1a3191d71db",
+        "cycle_id": "wp4_replay_synthetic_contested_capped",
+        "decision_ts": "2026-06-25T20:00:00+00:00",
+        "agent_id": "ORDER-MGR",
+        "prompt_version": "none",
+        "model_version": "none",
+        "manifest_version": "bf388c33e0d1",
+        "config_version": "2538cad3431f",
+        "code_version": "wp4-cp2-smoke"
+      }
+    }
+  ],
+  "halt_end_to_end_demo": {
+    "injected": "NAV 1,000,000 \u2192 900,000 (fund \u221210.0%)",
+    "monitor_actions": [
+      "fund_halt"
+    ],
+    "breaker_state": "halt",
+    "regated_proposal": {
+      "approved": false,
+      "rule": "breaker_halt"
+    }
+  },
+  "wall": "no broker object exists anywhere in this run \u2014 modeled orders only (R2)"
+}

@@ -47,7 +47,7 @@ MIN_PRICE_USD = param_number("min_price")                              # 5.00
 MIN_ADV_USD = param_number("min_adv_usd") * 1e6                        # $20,000,000
 DERISK_NEW_ENTRY_MULT = 0.5                                            # §7 fund_derisk: new-entry sizes ×0.5
 
-BREAKER_STATES = ("normal", "derisk", "halt")
+BREAKER_STATES = ("normal", "derisk", "halt", "cooldown")  # cooldown = P12 post-HALT exit-only
 
 
 @dataclass(frozen=True)
@@ -83,6 +83,7 @@ def evaluate(
     sector: str,
     book: list[Position],
     breaker_state: str = "normal",
+    exit_only_names: Optional[set[str]] = None,
 ) -> GateDecision:
     """Run the P7.3 gate. Never raises: any internal error returns a fail-closed REJECT."""
     audit: dict = {"proposed_size_pct_nav": size_pct_nav, "breaker_state": breaker_state}
@@ -91,6 +92,18 @@ def evaluate(
             return _reject("gate_error", f"unknown breaker_state {breaker_state!r} (fail-closed)", audit)
         if size_pct_nav <= 0 or nav_usd <= 0:
             return _reject("gate_error", "non-positive size or NAV (fail-closed)", audit)
+
+        # R7.3: a stale-marked held name is EXIT-ONLY — new entries/adds are rejected here; exits
+        # are monitor actions and never pass through this gate.
+        if exit_only_names and ticker in exit_only_names:
+            return _reject("stale_name_exit_only",
+                           f"{ticker} is exit-only (stale marks, P1/P8): adds blocked", audit)
+
+        # P12: post-HALT cooldown is EXIT-ONLY for `cooldown_cycles` sessions — no new entries.
+        if breaker_state == "cooldown":
+            return _reject("breaker_cooldown",
+                           "post-HALT cooldown (P12): exit-only — no new entries until the "
+                           "cooldown sessions complete", audit)
 
         # ── 5-pre. breaker policy multiplier (derisk: new-entry ×0.5; not a trim) ──────
         working = size_pct_nav
