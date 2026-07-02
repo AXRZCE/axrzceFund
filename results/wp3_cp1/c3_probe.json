@@ -1,0 +1,54 @@
+{
+  "threshold": 0.25,
+  "tol": 0.01,
+  "n_items": 16,
+  "manifest_version": "4f34593c18b7",
+  "models": {
+    "BULL-01-CAND-DEEPSEEK": {
+      "model_version": "deepseek/deepseek-v4-pro",
+      "provider": {
+        "only": [
+          "fireworks"
+        ],
+        "allow_fallbacks": false
+      },
+      "servable": true,
+      "hit_rate": 0.0,
+      "hits": 0,
+      "disqualified": false,
+      "cost_usd": 0.0018009,
+      "model_ran": "deepseek/deepseek-v4-pro-20260423"
+    },
+    "BULL-01-CAND-GLM": {
+      "model_version": "z-ai/glm-5.2",
+      "provider": {
+        "only": [
+          "together"
+        ],
+        "allow_fallbacks": false
+      },
+      "servable": true,
+      "hit_rate": 0.0,
+      "hits": 0,
+      "disqualified": false,
+      "cost_usd": 0.0002132,
+      "model_ran": "z-ai/glm-5.2-20260616"
+    },
+    "BULL-01-BASELINE-WEST": {
+      "model_version": "google/gemini-3.1-pro-preview",
+      "provider": {
+        "only": [
+          "google-vertex"
+        ],
+        "allow_fallbacks": false
+      },
+      "servable": true,
+      "hit_rate": 0.0,
+      "hits": 0,
+      "disqualified": false,
+      "cost_usd": 0.008922,
+      "model_ran": "google/gemini-3.1-pro-preview-20260219"
+    }
+  },
+  "total_cost_usd": 0.010936
+}

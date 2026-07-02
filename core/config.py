@@ -151,6 +151,24 @@ def load_config(config_file: Path = Path("docs/configuration.md")) -> ConfigVers
     return ConfigLoader(config_file).load()
 
 
+_LEADING_NUM = __import__("re").compile(r"[-+]?\d*\.?\d+")
+
+
+def param_number(name: str, *, config: "ConfigVersion | None" = None) -> float:
+    """Numeric value of a configuration.md parameter (the leading number of its raw entry —
+    entries carry trailing rationale text, e.g. `0.20\\` — weighted-score margin ...`).
+
+    Raises KeyError if the parameter is absent: per configuration.md §11, a config value used in
+    code but absent from the file is a build error by policy — never default silently.
+    """
+    cfg = config or load_config()
+    raw = cfg.params[name]  # KeyError on absence = the §11 build error, on purpose
+    m = _LEADING_NUM.search(str(raw))
+    if m is None:
+        raise ValueError(f"configuration.md parameter {name!r} has no numeric value: {raw!r}")
+    return float(m.group(0))
+
+
 if __name__ == "__main__":
     import sys
 

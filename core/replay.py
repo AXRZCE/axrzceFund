@@ -1,7 +1,12 @@
 """Replay tuple stamping and replayability per architecture.md §7.3.
 
-Every artifact carries: (agent_id, prompt_version, model_version, config_version, code_version).
-This enables exact reconstruction of any past decision.
+Every artifact carries: (agent_id, prompt_version, model_version, manifest_version,
+config_version, code_version). This enables exact reconstruction of any past decision.
+
+`manifest_version` (WP3 R5, closes SF-2) is the deploy-manifest hash — DISTINCT from
+`config_version` (the configuration.md hash). A model/roster swap in deploy/model_manifest.yaml
+changes `manifest_version`, so it must change the replay identity; before WP3 the manifest hash
+had no field of its own and WP2 stamped it into `config_version` (a conflation now corrected).
 """
 
 from dataclasses import dataclass
@@ -24,7 +29,8 @@ class ReplayTuple:
     agent_id: str  # Which agent produced the artifact
     prompt_version: str  # Version of the agent's system prompt
     model_version: str  # Which model+version (e.g., "claude-opus-4-8", "gpt-4-turbo-1106")
-    config_version: str  # Config hash from configuration.md
+    manifest_version: str  # Deploy-manifest hash (deploy/model_manifest.yaml) — a roster/model swap changes it
+    config_version: str  # configuration.md hash (fund bylaws) — DISTINCT from manifest_version
     code_version: str  # Git SHA or build identifier
 
     def to_dict(self) -> dict:
@@ -36,6 +42,7 @@ class ReplayTuple:
             "agent_id": self.agent_id,
             "prompt_version": self.prompt_version,
             "model_version": self.model_version,
+            "manifest_version": self.manifest_version,
             "config_version": self.config_version,
             "code_version": self.code_version,
         }
@@ -71,6 +78,7 @@ def new_replay_tuple(
     agent_id: str,
     prompt_version: str,
     model_version: str,
+    manifest_version: str,
     config_version: str,
     code_version: str,
     trade_id: Optional[str] = None,
@@ -82,7 +90,8 @@ def new_replay_tuple(
         agent_id: Which agent.
         prompt_version: Version of prompt.
         model_version: Model used.
-        config_version: Config hash.
+        manifest_version: Deploy-manifest hash (deploy/model_manifest.yaml).
+        config_version: configuration.md hash (distinct from manifest_version).
         code_version: Code version.
         trade_id: Optional existing trade ID; generates one if not provided.
 
@@ -99,6 +108,7 @@ def new_replay_tuple(
         agent_id=agent_id,
         prompt_version=prompt_version,
         model_version=model_version,
+        manifest_version=manifest_version,
         config_version=config_version,
         code_version=code_version,
     )
@@ -114,6 +124,7 @@ if __name__ == "__main__":
         agent_id="FUND-TECH",
         prompt_version="v1.0",
         model_version="claude-opus-4-8",
+        manifest_version="mani12345678",
         config_version="abc123def456",
         code_version="deadbeef",
     )

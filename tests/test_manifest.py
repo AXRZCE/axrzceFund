@@ -15,11 +15,138 @@ def test_real_manifest_loads_with_wp2_value_roster():
     assert m.access == "openrouter"
     assert len(m.manifest_version) == 12
     # WP2 in-scope research pool — value-frontier, NO Anthropic (ADR-2 amendment 2026-06-25)
-    assert set(m.specs) == {"TECH-01", "FUND-TECH", "SENT-01"}
+    assert {"TECH-01", "FUND-TECH", "SENT-01"} <= set(m.specs)
     assert m.resolve("TECH-01").model_version == "google/gemini-2.5-flash-lite"
     assert m.resolve("FUND-TECH").model_version == "google/gemini-3.1-pro-preview"
     assert m.resolve("SENT-01").model_version == "openai/gpt-5.4"
     assert not any("anthropic" in s.model_version for s in m.specs.values())
+
+
+def test_cp2_live_debate_roster_and_heterogeneity():
+    """WP3 CP2 S1: the live debate/decision roles exist, runtime-scoped, correctly pinned — and the
+    roster satisfies the Frozen-Set §9.4 heterogeneity invariant in code."""
+    from core.heterogeneity import assert_distinct_debaters, assert_judge_disjoint
+
+    m = load_manifest()
+    bull, bear = m.resolve_runtime("BULL-01"), m.resolve_runtime("BEAR-01")
+    mod, pm = m.resolve_runtime("MOD-01"), m.resolve_runtime("PM-01")
+    # the R1 verdict seat: GLM-5.2 on a Western host
+    assert bull.model_version == "z-ai/glm-5.2" and bull.family == "chinese"
+    assert bull.provider == {"only": ["together"], "allow_fallbacks": False}
+    assert bear.model_version == "openai/gpt-5.4" and bear.family == "openai"
+    assert mod.family == "google" and pm.family == "google"
+    # Frozen-Set §9.4: BULL≠BEAR; PM/MOD outside both — via the shared primitive, not string checks here
+    assert_distinct_debaters(bull.family, bear.family)
+    for referee in (pm, mod):
+        assert referee.family not in {bull.family, bear.family}
+    families = {s.family for s in m.specs.values()}
+    assert_judge_disjoint(mod.family, bull.family, families)
+    assert_judge_disjoint(mod.family, bear.family, families)
+
+
+def test_cp2_debate_binding_cutoff_clears_cp1_golden_days():
+    """GLM's 2026-06-16 availability now binds any fixture the DEBATE reads; the CP1 golden days
+    (2026-06-23..26) must still clear it."""
+    m = load_manifest()
+    binding = m.binding_cutoff(["BULL-01", "BEAR-01", "MOD-01", "PM-01"])
+    assert binding == date(2026, 6, 16)
+    assert binding < date(2026, 6, 23)  # first golden day strictly after
+
+
+def test_runtime_scope_guard_red_cand_roles_never_route_at_runtime():
+    """CP2 S1 red test: the CP1 validation-only roles resolve for evidence/replay purposes, but
+    RUNTIME resolution fail-closes. Gut resolve_runtime's scope check → a CAND role routes → red."""
+    m = load_manifest()
+    for role in ("BULL-01-CAND-DEEPSEEK", "BULL-01-CAND-GLM",
+                 "BULL-01-BASELINE-WEST", "VERIF-CP1-JUDGE"):
+        assert m.resolve(role).scope == "validation"  # still resolvable as committed evidence
+        with pytest.raises(ManifestError, match="validation-only"):
+            m.resolve_runtime(role)
+    # live roles pass the runtime path
+    assert m.resolve_runtime("BULL-01").scope == "runtime"
+
+
+def test_unknown_scope_fails_closed(tmp_path: Path):
+    bad = tmp_path / "scope.yaml"
+    bad.write_text(
+        "roles:\n"
+        "  X-01:\n"
+        "    family: google\n"
+        "    tier: T2\n"
+        "    scope: experimental\n"          # not a known scope
+        "    model_version: google/gemini-3.1-pro-preview\n"
+        "    cutoff: 2026-02-19\n"
+        "    provider:\n"
+        "      only: [google-vertex]\n"
+        "      allow_fallbacks: false\n"
+    )
+    with pytest.raises(ManifestError, match="scope"):
+        load_manifest(bad)
+
+
+def test_cp1_comparison_roles_present_western_host_pinned():
+    """WP3 CP1: the BULL-seat comparison candidates load, Chinese models are Western-host-pinned,
+    and the binding cutoff for the comparison is the MAX across the compared models."""
+    m = load_manifest()
+    cmp_roles = ["BULL-01-CAND-DEEPSEEK", "BULL-01-CAND-GLM", "BULL-01-BASELINE-WEST"]
+    assert set(cmp_roles) <= set(m.specs)
+    # Chinese candidates on approved WESTERN hosts (R1)
+    assert m.resolve("BULL-01-CAND-DEEPSEEK").family == "chinese"
+    assert m.resolve("BULL-01-CAND-DEEPSEEK").provider["only"] == ["fireworks"]
+    assert m.resolve("BULL-01-CAND-GLM").provider["only"] == ["together"]
+    # binding cutoff for the comparison = MAX(deepseek 2026-04-24, glm 2026-06-16, west 2026-02-19)
+    # (CONFIRMED via OpenRouter `created` at CP1b-PRE; GLM binds). Golden days 2026-06-23..26 clear it.
+    assert m.binding_cutoff(cmp_roles) == date(2026, 6, 16)
+
+
+def test_cp1_judge_family_disjoint_from_every_compared_model():
+    """R6 in miniature: the CP1 scoring judge must be a family disjoint from EVERY judged model."""
+    from core.heterogeneity import assert_judge_disjoint
+
+    m = load_manifest()
+    judge_family = m.resolve("VERIF-CP1-JUDGE").family  # openai
+    judged = [m.resolve(r).family for r in
+              ("BULL-01-CAND-DEEPSEEK", "BULL-01-CAND-GLM", "BULL-01-BASELINE-WEST")]
+    available = {s.family for s in m.specs.values()}
+    for jf in judged:
+        assert_judge_disjoint(judge_family, jf, available)  # must NOT raise (openai != chinese/google)
+
+
+def test_western_host_pin_red_a_chinese_model_on_a_non_western_host_fails(tmp_path: Path):
+    """R1 red test: a Chinese-origin (family: chinese) model pinned to a NON-Western host
+    (e.g. the first-party `deepseek` API) must FAIL to load — gut the WESTERN_HOSTS check → green."""
+    bad = tmp_path / "leak.yaml"
+    bad.write_text(
+        "roles:\n"
+        "  BULL-01-CAND-DEEPSEEK:\n"
+        "    family: chinese\n"
+        "    tier: T2\n"
+        "    model_version: deepseek/deepseek-v4-pro\n"
+        "    cutoff: 2026-04-30\n"
+        "    provider:\n"
+        "      only: [deepseek]\n"          # non-Western first-party host -> data egress risk
+        "      allow_fallbacks: false\n"
+    )
+    with pytest.raises(ManifestError, match="WESTERN inference host"):
+        load_manifest(bad)
+
+
+def test_western_host_pin_allows_chinese_model_on_western_host(tmp_path: Path):
+    """Control: the SAME Chinese model on an approved Western host (Fireworks) loads fine."""
+    ok = tmp_path / "ok.yaml"
+    ok.write_text(
+        "roles:\n"
+        "  BULL-01-CAND-DEEPSEEK:\n"
+        "    family: chinese\n"
+        "    tier: T2\n"
+        "    model_version: deepseek/deepseek-v4-pro\n"
+        "    cutoff: 2026-04-30\n"
+        "    provider:\n"
+        "      only: [fireworks]\n"
+        "      allow_fallbacks: false\n"
+    )
+    m = load_manifest(ok)
+    assert m.resolve("BULL-01-CAND-DEEPSEEK").provider["only"] == ["fireworks"]
 
 
 def test_binding_cutoff_is_max_availability_cutoff():

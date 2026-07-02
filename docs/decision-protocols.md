@@ -98,6 +98,18 @@ Candidates with unanimous low-stakes agreement skip to P5 with an **ensemble-onl
    - Exponents `⟨α,β,γ⟩` and clips are configuration; **Phase 1–2 runs with all weights equal** (`w_i = 1`) because weights without track records are noise — believability weighting activates in Phase 3 only after `⟨min_observations_for_weighting⟩` scored calls per agent.
    - **Sycophancy check (automatic):** each voter's ballot is compared to its P2 independent baseline. A stance flip *toward the debate's apparent winner* without new evidence cited is logged as a conformity event (dashboard metric; persistent flippers get a META-01 review).
 3. **Ballot outcome:** direction with max score wins if `score_margin ≥ ⟨ballot_margin_threshold⟩`; otherwise outcome is CONTESTED.
+   - **Margin definition (ruled 2026-07-01, WP3 R4-PRE — Akshar):** `score_margin` is **normalized**:
+     `margin = (score_top − score_runner_up) / total_cast_weight`, where **total cast weight =
+     Σ_i w_i·conviction_i over ALL ballots cast** (no_position included — an abstainer's weight
+     dampens the margin rather than vanishing). *Rationale:* `contested` measures **disagreement
+     among the voters**; the absolute strength of conviction is separately handled by P6's
+     `conviction_factor` sizing, so the threshold must be scale-free across ballots of different
+     sizes/conviction levels. *Motivating case:* the WP3-CP2 smoke ballot (long 1.15 vs short 0.67,
+     total cast 2.55) reads margin **0.2637** under this rule (not contested), but **0.48**
+     unnormalized and **0.16** (contested!) if normalized by voter count — three readings, three
+     different contested outcomes; the spec previously never defined the denominator.
+     `configuration.md` §4's "margin below 20% **of total cast weight**" is the same rule stated
+     from the threshold side. Boundary: `margin == threshold` ⇒ **NOT** contested.
 
 **Outputs:** `ballot_summary {weighted_score, margin, dissent_summary, contested: bool}`.
 **Metrics:** margin distribution, conformity events, weight concentration (no agent's weight may exceed `⟨w_max⟩` — prevents a hot streak from becoming a dictatorship).

@@ -1,15 +1,19 @@
-"""Deployment manifest — the version-pinning layer (WP2).
+"""Deployment manifest — the version-pinning layer (WP2; `manifest_version` consumed by WP3 R5).
 
 configuration.md §3 fixes family/tier by ROLE (the decorrelation design: different model
-families so adversaries/judges aren't one model checking itself). This manifest pins the
-exact `model_version` per role and each model's TRAINING-DATA cutoff. It carries its own hash
-(`manifest_version`), stamped per call alongside `model_version` into the ReplayTuple
-(core/replay.py), so a model swap is auditable in the replay identity.
+families so adversaries/judges aren't one model checking itself). This manifest pins the exact
+`model_version` per role and each model's post-cutoff gate date (`cutoff`, see below). It carries
+its own hash (`manifest_version`), stamped per call into the ReplayTuple's own `manifest_version`
+field (core/replay.py — WP3 R5 gave it a first-class field, un-conflating it from `config_version`),
+so a model/roster swap is auditable in the replay identity.
 
-R1 / backtesting-framework.md §6 C1: the post-cutoff fixture gate guards against MEMORIZATION,
-so `cutoff` is the **training-data cutoff** (the broader range), not the narrower "reliable
-knowledge cutoff". The binding cutoff for a fixture is the MAX cutoff across every model that
-will read it.
+R1 / backtesting-framework.md §6 C1: the post-cutoff fixture gate guards against MEMORIZATION, so
+`cutoff` must be a date provably >= the model's training-data cutoff (`fixture_date > cutoff` then
+guarantees the fixture was not in training). Where a provider publishes only a "knowledge cutoff"
+— a LOWER bound, unsafe to use directly (e.g. Google / OpenAI) — `cutoff` is the model's public
+availability date, a provably-conservative UPPER bound on training data. The binding cutoff for a
+fixture is the MAX cutoff across every model that will read it. (Same framing as
+deploy/model_manifest.yaml — SF-4 wording unified.)
 """
 
 from __future__ import annotations
@@ -25,10 +29,22 @@ import yaml
 DEFAULT_MANIFEST = Path("deploy/model_manifest.yaml")
 _REQUIRED = ("family", "tier", "model_version", "cutoff", "provider")
 
+# R1 (WP3, done-criteria §R1 sub-condition 2): an open-weight family whose weights are Chinese-origin
+# must run on a WESTERN inference host so no data leaves to a non-Western first-party API and
+# `model_version` pins a frozen artifact. Keyed on the declared `family`; DEFAULT-DENY — any host not
+# in this allowlist fails the load for such a family (fail-closed). The allowlist is the R1-approved
+# Western OpenRouter backends (extend only by review); e.g. `deepseek`/`zhipu`/`novita`/`siliconflow`
+# (non-Western first-party hosts) are deliberately absent.
+HOST_PINNED_FAMILIES = frozenset({"chinese"})
+WESTERN_HOSTS = frozenset({"fireworks", "together", "google-vertex"})
+
 
 class ManifestError(Exception):
     """Malformed/incomplete manifest. Fail-closed — an unpinned model or cutoff must never
     silently pass R1, so loading raises rather than defaulting."""
+
+
+_SCOPES = ("runtime", "validation")
 
 
 @dataclass(frozen=True)
@@ -37,8 +53,9 @@ class ModelSpec:
     family: str
     tier: str
     model_version: str   # OpenRouter slug, e.g. "anthropic/claude-sonnet-4.6"
-    cutoff: str          # training-data cutoff, ISO date (YYYY-MM-DD), end-of-month conservative
+    cutoff: str          # post-cutoff gate date >= training cutoff (availability-date proxy), ISO YYYY-MM-DD
     provider: dict       # OpenRouter routing pin, e.g. {"only": ["anthropic"], "allow_fallbacks": False}
+    scope: str = "runtime"  # "runtime" (live loop may use) | "validation" (committed evidence only — CP1 comparison roles)
 
     @property
     def cutoff_date(self) -> date:
@@ -58,6 +75,18 @@ class Manifest:
             raise ManifestError(
                 f"role {role!r} not in manifest (have: {sorted(self.specs)})"
             ) from None
+
+    def resolve_runtime(self, role: str) -> ModelSpec:
+        """Resolve a role for the RUNTIME loop. Fail-closed on a validation-scoped role: the CP1
+        comparison roles (BULL-01-CAND-*, BULL-01-BASELINE-WEST, VERIF-CP1-JUDGE) are committed R1
+        evidence, not live seats — a runtime node must never route to them (WP3 CP2 STEP 1)."""
+        spec = self.resolve(role)
+        if spec.scope != "runtime":
+            raise ManifestError(
+                f"role {role!r} is scope={spec.scope!r} — validation-only (CP1 evidence), not a live "
+                f"seat. The runtime loop must use the live roles (e.g. BULL-01), never a CAND role."
+            )
+        return spec
 
     def binding_cutoff(self, roles: Iterable[str]) -> date:
         """R1: binding training-data cutoff for a fixture = MAX cutoff across the models that
@@ -107,6 +136,22 @@ def load_manifest(path: Path = DEFAULT_MANIFEST) -> Manifest:
                 f"backends, so model_version alone would not pin what ran)"
             )
 
+        family = str(d["family"])
+        if family.lower() in HOST_PINNED_FAMILIES:
+            hosts = list(provider.get("only") or provider.get("order") or [])
+            offending = [h for h in hosts if h not in WESTERN_HOSTS]
+            if offending:
+                raise ManifestError(
+                    f"role {role!r}: family {family!r} is open-weight and must be pinned to an "
+                    f"R1-approved WESTERN inference host {sorted(WESTERN_HOSTS)}; host(s) "
+                    f"{offending} are not approved. A Chinese-origin model on a non-Western host "
+                    f"could egress data and breaks R1 (fail-closed)."
+                )
+
+        scope = str(d.get("scope", "runtime"))
+        if scope not in _SCOPES:
+            raise ManifestError(f"role {role!r}: scope {scope!r} not in {_SCOPES} (fail-closed)")
+
         specs[role] = ModelSpec(
             role=role,
             family=str(d["family"]),
@@ -114,6 +159,7 @@ def load_manifest(path: Path = DEFAULT_MANIFEST) -> Manifest:
             model_version=str(d["model_version"]),
             cutoff=cutoff,
             provider=provider,
+            scope=scope,
         )
 
     return Manifest(

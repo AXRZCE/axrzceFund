@@ -75,7 +75,9 @@ def test_fund_tech_grounded_validated_metered_replay(tmp_path):
     assert events and events[0].event_type == "memo_written"
     assert events[0].payload["usage"]["cost_usd"] > 0.0
 
-    # R5 — replay-stamped (model + manifest version + decision boundary)
+    # R5 — replay-stamped (model + manifest version + decision boundary).
+    # WP3 R5: manifest hash now lives in its OWN field (was conflated into config_version at WP2).
     assert run.replay.model_version.startswith("google/gemini-3.1-pro")
     assert run.replay.decision_ts == fx.decision_ts
-    assert run.replay.config_version == man.manifest_version
+    assert run.replay.manifest_version == man.manifest_version
+    assert run.replay.config_version != man.manifest_version  # un-conflated: config_version is configuration.md's hash

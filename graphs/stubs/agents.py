@@ -1,23 +1,25 @@
-"""The nine Phase-1 stub agents (replaced by real LLM agents in WP2).
+"""The remaining Phase-1 stub agents (each leaves this package as its real agent lands).
 
 Each returns a schema-valid but CLEARLY-FAKE artifact — deterministic canned content
-so a WP1 cycle is reproducible with zero LLM calls. No agent here imports any LLM
+so a skeleton cycle is reproducible with zero LLM calls. No agent here imports any LLM
 SDK. The `_STUB` markers make it obvious in any output/log that this is not a real
 memo, so a stub can never be mistaken for a real decision.
+
+WP3 CP2 (R2): StubBULL01 / StubBEAR01 / StubMOD01 are REMOVED — the debate roles left the
+quarantine when graphs/debate.py landed (anti-hoax: no canned returns outside stubs, and no
+stub left behind for a role that has a real implementation). The deep-loop debate node now takes
+an injected implementation; tests inject test doubles from tests/, production injects the real
+graphs.debate machinery. StubPM01 no longer casts ballots (P5: PM-01 does not vote — a WP1
+modeling error fixed here); the skeleton's sealed votes come from StubVoters.
 """
 
 from __future__ import annotations
 
 from graphs.state import (
-    Argument,
     Ballot,
-    BallotSummary,
     Catalyst,
-    DebateTurn,
-    EntryPlan,
     KeyClaim,
     ResearchMemo,
-    TradeProposal,
 )
 
 _STUB = "STUB — replaced in WP2"
@@ -63,52 +65,27 @@ class StubVERIF01:
         return list(memos), []
 
 
-# ── Adversarial pool (P4) → DebateTurn ──────────────────────────────────────────
-class StubBULL01:
-    agent_id = "BULL-01"
+# ── P5 sealed votes (skeleton only; real casting = graphs/debate.cast_votes, WP3 CP2) ──
+class StubVoters:
+    """Deterministic MIXED sealed votes so the REAL tally (graphs/ballot.tally) is exercised with
+    texture, not unanimity. Voter roster per P5: research agents with valid memos + BULL-01/BEAR-01
+    (stances constitutionally fixed to their roles); MOD-01/PM-01/governance do not vote."""
 
-    def run(self, candidate: str, round_: int = 1) -> DebateTurn:
-        return DebateTurn(
-            agent_id=self.agent_id, round=round_, position="bull",
-            arguments=[Argument(point=f"{_STUB} bull point", evidence=["stub_doc"], attacks=None)],
-            concessions=[f"{_STUB} concession"], steelman_of_opponent=f"{_STUB} steelman")
+    agent_id = "P5-VOTERS"
 
-
-class StubBEAR01:
-    agent_id = "BEAR-01"
-
-    def run(self, candidate: str, round_: int = 1) -> DebateTurn:
-        return DebateTurn(
-            agent_id=self.agent_id, round=round_, position="bear",
-            arguments=[Argument(point=f"{_STUB} bear point", evidence=["stub_doc"], attacks="claim_0")],
-            concessions=[f"{_STUB} concession"], steelman_of_opponent=f"{_STUB} steelman")
+    def cast(self) -> list[Ballot]:
+        return [
+            Ballot(voter="FUND-TECH", stance="long", conviction=0.6, size_inclination="standard"),
+            Ballot(voter="TECH-01", stance="long", conviction=0.55, size_inclination="standard"),
+            Ballot(voter="SENT-01", stance="no_position", conviction=0.4, size_inclination="small"),
+            Ballot(voter="BULL-01", stance="long", conviction=0.8, size_inclination="standard"),
+            Ballot(voter="BEAR-01", stance="short", conviction=0.6, size_inclination="small"),
+        ]
 
 
-class StubMOD01:
-    agent_id = "MOD-01"
-
-    def run(self, turns: list[DebateTurn]) -> tuple[str, list[str]]:
-        """Returns (debate_summary, premortem_top_risks)."""
-        return f"{_STUB}: debate summary over {len(turns)} turns", [f"{_STUB} premortem risk"]
-
-
-# ── Decision pool (P5/P6) → Ballot / TradeProposal ──────────────────────────────
-class StubPM01:
-    agent_id = "PM-01"
-
-    def ballot(self, voters: list[str]) -> list[Ballot]:
-        """Stub sealed ballot — each voter casts the same canned vote."""
-        return [Ballot(voter=v, stance="long", conviction=0.5, size_inclination="standard")
-                for v in voters]
-
-    def propose(self, candidate: str, ballot_summary: BallotSummary,
-                premortem: list[str]) -> TradeProposal:
-        return TradeProposal(
-            agent_id=self.agent_id, ticker=candidate, direction="long", size_pct_nav=1.0,
-            entry_plan=EntryPlan(type="market_open", params={}), stop_loss="5pct",
-            invalidation_conditions=[f"{_STUB} invalidation"], horizon_days=10,
-            thesis=f"{_STUB}: PM thesis", premortem_top_risks=premortem,
-            expected_edge_bps=25, ballot_summary=ballot_summary)
+# ── Decision pool (P6): StubPM01 REMOVED at WP3 CP3 — PM-01 is real (graphs/pm.py). ──
+# The deep-loop pm node takes an injected implementation (tests inject a double), same
+# pattern as the debate node at CP2. No stub left behind for a role with a real agent.
 
 
 # ── Governance (P9): post-mortem ────────────────────────────────────────────────

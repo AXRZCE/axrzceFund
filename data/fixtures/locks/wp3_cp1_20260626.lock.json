@@ -1,0 +1,25 @@
+{
+  "fixture_id": "wp3_cp1_20260626",
+  "decision_ts": "2026-06-26T20:00:00+00:00",
+  "tickers": [
+    "AVGO",
+    "COST",
+    "LULU",
+    "MDT"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-07-01T20:26:37.879116+00:00",
+  "content_hash": "3639eb701dd1beb8",
+  "payload_summary": {
+    "price_bars": 100,
+    "fundamentals": {
+      "ASSETS": 400,
+      "EPS": 397,
+      "EQUITY": 400,
+      "FCF": 398,
+      "NETINC": 399,
+      "REVENUE": 399
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}

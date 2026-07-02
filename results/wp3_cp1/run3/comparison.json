@@ -1,0 +1,835 @@
+{
+  "bar_as_declared": {
+    "G1_schema_min": 0.9,
+    "G2_abs_floor": 0.7,
+    "G3_parity_margin": 0.05,
+    "west_baseline_mean": 0.7188,
+    "west_baseline_status": "OK"
+  },
+  "per_model": {
+    "BULL-01-CAND-DEEPSEEK": {
+      "status": "OK",
+      "disqualified_c3": false,
+      "mean_composite": 0.5938,
+      "grounding_mean": 2.0625,
+      "schema_valid_rate": 1.0,
+      "n_scored": 16,
+      "transport_failures": 0,
+      "cost_usd": 0.243654,
+      "tokens": {
+        "prompt": 21907,
+        "completion": 61173
+      },
+      "gates": {
+        "G1_schema>=0.90": true,
+        "G2_mean>=0.70": false,
+        "G3_parity>=west-0.05": false,
+        "passes": false
+      }
+    },
+    "BULL-01-CAND-GLM": {
+      "status": "OK",
+      "disqualified_c3": false,
+      "mean_composite": 0.7383,
+      "grounding_mean": 2.375,
+      "schema_valid_rate": 1.0,
+      "n_scored": 16,
+      "transport_failures": 0,
+      "cost_usd": 0.093636,
+      "tokens": {
+        "prompt": 18496,
+        "completion": 15744
+      },
+      "gates": {
+        "G1_schema>=0.90": true,
+        "G2_mean>=0.70": true,
+        "G3_parity>=west-0.05": true,
+        "passes": true
+      }
+    },
+    "BULL-01-BASELINE-WEST": {
+      "status": "OK",
+      "disqualified_c3": false,
+      "mean_composite": 0.7188,
+      "grounding_mean": 2.9375,
+      "schema_valid_rate": 1.0,
+      "n_scored": 16,
+      "transport_failures": 0,
+      "cost_usd": 0.593096,
+      "tokens": {
+        "prompt": 23176,
+        "completion": 45562
+      }
+    }
+  },
+  "verdict": {
+    "outcome": "SEAT_CHINESE",
+    "bull_seat": "BULL-01-CAND-GLM",
+    "model_version": "z-ai/glm-5.2",
+    "reason": "BULL-01-CAND-GLM clears G1-G3 vs a valid baseline (mean=0.7383, west=0.7188)",
+    "caveat": null
+  },
+  "run": "run3 (run of record)",
+  "total_cost_usd": 1.16727,
+  "prior_spend_usd": 1.352,
+  "cumulative_cost_usd": 2.51927,
+  "hard_cap_usd": 15.0,
+  "degrade_stop_usd": 12.0,
+  "cells_completed": 16,
+  "usage_by_model": {
+    "BULL-01-CAND-DEEPSEEK": {
+      "cost_usd": 0.24365365000000003,
+      "prompt_tokens": 21907,
+      "completion_tokens": 61173,
+      "calls": 19
+    },
+    "BULL-01-CAND-GLM": {
+      "cost_usd": 0.09363584000000001,
+      "prompt_tokens": 18496,
+      "completion_tokens": 15744,
+      "calls": 16
+    },
+    "BULL-01-BASELINE-WEST": {
+      "cost_usd": 0.5930959999999998,
+      "prompt_tokens": 23176,
+      "completion_tokens": 45562,
+      "calls": 16
+    },
+    "VERIF-CP1-JUDGE": {
+      "cost_usd": 0.23688499999999998,
+      "prompt_tokens": 60182,
+      "completion_tokens": 5762,
+      "calls": 16
+    }
+  },
+  "fixture_hash_verified": {
+    "wp3_cp1_20260623": true,
+    "wp3_cp1_20260624": true,
+    "wp3_cp1_20260625": true,
+    "wp3_cp1_20260626": true
+  },
+  "incomplete_cells": {
+    "BULL-01-CAND-DEEPSEEK": 0,
+    "BULL-01-CAND-GLM": 0,
+    "BULL-01-BASELINE-WEST": 0
+  },
+  "fail_reasons": {
+    "BULL-01-CAND-DEEPSEEK": {
+      "ok": 16
+    },
+    "BULL-01-CAND-GLM": {
+      "ok": 16
+    },
+    "BULL-01-BASELINE-WEST": {
+      "ok": 16
+    }
+  },
+  "manifest_version": "4f34593c18b7",
+  "code_version": "8bb03f3",
+  "per_cell": [
+    {
+      "day": "20260623",
+      "ticker": "AVGO",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-BASELINE-WEST",
+        "B": "BULL-01-CAND-DEEPSEEK",
+        "C": "BULL-01-CAND-GLM"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-BASELINE-WEST": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.8125
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 2,
+          "composite": 0.5625
+        },
+        "BULL-01-CAND-GLM": {
+          "D1": 1,
+          "D2": 4,
+          "D3": 4,
+          "D4": 4,
+          "composite": 0.8125
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260623",
+      "ticker": "COST",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-BASELINE-WEST",
+        "B": "BULL-01-CAND-GLM",
+        "C": "BULL-01-CAND-DEEPSEEK"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-BASELINE-WEST": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        },
+        "BULL-01-CAND-GLM": {
+          "D1": 3,
+          "D2": 3,
+          "D3": 4,
+          "D4": 4,
+          "composite": 0.875
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 1,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.5625
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260623",
+      "ticker": "MDT",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-BASELINE-WEST",
+        "B": "BULL-01-CAND-GLM",
+        "C": "BULL-01-CAND-DEEPSEEK"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-BASELINE-WEST": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        },
+        "BULL-01-CAND-GLM": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260623",
+      "ticker": "LULU",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM",
+        "B": "BULL-01-CAND-DEEPSEEK",
+        "C": "BULL-01-BASELINE-WEST"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 1,
+          "D2": 1,
+          "D3": 2,
+          "D4": 2,
+          "composite": 0.375
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 2,
+          "D4": 2,
+          "composite": 0.5
+        },
+        "BULL-01-BASELINE-WEST": {
+          "D1": 0,
+          "D2": 1,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.4375
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260624",
+      "ticker": "AVGO",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-BASELINE-WEST",
+        "B": "BULL-01-CAND-DEEPSEEK",
+        "C": "BULL-01-CAND-GLM"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-BASELINE-WEST": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        },
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 3,
+          "D3": 4,
+          "D4": 4,
+          "composite": 0.8125
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260624",
+      "ticker": "COST",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 1,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-BASELINE-WEST",
+        "B": "BULL-01-CAND-GLM",
+        "C": "BULL-01-CAND-DEEPSEEK"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-BASELINE-WEST": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        },
+        "BULL-01-CAND-GLM": {
+          "D1": 3,
+          "D2": 3,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.75
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 2,
+          "D4": 2,
+          "composite": 0.5
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260624",
+      "ticker": "MDT",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-DEEPSEEK",
+        "B": "BULL-01-BASELINE-WEST",
+        "C": "BULL-01-CAND-GLM"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.8125
+        },
+        "BULL-01-BASELINE-WEST": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        },
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 3,
+          "D3": 3,
+          "D4": 4,
+          "composite": 0.75
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260624",
+      "ticker": "LULU",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 1,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM",
+        "B": "BULL-01-CAND-DEEPSEEK",
+        "C": "BULL-01-BASELINE-WEST"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 1,
+          "D2": 1,
+          "D3": 2,
+          "D4": 2,
+          "composite": 0.375
+        },
+        "BULL-01-BASELINE-WEST": {
+          "D1": 1,
+          "D2": 1,
+          "D3": 2,
+          "D4": 3,
+          "composite": 0.4375
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260625",
+      "ticker": "AVGO",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-BASELINE-WEST",
+        "B": "BULL-01-CAND-DEEPSEEK",
+        "C": "BULL-01-CAND-GLM"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-BASELINE-WEST": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        },
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 3,
+          "D3": 3,
+          "D4": 4,
+          "composite": 0.75
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260625",
+      "ticker": "COST",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-BASELINE-WEST",
+        "B": "BULL-01-CAND-GLM",
+        "C": "BULL-01-CAND-DEEPSEEK"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-BASELINE-WEST": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        },
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 3,
+          "D3": 3,
+          "D4": 4,
+          "composite": 0.75
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 1,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.5625
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260625",
+      "ticker": "MDT",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM",
+        "B": "BULL-01-CAND-DEEPSEEK",
+        "C": "BULL-01-BASELINE-WEST"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 3,
+          "D2": 3,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.75
+        },
+        "BULL-01-BASELINE-WEST": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 2,
+          "composite": 0.5625
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260625",
+      "ticker": "LULU",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 1,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM",
+        "B": "BULL-01-CAND-DEEPSEEK",
+        "C": "BULL-01-BASELINE-WEST"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 1,
+          "D2": 1,
+          "D3": 2,
+          "D4": 3,
+          "composite": 0.4375
+        },
+        "BULL-01-BASELINE-WEST": {
+          "D1": 1,
+          "D2": 1,
+          "D3": 2,
+          "D4": 3,
+          "composite": 0.4375
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260626",
+      "ticker": "AVGO",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-BASELINE-WEST",
+        "B": "BULL-01-CAND-DEEPSEEK",
+        "C": "BULL-01-CAND-GLM"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-BASELINE-WEST": {
+          "D1": 4,
+          "D2": 2,
+          "D3": 3,
+          "D4": 2,
+          "composite": 0.6875
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        },
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 3,
+          "D3": 4,
+          "D4": 4,
+          "composite": 0.8125
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260626",
+      "ticker": "COST",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-BASELINE-WEST",
+        "B": "BULL-01-CAND-GLM",
+        "C": "BULL-01-CAND-DEEPSEEK"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-BASELINE-WEST": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 4,
+          "composite": 0.9375
+        },
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 2,
+          "D4": 2,
+          "composite": 0.5
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260626",
+      "ticker": "MDT",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM",
+        "B": "BULL-01-CAND-DEEPSEEK",
+        "C": "BULL-01-BASELINE-WEST"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 2,
+          "D2": 3,
+          "D3": 3,
+          "D4": 2,
+          "composite": 0.625
+        },
+        "BULL-01-BASELINE-WEST": {
+          "D1": 3,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.6875
+        }
+      },
+      "fail_detail": {}
+    },
+    {
+      "day": "20260626",
+      "ticker": "LULU",
+      "schema_ok": {
+        "BULL-01-CAND-DEEPSEEK": true,
+        "BULL-01-CAND-GLM": true,
+        "BULL-01-BASELINE-WEST": true
+      },
+      "retried": {
+        "BULL-01-CAND-DEEPSEEK": 0,
+        "BULL-01-CAND-GLM": 0,
+        "BULL-01-BASELINE-WEST": 0
+      },
+      "lab2role": {
+        "A": "BULL-01-CAND-GLM",
+        "B": "BULL-01-CAND-DEEPSEEK",
+        "C": "BULL-01-BASELINE-WEST"
+      },
+      "n_judged_together": 3,
+      "scores": {
+        "BULL-01-CAND-GLM": {
+          "D1": 4,
+          "D2": 3,
+          "D3": 4,
+          "D4": 3,
+          "composite": 0.875
+        },
+        "BULL-01-CAND-DEEPSEEK": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 2,
+          "composite": 0.5625
+        },
+        "BULL-01-BASELINE-WEST": {
+          "D1": 2,
+          "D2": 2,
+          "D3": 3,
+          "D4": 3,
+          "composite": 0.625
+        }
+      },
+      "fail_detail": {}
+    }
+  ]
+}

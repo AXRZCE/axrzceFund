@@ -104,6 +104,36 @@ class DebateTurn(BaseModel):
     steelman_of_opponent: str
 
 
+class ClosingStatement(BaseModel):  # §4.1 "final closing_statement with its 3 strongest surviving points"
+    agent_id: str
+    position: Literal["bull", "bear"]  # must equal the assigned side — a flip is capitulation (P4.2)
+    strongest_points: list[str] = Field(min_length=1, max_length=3)
+    conviction: float = Field(ge=0.0, le=1.0)  # carried into the debater's constitutionally-fixed ballot (P5)
+
+
+# ── §4.2 MOD-01 debate_summary (structured per the WP1-R1 reconcile's WP3 note) ──
+# `extra: forbid` is the NEUTRALITY guard: the schema has no stance field, and a moderator output
+# smuggling one in (stance/direction/winner/...) fails validation (agent-specifications §4.2:
+# "drifting into having an opinion → guard: schema has no stance field").
+class FailureScenario(BaseModel):
+    model_config = {"extra": "forbid"}
+    scenario: str
+    early_warning_indicator: str  # observable; "a pre-mortem without observable indicators is unfinished"
+
+
+class Premortem(BaseModel):
+    model_config = {"extra": "forbid"}
+    failure_scenarios: list[FailureScenario] = Field(default_factory=list)
+
+
+class DebateSummary(BaseModel):
+    model_config = {"extra": "forbid"}
+    resolved_points: list[str] = Field(default_factory=list)
+    unresolved_cruxes: list[str] = Field(default_factory=list)
+    premortem: Premortem = Field(default_factory=Premortem)
+    process_flags: list[str] = Field(default_factory=list)
+
+
 # ── §2.3 TradeProposal ──────────────────────────────────────────────────────────
 class EntryPlan(BaseModel):
     type: Literal["market_open", "limit", "vwap_window"]
@@ -161,7 +191,8 @@ class CycleState(BaseModel):
     verifier_flags: list[str] = Field(default_factory=list)
     debate_eligible: bool = False                                      # P3
     debate_turns: list[DebateTurn] = Field(default_factory=list)       # P4
-    debate_summary: Optional[str] = None                              # MOD-01
+    debate_closings: list[ClosingStatement] = Field(default_factory=list)  # §4.1 (WP3 CP2)
+    debate_summary: Optional[DebateSummary] = None                    # MOD-01 §4.2 (structured at WP3 per the R1 reconcile)
     premortem_top_risks: list[str] = Field(default_factory=list)
     ballot: list[Ballot] = Field(default_factory=list)                 # P5 (sealed)
     ballot_summary: Optional[BallotSummary] = None

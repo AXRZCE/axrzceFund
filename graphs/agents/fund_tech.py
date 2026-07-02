@@ -20,6 +20,7 @@ from dataclasses import dataclass
 from typing import Any, Optional
 
 from core.event_log import EventLog
+from core.config import load_config
 from core.llm import LLMResponse, OpenRouterClient
 from core.manifest import Manifest
 from core.replay import ReplayTuple, new_trade_id
@@ -122,7 +123,7 @@ def run_fund_tech(
     max_tokens: int = 8000,
 ) -> AgentRun:
     """Run FUND-TECH on one fixture candidate. Returns the validated, metered, replay-stamped run."""
-    spec = manifest.resolve(ROLE)
+    spec = manifest.resolve_runtime(ROLE)  # runtime path — a validation-scoped role fail-closes (CP2 S1)
     data_block, _doc_ids = _candidate_doc_block(fixture, candidate)
     messages = [
         {"role": "system", "content": SYSTEM},
@@ -156,7 +157,9 @@ def run_fund_tech(
     replay = ReplayTuple(
         trade_id=new_trade_id(), cycle_id=cycle_id, decision_ts=fixture.decision_ts,
         agent_id=ROLE, prompt_version=PROMPT_VERSION, model_version=resp.model_version,
-        config_version=manifest.manifest_version, code_version=code_version,
+        manifest_version=manifest.manifest_version,        # WP3 R5: manifest hash in its own field
+        config_version=load_config().config_version,       # configuration.md hash (no longer conflated)
+        code_version=code_version,
     )
 
     if event_log is not None:
