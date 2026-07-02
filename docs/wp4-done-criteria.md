@@ -17,8 +17,8 @@ risk-analyst agent itself is Phase 2** — WP4 builds the gate only, per §7's r
 the actual WP2–WP3 portfolio);
 WP0 broker layer: `data/interfaces/alpaca.py` (`AlpacaBroker.submit` is the REAL write path —
 G0.5 proved it with real fills; `simulate_fill` models at `_HALF_SPREAD_BPS = 1.0`) + the G0.5
-artifacts (`results/g05/` — measured modeled-vs-broker divergence **≈1.8 bps** per side, n=6 fills
-across two runs);
+artifacts (`results/g05/`, **n=20 divergence records across two runs: mean_abs 1.94 bps, median
+1.07 bps, max +10.4 bps** — recomputed from the committed artifacts);
 `graphs/pm.py` (`TradeProposal` + sizing audit = the gate's input; `ASSUMED_ROUND_TRIP_COST_BPS=20`
 is the flagged placeholder this WP retires); [wp3-readout.md](wp3-readout.md) carried limitations.
 
@@ -41,15 +41,15 @@ divergence; config §5/§6 standing values.
 |---|---|---|
 | `max_position_pct_nav` | **5%** ($50k) — keep §6 | Observed max PM size 0.735% ⇒ ~7× headroom even after adds; no evidence to move it. |
 | `max_new_position_pct_nav` | **2.5%** ($25k) — keep §5 | Already binding in `graphs/pm.py` sizing; never approached (max 0.735%). |
-| `max_sector_pct_nav` | **20%** gross — keep §6 | ⚠️ THIN (N=2 proposals, both different sectors): binds only at ~8 same-sector starter positions; adopt, exercise at WP6. |
-| `max_gross` / `net_band` | **150% / ±30%** — keep §6 | ⚠️ THIN (Phase-1 book is 0–2 positions; gross ≈ 1.2% max observed): adopt §6 defaults, first real exercise is WP6's week. |
+| `max_sector_pct_nav` | **20%** gross — keep §6 | ⚠️ THIN (N=2 proposals, both different sectors): binds only at ~8 same-sector starter positions; adopt, exercise at WP6; **re-derived at WP6 close from the real book**. |
+| `max_gross` / `net_band` | **150% / ±30%** — keep §6 | ⚠️ THIN (Phase-1 book is 0–2 positions; gross ≈ 1.2% max observed): adopt §6 defaults, first real exercise is WP6's week; **re-derived at WP6 close from the real book**. |
 | `max_adv_participation_pct` | **2%** of 20-day ADV — keep §6 | Measured ADV: AVGO ~$8.0B, COST ~$1.1B, MDT ~$493M, LULU ~$340M ⇒ 2% ≥ $6.8M/day vs $50k max position — never binds by ~100–3000×, which is the intended design ("binding liquidity would mean we're simulating a fund we aren't"). |
 | `min_adv_usd` (P1 floor, ENFORCED IN THE GATE) | **$20M** — keep §1 | **Evidence finding:** the WP2 fixture names BNC (~$1.0M) and BIOX (~$0.1M) are FAR below the floor — the gate must re-check it so a sub-floor name can never reach the order path even if screening regresses. |
 | `min_price` | **$5.00** — keep §1 | Same gate re-check; all observed candidates ≥ ~$180. |
 | `min_clamp_ratio` | **0.8** — keep §6 | Behavior pinned by R1's boundary test (trim to ≥80% ⇒ clamp; needing more ⇒ reject). |
 | Breakers §7 | **pod −5%/−7.5%; fund −6% (derisk to 75%)/−10% HALT; cooldown 3** — keep | Frozen-Set §9.3 (tighten-only); at $1M NAV the fund trips are −$60k/−$100k; no P&L history yet to justify tightening. ⚠️ THIN by construction — first exercised via R4's injected breaches, then WP6. |
 | `escalation_timeout` / `default_derisk_pct` | **10 min / 50%** — keep §8 | Red-tested at R5; no latency evidence yet to move them. |
-| **Cost model (NEW — replaces the 20 bps placeholder)** | `round_trip_cost_bps = max(2 × half_spread_bps + impact_bps, 6)` with `half_spread_bps = 2`, `impact_bps = 25 × participation_fraction` | **Measured:** G0.5 modeled-vs-broker divergence ≈1.8 bps/side (n=6) and the WP0 model floor is 1 bp/side; propose 2 bps/side (conservative ~2× measured), impact linear in participation (negligible at our ~1e-4 participation), and a **6 bps round-trip floor** so the edge gate (3×) still demands ≥18 bps edge. ⚠️ Materially LOWER than the 20 bps placeholder (edge bar drops 60→18 bps) — this is the honest number, but flagged prominently since it loosens P6; refine from logged IEX quotes during WP6. |
+| **Cost model (NEW — replaces the 20 bps placeholder)** | `round_trip_cost_bps = max(2 × half_spread_bps + impact_bps, 6)` with `half_spread_bps = 2`, `impact_bps = 25 × participation_fraction` | **Measured (G0.5 artifacts, n=20):** modeled-vs-broker divergence mean_abs **1.94 bps**, median **1.07 bps**, **max +10.4 bps**. 2 bps/side ≈ **1.0× the measured mean** (it is ~2× only vs the WP0 model's 1 bp/side floor); the **+10.4 bps outlier is known tail risk** the 6 bps round-trip floor only PARTIALLY covers — accepted for Phase 1, monitored. Impact linear in participation (negligible at our ~1e-4 participation). Floor 6 bps ⇒ the edge gate (3×) demands ≥18 bps edge. ⚠️ Materially LOWER than the 20 bps placeholder (edge bar drops 60→18 bps) — honest number, flagged since it loosens P6. |
 
 ---
 
@@ -115,10 +115,15 @@ never new entries, never size increases (Frozen-Set §9.5).
 
 ### R6 — The real cost model replaces the 20 bps placeholder this WP.
 `round_trip_cost_bps(order_notional, adv_usd_20d) = max(2·half_spread_bps + impact_bps, floor)`
-with the ratified parameters (proposed above): half_spread 2 bps (≈2× G0.5's measured 1.8 bps
-divergence), `impact_bps = 25 × participation_fraction`, floor 6 bps. `graphs/pm.py` consumes it
-(the flagged `ASSUMED_ROUND_TRIP_COST_BPS` constant is deleted); the P6 edge check
-(`expected_edge_bps ≥ 3× cost`) now runs against the modeled cost of THIS order in THIS name.
+with the ratified parameters (table above): half_spread 2 bps (≈1.0× the G0.5 measured mean_abs of
+1.94 bps, n=20; the +10.4 bps outlier is known tail risk the floor partially covers),
+`impact_bps = 25 × participation_fraction`, floor 6 bps. `graphs/pm.py` consumes it (the flagged
+`ASSUMED_ROUND_TRIP_COST_BPS` constant is deleted); the P6 edge check (`expected_edge_bps ≥ 3×
+cost`) now runs against the modeled cost of THIS order in THIS name.
+- **MANDATORY recalibration checkpoint (committed here as part of this ruling, ratified by Akshar):**
+  the cost parameters are **re-derived at WP6 from the dry-run week's logged IEX quotes** (measured
+  spreads), and again at WP7 from real paper fills — this is a **WP6 gate item**, not a hope. The
+  Phase-1 parameters above are explicitly interim.
 - **Red tests:** the model is size- and liquidity-sensitive — a larger order in a thinner name
   costs strictly more (gut to a constant → the monotonicity test red); the floor binds at megacap
   sizes (6 bps, so required edge 18 bps); the placeholder constant is GONE from graphs/pm.py
