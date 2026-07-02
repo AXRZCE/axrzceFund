@@ -85,9 +85,13 @@ def test_conviction_factor_range():
 
 # ── R5: edge, override guard, grounding, replay ───────────────────────────────────
 def test_edge_below_multiple_rejected():
+    """WP4 R6: the cost is the MODEL's output, supplied explicitly (no default constant).
+    At the 6 bps floor the bar is 18 bps."""
     with pytest.raises(EdgeError, match="round-trip"):
-        check_edge(59.0)  # 3 × 20bps = 60 required
-    check_edge(60.0)  # boundary: exactly the multiple passes
+        check_edge(17.9, round_trip_cost_bps=6.0)
+    check_edge(18.0, round_trip_cost_bps=6.0)  # boundary: exactly the multiple passes
+    with pytest.raises(EdgeError):
+        check_edge(25.0, round_trip_cost_bps=9.0)  # thinner name, higher bar (27)
 
 
 def test_override_without_rebuttal_rejected():

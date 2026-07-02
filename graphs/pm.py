@@ -16,9 +16,9 @@ says. P6 discipline enforced in code, not prompt-trusted:
   - Hard caps AFTER the haircuts: contested ⇒ `contested_size_cap_pct_nav = 0.5%` (R4: both the
     haircut AND the cap fire); DEBATE_FAILED ⇒ `undebated_size_cap_pct_nav = 0.75%`; all new
     positions ⇒ `max_new_position_pct_nav = 2.5%`.
-  - `expected_edge_bps ≥ edge_to_cost_multiple × round-trip cost` validity check. ⚠️ Phase-1
-    placeholder cost (`ASSUMED_ROUND_TRIP_COST_BPS`) until the backtesting-framework cost model
-    lands — FLAGGED in the CP3 readout, not hidden.
+  - `expected_edge_bps ≥ edge_to_cost_multiple × round-trip cost` validity check, where the cost
+    is the REAL model (core/costs.py, WP4 R6): spread + participation impact, floored — computed
+    for THIS order's notional in THIS name's ADV. (The WP3 placeholder constant is gone.)
   - Override guard (agent-specifications §5.1 / P6.3): proposing AGAINST the ballot direction
     requires a written rebuttal addressing the majority's strongest crux, and overrides are capped
     at `max_overrides_per_month = 2` (the caller supplies the month's prior count; the event log
@@ -64,10 +64,8 @@ HAIRCUTS = {
     "liquidity_thin": 0.8,
 }
 
-# ⚠️ Phase-1 placeholder until the cost model lands (backtesting-framework / WP4): a conservative
-# round-trip cost for liquid S&P-500 names. The edge check is real; this constant is the flagged
-# stand-in for its second input.
-ASSUMED_ROUND_TRIP_COST_BPS = 20.0
+# WP4 R6: the cost input to the edge check is the REAL model (core/costs.py — spread + impact,
+# floored), computed per order/name. The WP3 placeholder constant is gone.
 
 
 class PMError(Exception):
@@ -132,9 +130,9 @@ def size_position(
     return round(size, 6), audit
 
 
-def check_edge(expected_edge_bps: float,
-               round_trip_cost_bps: float = ASSUMED_ROUND_TRIP_COST_BPS) -> None:
-    """P6.3: expected edge must be ≥ edge_to_cost_multiple × estimated round-trip cost."""
+def check_edge(expected_edge_bps: float, round_trip_cost_bps: float) -> None:
+    """P6.3: expected edge must be ≥ edge_to_cost_multiple × the MODELED round-trip cost of this
+    order in this name (core/costs.py — no default: the caller must supply the real model output)."""
     required = EDGE_TO_COST_MULTIPLE * round_trip_cost_bps
     if expected_edge_bps < required:
         raise EdgeError(
@@ -214,6 +212,8 @@ def run_pm(
     cycle_id: str,
     decision_ts: str,
     code_version: str,
+    nav_usd: float,
+    adv_usd_20d: float,
     event_log: Optional[Any] = None,
     prior_overrides_this_month: int = 0,
 ) -> PMDecision:
@@ -276,11 +276,16 @@ def run_pm(
     is_override = check_override(direction=direction, ballot_direction=ballot_direction,
                                  rebuttal=raw.get("override_rebuttal"),
                                  prior_overrides_this_month=prior_overrides_this_month)
-    check_edge(float(raw.get("expected_edge_bps", 0)))
     unresolved_crux = bool(debate_summary.unresolved_cruxes)
     size, audit = size_position(conviction=float(raw.get("conviction", 0.0)),
                                 contested=ballot_summary.contested, debate_failed=debate_failed,
                                 unresolved_bear_crux=unresolved_crux)
+    # WP4 R6: edge check against the MODELED cost of THIS order in THIS name (size known now)
+    from core.costs import round_trip_cost_bps
+    order_notional = nav_usd * size / 100.0
+    cost_bps = round_trip_cost_bps(order_notional, adv_usd_20d)
+    audit["round_trip_cost_bps"] = round(cost_bps, 4)
+    check_edge(float(raw.get("expected_edge_bps", 0)), cost_bps)
 
     try:
         proposal = TradeProposal(
