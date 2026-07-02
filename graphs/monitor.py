@@ -130,6 +130,19 @@ class BreakerStateMachine:
         self.state = "cooldown"
         self._clean_sessions = 0
 
+    # ── WP6 R-persistence: breaker state survives process restarts via event-log snapshots ──
+    def snapshot(self) -> dict:
+        return {"state": self.state, "hwm_usd": self.hwm_usd,
+                "clean_sessions": self._clean_sessions, "fired": sorted(self._fired)}
+
+    @classmethod
+    def from_snapshot(cls, snap: dict) -> "BreakerStateMachine":
+        m = cls(float(snap["hwm_usd"]))
+        m.state = snap["state"]
+        m._clean_sessions = int(snap.get("clean_sessions", 0))
+        m._fired = set(snap.get("fired", []))
+        return m
+
 
 @dataclass
 class Escalation:

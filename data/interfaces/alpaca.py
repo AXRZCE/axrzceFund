@@ -13,7 +13,11 @@ from typing import Any, Optional
 
 import pandas as pd
 from alpaca.data.historical import StockHistoricalDataClient
-from alpaca.data.requests import StockBarsRequest, StockLatestTradeRequest
+from alpaca.data.requests import (
+    StockBarsRequest,
+    StockLatestQuoteRequest,
+    StockLatestTradeRequest,
+)
 from alpaca.data.timeframe import TimeFrame
 from alpaca.trading.client import TradingClient
 from alpaca.trading.enums import OrderSide, QueryOrderStatus, TimeInForce
@@ -70,6 +74,17 @@ class AlpacaMarketData(MarketDataInterface):
         resp = self._client.get_stock_latest_trade(
             StockLatestTradeRequest(symbol_or_symbols=symbol, feed="iex"))
         return float(resp[symbol].price)
+
+    def get_latest_quote(self, symbol: str) -> dict:
+        """Latest IEX NBBO quote — READ-only (WP6 R2 quote logging for cost recalibration)."""
+        resp = self._client.get_stock_latest_quote(
+            StockLatestQuoteRequest(symbol_or_symbols=symbol, feed="iex"))
+        q = resp[symbol]
+        bid, ask = float(q.bid_price), float(q.ask_price)
+        mid = (bid + ask) / 2.0
+        spread_bps = ((ask - bid) / mid * 1e4) if mid > 0 else None
+        return dict(bid=bid, ask=ask, mid=mid, spread_bps=spread_bps,
+                    ts=q.timestamp.isoformat() if q.timestamp else None)
 
 
 class AlpacaBroker(BrokerInterface):

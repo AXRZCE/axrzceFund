@@ -24,6 +24,12 @@ class MarketDataInterface(ABC):
         (Sharadar SEP returns all names in the window); a list restricts to those
         symbols (Alpaca IEX fetches per-symbol)."""
 
+    def get_latest_quote(self, symbol: str) -> dict:
+        """Latest NBBO quote {bid, ask, spread_bps, ts} — READ-only market data (the WP4 wall
+        blocks broker WRITES, not reads). Used by WP6 R2 quote logging for the cost-model
+        recalibration. Optional: implementations without a quote feed raise."""
+        raise NotImplementedError(f"{type(self).__name__} has no quote feed")
+
 
 class FundamentalsInterface(ABC):
     """Point-in-time fundamentals (Sharadar SF1). available_at = filing date."""
