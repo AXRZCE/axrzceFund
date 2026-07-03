@@ -232,9 +232,11 @@ def test_audit_classifies_the_week_r6_r7_r9(tmp_path, monkeypatch):
 
 
 def test_session_bars_releases_the_store_for_read_write(tmp_path):
-    """THE supervised-cycle failure shape: after the read-only bars read, a READ-WRITE open of the
-    same file (PITStore) must succeed in the same process. Gut _session_bars' close → DuckDB's
-    mixed-config ConnectionException → red."""
+    """Regression: after the read-only bars read, a READ-WRITE open of the same file (PITStore)
+    must succeed in the same process. NOTE (honest limitation, disclosed): this behavioral test
+    CANNOT go red if only the explicit close is gutted — CPython refcounting closes the helper's
+    connection at return anyway. The real VM failure required the connection held in the CALLER'S
+    frame (the old inline pattern). The load-bearing red test is the STRUCTURAL pin below."""
     import duckdb
 
     from graphs.daily_cycle import _session_bars
@@ -250,3 +252,22 @@ def test_session_bars_releases_the_store_for_read_write(tmp_path):
     rw = duckdb.connect(str(db))          # read-write open MUST succeed now
     rw.execute("insert into price_bars values ('MU', '2026-07-02T00:00:00', 1000.0, 1010.0)")
     rw.close()
+
+
+def test_session_bars_structural_pin_finally_close():
+    """The TRUE red test for the 2026-07-03 deploy failure: _session_bars must exist as a helper
+    (the scope boundary IS the fix) and must close its connection in a `finally`. Reintroduce the
+    inline held-open pattern, or drop the finally-close → red."""
+    import ast
+
+    tree = ast.parse(Path("graphs/daily_cycle.py").read_text(encoding="utf-8"))
+    fn = next((n for n in ast.walk(tree)
+               if isinstance(n, ast.FunctionDef) and n.name == "_session_bars"), None)
+    assert fn is not None, "_session_bars helper removed — the inline pattern caused the failure"
+    closes_in_finally = any(
+        isinstance(n, ast.Try) and any(
+            isinstance(f, ast.Expr) and isinstance(f.value, ast.Call)
+            and isinstance(f.value.func, ast.Attribute) and f.value.func.attr == "close"
+            for f in n.finalbody)
+        for n in ast.walk(fn))
+    assert closes_in_finally, "_session_bars must close its connection in a finally block"
