@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260702_AVGO",
+  "decision_ts": "2026-07-02T20:00:00+00:00",
+  "tickers": [
+    "AVGO"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-07-03T11:45:56.851700+00:00",
+  "content_hash": "03991668f65ff5de",
+  "payload_summary": {
+    "price_bars": 269,
+    "fundamentals": {
+      "ASSETS": 69,
+      "EPS": 68,
+      "EQUITY": 69,
+      "FCF": 68,
+      "NETINC": 68,
+      "REVENUE": 68
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}

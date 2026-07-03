@@ -1,0 +1,200 @@
+{
+  "session_date": "2026-07-02",
+  "cycle_id": "wp6_20260702",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [],
+  "book": {
+    "nav_usd": 1000000.0,
+    "positions": []
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0
+  },
+  "held_reapprovals": [],
+  "screen": {
+    "new_candidates": [
+      "MU",
+      "AVGO"
+    ],
+    "held": [],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6322
+  },
+  "decisions": [
+    {
+      "ticker": "MU",
+      "fixture": "wp6_20260702_MU",
+      "content_hash": "e0200006fa0c8cee",
+      "ballot": {
+        "weighted_score": 0.68,
+        "margin": 0.101124,
+        "dissent_summary": "FUND-TECH voted no_position (conviction 0.60); BULL-01 voted long (conviction 0.50)",
+        "contested": true
+      },
+      "direction": "short",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.4025
+      },
+      "order": {
+        "side": "sell",
+        "qty": 4,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "MU",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 910.59,
+        "ask": 1014.93,
+        "mid": 962.76,
+        "spread_bps": 1083.7591923220732,
+        "ts": "2026-07-02T20:00:04.345174+00:00"
+      }
+    },
+    {
+      "ticker": "AVGO",
+      "fixture": "wp6_20260702_AVGO",
+      "content_hash": "03991668f65ff5de",
+      "ballot": {
+        "weighted_score": 1.25,
+        "margin": 0.302083,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.67)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.84
+      },
+      "order": {
+        "side": "buy",
+        "qty": 23,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "AVGO",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 339.74,
+        "ask": 377.22,
+        "mid": 358.48,
+        "spread_bps": 1045.525552332069,
+        "ts": "2026-07-02T20:00:00.021522+00:00"
+      }
+    }
+  ],
+  "replay_check": {
+    "hash": "24661c5e088a6561",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "MU",
+          "direction": "short",
+          "size_pct_nav": 0.4025,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "1275.00",
+          "invalidation_conditions": [
+            "A decisive daily close above the $1255.00 window high on abnormally high volume.",
+            "Next quarterly earnings post sequential EPS acceleration above $26.00 and FCF above $18B.",
+            "Major hyperscalers upwardly revise forward capex guidance, confirming a prolonged and strictly constrained structural HBM deficit."
+          ],
+          "horizon_days": 90,
+          "thesis": "The market is dangerously extrapolating peak cyclical earnings (annualized ~$100 EPS) into a permanent plateau, leaving zero margin of safety. Parabolic revenue growth sets an intensely high hurdle for further sequential acceleration; any slight quarterly deceleration risks severe simultaneous multiple and earnings compression. The stock is nearing its $1,255 window high without supportive volume expansion, while the closest technical support rests ~30% lower at $854, presenting an extremely asymmetric downside profile. Given the structural volatility of the memory cycle and compounding risks of industry capacity additions, we short the impending late-cycle exhaustion.",
+          "premortem_top_risks": [
+            "Bull Failure: The memory cycle turns due to aggressive capacity additions or hyperscaler capex deceleration, causing the market to violently de-rate the stock as both peak earnings and the peak multiple compress simultaneously.",
+            "Bear Failure: HBM supply constraints remain structural, allowing MU to sustain or sequentially exceed its supernormal quarterly earnings, forcing the market to re-rate the stock toward the $1,500 upper fair-value bound as the cycle duration stretches."
+          ],
+          "expected_edge_bps": 1500,
+          "ballot_summary": {
+            "weighted_score": 0.68,
+            "margin": 0.101124,
+            "dissent_summary": "FUND-TECH voted no_position (conviction 0.60); BULL-01 voted long (conviction 0.50)",
+            "contested": true
+          }
+        }
+      },
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "AVGO",
+          "direction": "long",
+          "size_pct_nav": 0.84,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "355.00",
+          "invalidation_conditions": [
+            "A sustained technical breakdown evidenced by a daily close below $355.00.",
+            "Quarterly Free Cash Flow declining below $8.5 billion (indicating deteriorating VMware synergies or stalling AI momentum).",
+            "Sequential contraction in top-line revenue in either of the next two earnings periods."
+          ],
+          "horizon_days": 180,
+          "thesis": "AVGO presents a high-quality entry point following its pullback to technical support near $370. Fundamentals are exceptional, with accelerating revenue ($22.18B) and $10.26B in quarterly FCF driven by VMware synergies and explosive custom AI silicon demand. The current technical consolidation offers an asymmetric accumulation zone ahead of further FCF accretion.",
+          "premortem_top_risks": [
+            "Hyperscaler AI infrastructure spending digests or shifts architecture, halting the sequential acceleration in custom silicon revenue.",
+            "VMware customer churn materializes with a lag due to aggressive pricing and licensing overhauls, degrading the margin base.",
+            "The market refuses to pay the 38x-45x premium multiple despite solid fundamentals, leading to technical breakdown and multiple compression."
+          ],
+          "expected_edge_bps": 550,
+          "ballot_summary": {
+            "weighted_score": 1.25,
+            "margin": 0.302083,
+            "dissent_summary": "BEAR-01 voted short (conviction 0.67)",
+            "contested": false
+          }
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": [
+    {
+      "role": "BULL-01-CAND-DEEPSEEK",
+      "stance": "long"
+    },
+    {
+      "role": "BULL-01-BASELINE-WEST",
+      "stance": "long"
+    }
+  ],
+  "spend": {
+    "day_spent_usd": 0.611012,
+    "shadow_spent_usd": 0.004076,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 0.0,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
