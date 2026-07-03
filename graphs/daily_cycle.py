@@ -48,6 +48,19 @@ OUT_DIR = Path("results/wp6")
 NYSE_HOLIDAYS = {"2026-07-03", "2026-09-07", "2026-11-26", "2026-12-25"}
 
 
+def _session_bars(db_path: str, session_date: str) -> list:
+    """Read the session's bars and CLOSE the read-only connection before returning — PITStore
+    opens the same file read-write later in the cycle, and DuckDB refuses mixed-config
+    connections in one process (the deploy-checkpoint failure of 2026-07-03; red-tested)."""
+    import duckdb
+    con = duckdb.connect(db_path, read_only=True)
+    try:
+        return con.execute(
+            "select ticker, open, close from price_bars where substr(as_of,1,10)=?",
+            [session_date]).fetchall()
+    finally:
+        con.close()
+
 def is_trading_session(date_iso: str) -> bool:
     """R9 calendar check: weekends + the holiday table. (Half-days ARE sessions — ruled.)"""
     d = _dt.date.fromisoformat(date_iso)
@@ -149,11 +162,7 @@ def run_daily_cycle(
     preflight(manifest)
 
     # today's bars: settlement opens + marks (a trading day with no bars = data late ⇒ fail closed)
-    import duckdb
-    con = duckdb.connect(db_path, read_only=True)
-    bars = con.execute(
-        "select ticker, open, close from price_bars where substr(as_of,1,10)=?",
-        [session_date]).fetchall()
+    bars = _session_bars(db_path, session_date)
     if not bars:
         summary.update(status="cycle_failed", detail="data late: no bars for a trading session "
                                                      "(fail-closed — no decisions, R7)")
