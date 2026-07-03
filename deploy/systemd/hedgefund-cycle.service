@@ -15,3 +15,6 @@ ExecStart=/root/hedgefund/.venv/bin/python ops/run_daily_cycle_vm.py
 ExecStopPost=/usr/bin/env bash ops/vm_commit_results.sh wp6-cycle
 # A hung cycle self-heals; the resulting gap is a MISSED/failed record, never a silent skip (R6).
 TimeoutStartSec=2700
+# ExecStopPost (the self-healing results push, 3 attempts spaced ~2-3 min)
+# must never be killed by the 90s default.
+TimeoutStopSec=900

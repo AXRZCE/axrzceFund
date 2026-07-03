@@ -49,3 +49,24 @@ missing pathspec silently staged nothing).
   timer") is satisfied by this ratification; **everything else in R10 stands** — the timer remains
   DISABLED until the supervised cycle + off-VM audit pass and **Akshar enables it personally**.
 - Linked from [wp6-readout](../wp6-readout.md) at WP6 close (Condition B).
+
+## Addendum 2026-07-03 — the push-flakiness pattern + the self-healing hardening
+
+**The pattern, on record:** the nightly Track-A pushes failed on TWO consecutive nights at
+~01:41 UTC ("push deferred") while daytime pushes from the same VM worked — transient overnight
+flakiness, cause unattributed (provider network / GitHub edge). Night `20260702`'s queued commit
+was then stranded by the incident-day branch reset and recovered from the reflog (cherry-picked as
+`1a5fd3c`, pushed under a hand-run guard check with explicit authorization). The nightly record on
+`origin/main` is gapless again.
+
+**The hardening (`phase1/wp6-push-selfheal`):** `vm_commit_results.sh` now (a) retries a failed
+push 3× (spaced `VM_PUSH_RETRY_SLEEPS`, default 120/180s; guard re-checked before every attempt;
+still non-force; the service units carry `TimeoutStopSec=900` so systemd never kills the window),
+and (b) on EVERY invocation pushes already-queued `vm(` commits even when nothing new exists — the
+no-op gap that stranded `20260702` is closed and red-tested.
+
+**Standing architecture rule (Akshar, 2026-07-03):** NOTHING recurring or time-critical may depend
+on a CC session — the 24/7 VM is self-sufficient for all execution and self-healing. The one-shot
+origin-polling watcher used for tonight's supervised cycle is **DECOMMISSIONED after that single
+run** — one-shot scaffolding only, never to be reused for recurring work. CC's recurring role
+during the dry-run week is the read-only morning audit report ONLY.

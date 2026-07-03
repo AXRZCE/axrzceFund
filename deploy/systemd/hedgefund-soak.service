@@ -15,3 +15,6 @@ ExecStopPost=/usr/bin/env bash ops/vm_commit_results.sh soak
 # Load-bearing for G0.3 (validation-criteria.md): a hung run self-heals (timeout-kill does NOT
 # count); catch-up after downtime counts (see the timer's Persistent=true).
 TimeoutStartSec=1800
+# ExecStopPost (the self-healing results push, 3 attempts spaced ~2-3 min)
+# must never be killed by the 90s default.
+TimeoutStopSec=900
