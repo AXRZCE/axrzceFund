@@ -226,3 +226,27 @@ def test_audit_classifies_the_week_r6_r7_r9(tmp_path, monkeypatch):
     (tmp_path / "cycle_20260708.json").unlink()
     r2 = audit_range("2026-07-03", "2026-07-10")
     assert r2["week_ok"] is False and len(r2["missed"]) == 2
+
+
+# ── the 2026-07-03 deploy-checkpoint catch: mixed-config DuckDB opens in one process ─
+
+
+def test_session_bars_releases_the_store_for_read_write(tmp_path):
+    """THE supervised-cycle failure shape: after the read-only bars read, a READ-WRITE open of the
+    same file (PITStore) must succeed in the same process. Gut _session_bars' close → DuckDB's
+    mixed-config ConnectionException → red."""
+    import duckdb
+
+    from graphs.daily_cycle import _session_bars
+
+    db = tmp_path / "store.duckdb"
+    con = duckdb.connect(str(db))
+    con.execute("create table price_bars(ticker varchar, as_of varchar, open double, close double)")
+    con.execute("insert into price_bars values ('MDT', '2026-07-02T00:00:00', 80.0, 79.5)")
+    con.close()
+
+    bars = _session_bars(str(db), "2026-07-02")
+    assert bars == [("MDT", 80.0, 79.5)]
+    rw = duckdb.connect(str(db))          # read-write open MUST succeed now
+    rw.execute("insert into price_bars values ('MU', '2026-07-02T00:00:00', 1000.0, 1010.0)")
+    rw.close()
