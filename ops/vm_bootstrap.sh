@@ -30,7 +30,7 @@ git config user.email "vm-bot@axrzcefund.local"
 git config user.name  "axrzceFund VM (clawbot-v2)"
 
 echo "== install systemd units (copy; re-run this bootstrap after a unit-file change) =="
-for u in hedgefund-soak.service hedgefund-soak.timer hedgefund-g05.service hedgefund-g05.timer; do
+for u in hedgefund-soak.service hedgefund-soak.timer hedgefund-g05.service hedgefund-g05.timer \n         hedgefund-cycle.service hedgefund-cycle.timer; do  # cycle units INSTALLED, timer NOT enabled (R10)
   install -m 644 "$REPO/deploy/systemd/$u" "/etc/systemd/system/$u"
   echo "  installed $u"
 done

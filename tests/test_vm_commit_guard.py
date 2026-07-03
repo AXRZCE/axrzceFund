@@ -117,3 +117,63 @@ def test_noop_when_nothing_new(tmp_path):
     _, work = _mk_repos(tmp_path)
     r = _run_script(work)
     assert r.returncode == 0 and "no-op" in r.stdout
+
+
+# ── the 2026-07-03 self-healing (the night_20260702 stranding can never recur) ──────
+
+
+def _run_script_fast(work: Path, label: str = "test") -> subprocess.CompletedProcess:
+    """Run with zero retry sleeps so failure paths are test-fast."""
+    env = {**__import__("os").environ, "AXRZCE_REPO": str(work), "VM_PUSH_RETRY_SLEEPS": "0 0"}
+    return subprocess.run([BASH, str(SCRIPT), label], cwd=work, capture_output=True, text=True,
+                          env=env)
+
+
+def _break_remote(work: Path) -> str:
+    url = _git(work, "remote", "get-url", "origin")
+    _git(work, "remote", "set-url", "origin", str(work / "nonexistent.git"))
+    return url
+
+
+def test_push_failure_retries_then_queues(tmp_path):
+    """Simulated push failure: 3 attempts, then the commit stays QUEUED (exit 0 — the artifact is
+    safe locally; the next invocation delivers it)."""
+    _, work = _mk_repos(tmp_path)
+    _break_remote(work)
+    (work / "results").mkdir()
+    (work / "results" / "night.json").write_text("{}")
+    r = _run_script_fast(work)
+    assert r.returncode == 0
+    assert r.stdout.count("push attempt") == 3 or "attempt 3 failed" in r.stdout
+    assert "QUEUED" in r.stdout
+    assert "vm(test)" in _git(work, "log", "-1", "--format=%s")  # committed locally
+
+
+def test_next_invocation_pushes_the_queued_commit(tmp_path):
+    """THE night_20260702 gap, closed: with NOTHING new to commit, a queued vm( commit is still
+    pushed on the next invocation. Gut the queued-push → 'no-op' strands it again → red."""
+    origin, work = _mk_repos(tmp_path)
+    url = _break_remote(work)
+    (work / "results").mkdir()
+    (work / "results" / "night.json").write_text("{}")
+    _run_script_fast(work)                                   # commit queued, push failed
+    _git(work, "remote", "set-url", "origin", url)           # remote heals
+    r = _run_script_fast(work)                               # NOTHING new this time
+    assert r.returncode == 0 and "pushed" in r.stdout
+    assert "vm(test)" in _git(origin, "log", "-1", "--format=%s", "main")
+
+
+def test_foreign_commit_refused_in_the_queued_push_path_too(tmp_path):
+    """A queued vm( commit plus a foreign code commit must refuse — in EVERY path."""
+    origin, work = _mk_repos(tmp_path)
+    before = _origin_head(origin)
+    url = _break_remote(work)
+    (work / "results").mkdir()
+    (work / "results" / "night.json").write_text("{}")
+    _run_script_fast(work)                                   # queued vm( commit
+    (work / "sneak.py").write_text("code")
+    _git(work, "add", "."); _git(work, "commit", "-m", "sneaky code commit")
+    _git(work, "remote", "set-url", "origin", url)
+    r = _run_script_fast(work)
+    assert r.returncode == 1 and "REFUSED" in r.stdout
+    assert _origin_head(origin) == before

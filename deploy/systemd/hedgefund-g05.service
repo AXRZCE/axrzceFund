@@ -10,3 +10,6 @@ ExecStartPre=/usr/bin/env bash ops/vm_git_sync.sh
 ExecStart=/root/hedgefund/.venv/bin/python ops/broker_roundtrip.py
 ExecStopPost=/usr/bin/env bash ops/vm_commit_results.sh g05
 TimeoutStartSec=1800
+# ExecStopPost (the self-healing results push, 3 attempts spaced ~2-3 min)
+# must never be killed by the 90s default.
+TimeoutStopSec=900
