@@ -1,0 +1,16 @@
+[Unit]
+Description=axrzceFund daytime results flush — delivers queued vm( results commits (no decisions)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/hedgefund
+# Delivery-only: pushes result artifacts that are already recorded (committed locally). Runs the
+# same guarded script as the nightly services — current-branch-only, refuses foreign commits,
+# non-force. No sync, no decisions, no LLM. Exists because the nightly 01:30-02:20 UTC window has
+# rejected pushes since 2026-07-02 while daytime writes work (incident addendum); this guarantees
+# every night's record lands on origin by ~12:05 UTC, before the 09:00 ET morning audit.
+ExecStart=/usr/bin/env bash ops/vm_commit_results.sh flush
+# the push retry loop (3 attempts spaced ~2-3 min) must never be killed early
+TimeoutStartSec=900

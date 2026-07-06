@@ -30,7 +30,11 @@ git config user.email "vm-bot@axrzcefund.local"
 git config user.name  "axrzceFund VM (clawbot-v2)"
 
 echo "== install systemd units (copy; re-run this bootstrap after a unit-file change) =="
-for u in hedgefund-soak.service hedgefund-soak.timer hedgefund-g05.service hedgefund-g05.timer \n         hedgefund-cycle.service hedgefund-cycle.timer; do  # cycle units INSTALLED, timer NOT enabled (R10)
+# (2026-07-05: the old one-line list carried a literal '\n' token — the loop tried to install a
+# unit named "n" every run, failing harmlessly; fixed while adding the flush units)
+for u in hedgefund-soak.service hedgefund-soak.timer hedgefund-g05.service hedgefund-g05.timer \
+         hedgefund-cycle.service hedgefund-cycle.timer \
+         hedgefund-flush.service hedgefund-flush.timer; do  # cycle/flush timers enabled per rulings, not here
   install -m 644 "$REPO/deploy/systemd/$u" "/etc/systemd/system/$u"
   echo "  installed $u"
 done
