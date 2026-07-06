@@ -177,3 +177,71 @@ def test_foreign_commit_refused_in_the_queued_push_path_too(tmp_path):
     r = _run_script_fast(work)
     assert r.returncode == 1 and "REFUSED" in r.stdout
     assert _origin_head(origin) == before
+
+
+# ── the 2026-07-05 queue-preserving sync (the weekend orphaning can never recur) ────
+
+SYNC = Path(__file__).resolve().parent.parent / "ops" / "vm_git_sync.sh"
+
+
+def _run_sync(work: Path) -> subprocess.CompletedProcess:
+    env = {**__import__("os").environ, "AXRZCE_REPO": str(work)}
+    return subprocess.run([BASH, str(SYNC)], cwd=work, capture_output=True, text=True, env=env)
+
+
+def test_sync_preserves_queued_vm_commits_between_invocations(tmp_path):
+    """THE weekend shape (2026-07-05): a queued vm( results commit must SURVIVE the next run's
+    ExecStartPre sync so the queued-push can deliver it. The old reset --hard orphaned 3 of 4
+    weekend records this way. Gut map: force the reset path over the rebase path → the queue is
+    orphaned → this test is the red."""
+    origin, work = _mk_repos(tmp_path)
+    url = _break_remote(work)
+    (work / "results").mkdir()
+    (work / "results" / "night.json").write_text("{}")
+    _run_script_fast(work)                                   # commit queued, push failed
+    queued = _git(work, "rev-parse", "HEAD")
+    _git(work, "remote", "set-url", "origin", url)           # remote heals overnight
+    r = _run_sync(work)                                      # the NEXT run's ExecStartPre
+    assert r.returncode == 0, r.stdout
+    assert "rebased 1 queued" in r.stdout
+    assert _git(work, "rev-parse", "HEAD") == queued         # the queue SURVIVED the sync
+    r2 = _run_script_fast(work)                              # and the next invocation delivers it
+    assert r2.returncode == 0 and "pushed" in r2.stdout
+    assert "vm(test)" in _git(origin, "log", "-1", "--format=%s", "main")
+
+
+def test_sync_rebases_queue_onto_remote_advance(tmp_path):
+    """Monday-morning shape: origin/main advanced (a reviewed merge) while a vm( commit sat
+    queued — the sync must land the queue ON TOP of the new head, not orphan it."""
+    origin, work = _mk_repos(tmp_path)
+    url = _break_remote(work)
+    (work / "results").mkdir()
+    (work / "results" / "night.json").write_text("{}")
+    _run_script_fast(work)                                   # queued vm( commit on stale main
+    other = tmp_path / "other"                               # meanwhile: a gated merge advances main
+    subprocess.run(["git", "clone", str(origin), str(other)], capture_output=True, check=True)
+    _git(other, "config", "user.email", "t@t"); _git(other, "config", "user.name", "t")
+    (other / "merged.py").write_text("reviewed code")
+    _git(other, "add", "."); _git(other, "commit", "-m", "merged feature (reviewed)")
+    _git(other, "push", "origin", "HEAD:main")
+    _git(work, "remote", "set-url", "origin", url)
+    r = _run_sync(work)
+    assert r.returncode == 0 and "rebased 1 queued" in r.stdout
+    subjects = _git(work, "log", "--format=%s", "-2").splitlines()
+    assert subjects[0].startswith("vm(test)")                # queue on top
+    assert subjects[1] == "merged feature (reviewed)"        # of the NEW head
+
+
+def test_sync_still_resets_foreign_commits(tmp_path):
+    """The 2026-07-02 incident protection, UNWEAKENED: any foreign commit ahead of origin/main —
+    even sitting alongside a queued vm( commit — still triggers the full reset --hard."""
+    origin, work = _mk_repos(tmp_path)
+    main_head = _origin_head(origin)
+    (work / "results").mkdir()
+    (work / "results" / "a.json").write_text("{}")
+    _git(work, "add", "results"); _git(work, "commit", "-m", "vm(prior): result artifacts queued")
+    (work / "sneak.py").write_text("code")
+    _git(work, "add", "."); _git(work, "commit", "-m", "wp999: unreviewed feature code")
+    r = _run_sync(work)
+    assert r.returncode == 0 and "synced to origin/main" in r.stdout
+    assert _git(work, "rev-parse", "HEAD") == main_head      # BOTH wiped from HEAD (reflog only)

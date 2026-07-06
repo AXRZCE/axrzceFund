@@ -78,11 +78,14 @@ for delay in 0 $RETRY_SLEEPS; do
   guard_check || exit 1
   # integrate any remote advance so the non-force push fast-forwards; abort a stray rebase
   git pull --rebase origin "$CURRENT" 2>/dev/null || git rebase --abort 2>/dev/null || true
-  if git push origin "HEAD:$CURRENT" 2>/dev/null; then
+  # stderr is CAPTURED and logged (2026-07-05: 12 straight nightly push failures were
+  # unattributable because the old 2>/dev/null discarded the error text)
+  if PUSH_ERR=$(git push origin "HEAD:$CURRENT" 2>&1); then
     echo "[vm-commit-results] pushed $(git rev-parse --short HEAD) -> $CURRENT (attempt $attempt)"
     exit 0
   fi
-  echo "[vm-commit-results] push attempt $attempt failed"
+  echo "[vm-commit-results] push attempt $attempt failed:"
+  printf '%s\n' "$PUSH_ERR" | sed 's/^/    /'
   attempt=$((attempt + 1))
 done
 echo "[vm-commit-results] push deferred after $((attempt - 1)) attempts — commits stay QUEUED;"

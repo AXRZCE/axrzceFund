@@ -1,0 +1,12 @@
+[Unit]
+Description=axrzceFund daytime results flush — 12:00 UTC daily (08:00 ET, before the morning audit)
+
+[Timer]
+# Deliberately UTC (not named-TZ): the target is the reliable daytime push window relative to the
+# failing nightly 01:30-02:20 UTC window, not a market-calendar moment.
+OnCalendar=*-*-* 12:00:00 UTC
+# Reboot/downtime catch-up: a late flush still delivers the queue.
+Persistent=true
+
+[Install]
+WantedBy=timers.target

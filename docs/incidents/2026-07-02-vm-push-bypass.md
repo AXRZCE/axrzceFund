@@ -70,3 +70,26 @@ on a CC session — the 24/7 VM is self-sufficient for all execution and self-he
 origin-polling watcher used for tonight's supervised cycle is **DECOMMISSIONED after that single
 run** — one-shot scaffolding only, never to be reused for recurring work. CC's recurring role
 during the dry-run week is the read-only morning audit report ONLY.
+
+## Addendum 2026-07-05 — the weekend orphaning: reset-between-invocations defeated the queued-push
+
+**Finding (Sunday pre-week check):** all four weekend timer runs (Fri/Sat soak + cycle) executed
+and recorded correctly — unit hashes matched, artifacts and events created, including the
+`market_closed` records for 07-03/07-04 — but **every push attempt (12/12) failed in the nightly
+01:30–02:20 UTC window while daytime writes worked** (a Sunday-daytime `push --dry-run`
+authenticated and would have fast-forwarded). That is four consecutive nights of the pattern
+first logged above, still unattributed because the script discarded push stderr. Worse, each
+run's ExecStartPre sync (`reset --hard origin/main`) **orphaned the previous run's queued `vm(`
+commit before its queued-push could deliver it** — the `night_20260702` stranding class, made
+systematic (3 of 4 weekend records orphaned into the reflog; nothing lost — recovered and pushed
+under Akshar's 2026-07-05 authorization). The 2026-07-03 hardening's red test modeled the no-op
+gap *within* an invocation but never the sync *between* invocations.
+
+**The closure (`phase1/wp6-sync-queuefix`):** (a) `vm_commit_results.sh` now captures and logs
+push stderr — every future failure is attributable; (b) `vm_git_sync.sh` REBASES queued
+`vm(`-only commits onto the new head instead of resetting them away — any foreign commit still
+triggers the full reset, the 2026-07-02 protection deliberately unweakened — red-tested in the
+between-invocations shape; (c) `hedgefund-flush.timer` (12:00 UTC daily) delivers any queued
+results in the reliable daytime window before the 09:00 ET morning audit. Nightly-window root
+cause: under investigation (candidate: provider nightly maintenance/backup window); to be
+recorded here when named.
