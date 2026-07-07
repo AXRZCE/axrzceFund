@@ -1,0 +1,186 @@
+{
+  "session_date": "2026-07-06",
+  "cycle_id": "wp6_20260706",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [
+    {
+      "symbol": "MU",
+      "side": "sell",
+      "qty": 4,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 3901.62,
+      "status": "modeled_filled",
+      "modeled_fill_price": 1003.69922,
+      "full_fill": true
+    },
+    {
+      "symbol": "AVGO",
+      "side": "buy",
+      "qty": 23,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 8291.5,
+      "status": "modeled_filled",
+      "modeled_fill_price": 372.864558,
+      "full_fill": true
+    }
+  ],
+  "book": {
+    "nav_usd": 1000113.94,
+    "positions": [
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 8602.23
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3927.2
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "ORCL",
+      "KLAC"
+    ],
+    "held": [
+      "AVGO",
+      "MU"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6337
+  },
+  "decisions": [
+    {
+      "ticker": "ORCL",
+      "status": "cycle_failed",
+      "error": "BEAR-01 round 3 cites doc_id(s) ['sf1:ORCL:NETINC:2025-03'] outside the verified-memo evidence set \u2014 uncited/invented evidence voids the argument (fail-closed)."
+    },
+    {
+      "ticker": "KLAC",
+      "fixture": "wp6_20260706_KLAC",
+      "content_hash": "9687b989e14f27a1",
+      "ballot": {
+        "weighted_score": 1.3,
+        "margin": 0.287129,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.72)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 3,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.84
+      },
+      "order": {
+        "side": "sell",
+        "qty": 36,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "KLAC",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 224.54,
+        "ask": 245.04,
+        "mid": 234.79,
+        "spread_bps": 873.1206610162274,
+        "ts": "2026-07-06T20:00:00.010506+00:00"
+      }
+    }
+  ],
+  "replay_check": {
+    "hash": "c128d47da32c2eb8",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "KLAC",
+          "direction": "short",
+          "size_pct_nav": 0.84,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "285.00",
+          "invalidation_conditions": [
+            "A sustained daily close above the $279.34 resistance level on statistically abnormal volume",
+            "Revenue growth re-accelerates definitively above 25% YoY in the next quarterly earnings",
+            "Free Cash Flow immediately rebounds to >$1.3B per quarter"
+          ],
+          "horizon_days": 90,
+          "thesis": "Overriding the long ballot. KLAC is trading at an estimated ~77x trailing P/E multiple despite modest single-digit revenue growth and deteriorating cash conversion, with Q1 FCF plunging to $622M. The AI supercycle narrative has pushed the stock to the absolute top of its technical range ($279.34) without any volume confirmation for a breakout. Going short at resistance offers a highly asymmetric risk/reward. The long thesis relies on multiple expansion that ignores cyclical realities and weakening working capital metrics. We expect a reversion to range support and historical semi-cap multiples.",
+          "premortem_top_risks": [
+            "The bull thesis fails because the anticipated structural demand from AI-driven inspection/advanced-nodes does not materialize at a hyper-growth rate. The company continues posting 'stable' single-digit growth, causing the market to balk at the ~77x trailing P/E and compress the multiple closer to historic semiconductor capital equipment norms, driving down the stock.",
+            "The bear thesis fails because KLAC proves to be at the outset of a structural re-rating driven by intense next-gen logic/memory wafer inspection demands. Working capital timing reverses, FCF surges to prior highs, and ongoing buybacks drastically reduce outstanding shares, allowing the stock to aggressively grow into its current multiple."
+          ],
+          "expected_edge_bps": 500,
+          "ballot_summary": {
+            "weighted_score": 1.3,
+            "margin": 0.287129,
+            "dissent_summary": "BEAR-01 voted short (conviction 0.72)",
+            "contested": false
+          }
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": [
+    {
+      "role": "BULL-01-CAND-DEEPSEEK",
+      "stance": "long"
+    },
+    {
+      "role": "BULL-01-BASELINE-WEST",
+      "stance": "long"
+    }
+  ],
+  "spend": {
+    "day_spent_usd": 0.373586,
+    "shadow_spent_usd": 0.003681,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 0.0,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
