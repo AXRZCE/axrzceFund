@@ -6,11 +6,16 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 WorkingDirectory=/root/hedgefund
+# HOME is REQUIRED: git's credential.helper=store reads $HOME/.git-credentials, but the systemd
+# service context sets no HOME → every push failed with "could not read Username" since
+# night_20260702 (Defect-1; docs/incidents/2026-07-02-vm-push-bypass.md, Addendum 2026-07-07).
+Environment=HOME=/root
 # Delivery-only: pushes result artifacts that are already recorded (committed locally). Runs the
 # same guarded script as the nightly services — current-branch-only, refuses foreign commits,
-# non-force. No sync, no decisions, no LLM. Exists because the nightly 01:30-02:20 UTC window has
-# rejected pushes since 2026-07-02 while daytime writes work (incident addendum); this guarantees
-# every night's record lands on origin by ~12:05 UTC, before the 09:00 ET morning audit.
+# non-force. No sync, no decisions, no LLM. Originally added when nightly pushes were failing while
+# daytime pushes worked — now attributed to the HOME-less service context, not a time window
+# (Defect-1; incident Addendum 2026-07-07). Retained as defense-in-depth: it lands every night's
+# record on origin by ~12:05 UTC, before the 09:00 ET morning audit, even if a nightly push slips.
 ExecStart=/usr/bin/env bash ops/vm_commit_results.sh flush
 # the push retry loop (3 attempts spaced ~2-3 min) must never be killed early
 TimeoutStartSec=900

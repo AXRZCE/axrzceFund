@@ -6,6 +6,10 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 WorkingDirectory=/root/hedgefund
+# HOME is REQUIRED: git's credential.helper=store reads $HOME/.git-credentials, but the systemd
+# service context sets no HOME → every nightly push failed with "could not read Username" since
+# night_20260702 (Defect-1; docs/incidents/2026-07-02-vm-push-bypass.md, Addendum 2026-07-07).
+Environment=HOME=/root
 # Self-update to the gated remote head (main) before running — the WP6 PR must therefore be
 # MERGED before the timer is enabled (done-criteria R10).
 ExecStartPre=/usr/bin/env bash ops/vm_git_sync.sh
