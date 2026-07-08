@@ -1,0 +1,188 @@
+{
+  "session_date": "2026-07-07",
+  "cycle_id": "wp6_20260707",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [
+    {
+      "symbol": "KLAC",
+      "side": "sell",
+      "qty": 36,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 8399.16,
+      "status": "modeled_filled",
+      "modeled_fill_price": 217.116568,
+      "full_fill": true
+    }
+  ],
+  "book": {
+    "nav_usd": 1000227.18,
+    "positions": [
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 8522.189999999999
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -7791.4800000000005
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3758.64
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "ORCL",
+      "DELL"
+    ],
+    "held": [
+      "AVGO",
+      "KLAC",
+      "MU"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6342
+  },
+  "decisions": [
+    {
+      "ticker": "ORCL",
+      "fixture": "wp6_20260707_ORCL",
+      "content_hash": "cb6d4261fd78410d",
+      "ballot": {
+        "weighted_score": 1.55,
+        "margin": 0.390135,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.68)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.84
+      },
+      "order": {
+        "side": "buy",
+        "qty": 59,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "ORCL",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 141.51,
+        "ask": 206.77,
+        "mid": 174.14,
+        "spread_bps": 3747.5594349374082,
+        "ts": "2026-07-07T20:39:25.965666+00:00"
+      }
+    },
+    {
+      "ticker": "DELL",
+      "status": "cycle_failed",
+      "error": "BULL-01 round 2 cites doc_id(s) ['sf1:DELL:EPS:2025-09', 'sf1:DELL:EPS:2025-12'] outside the verified-memo evidence set \u2014 uncited/invented evidence voids the argument (fail-closed)."
+    }
+  ],
+  "replay_check": {
+    "hash": "35424fbfd192413a",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "ORCL",
+          "direction": "long",
+          "size_pct_nav": 0.84,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "142.50",
+          "invalidation_conditions": [
+            "Sequential quarterly revenue drops below $18B.",
+            "Quarterly FCF deteriorates back below -$5B without commensurate top-line or asset expansion.",
+            "A sustained daily close beneath the 144.48 technical support level."
+          ],
+          "horizon_days": 90,
+          "thesis": "ORCL trades near a significant technical support level (~144.50) while demonstrating accelerating top-line growth and rapidly narrowing cash burn (FCF improved to -$1.87B from a trough of -$11.48B). The market is overly penalizing its massive AI infrastructure CapEx, missing the imminent inflection as capital intensity peaks and structural ROIC materializes. Purchasing near historical support offers a highly asymmetric entry point against future depreciation risks.",
+          "premortem_top_risks": [
+            "Return on invested capital fails to manifest as peak-cycle AI demand cools, leaving ORCL with unmonetized infrastructure and an inflated asset base.",
+            "Cash conversion persistently lags accounting profits, forcing ORCL to issue high-yielding debt or dilute equity to sustain operations.",
+            "Depreciation from the $81B capital spend hits the income statement faster than revenue covers the margin impact, heavily compressing profitability.",
+            "The fundamental uncertainty forces a technical failure, causing the historical support to cave and investors to re-price the multiple downward."
+          ],
+          "expected_edge_bps": 450,
+          "ballot_summary": {
+            "weighted_score": 1.55,
+            "margin": 0.390135,
+            "dissent_summary": "BEAR-01 voted short (conviction 0.68)",
+            "contested": false
+          }
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": [
+    {
+      "role": "BULL-01-CAND-DEEPSEEK",
+      "stance": "long"
+    },
+    {
+      "role": "BULL-01-BASELINE-WEST",
+      "stance": "long"
+    }
+  ],
+  "spend": {
+    "day_spent_usd": 0.326879,
+    "shadow_spent_usd": 0.004938,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 0.373586,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
