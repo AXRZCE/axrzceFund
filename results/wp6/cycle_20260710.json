@@ -1,0 +1,145 @@
+{
+  "session_date": "2026-07-10",
+  "cycle_id": "wp6_20260710",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [],
+  "book": {
+    "nav_usd": 1000290.41,
+    "positions": [
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 9197.93
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -8333.82
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3917.44
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 8299.825
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0266
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "DELL",
+      "CRWD"
+    ],
+    "held": [
+      "AVGO",
+      "KLAC",
+      "MU",
+      "ORCL"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6350
+  },
+  "decisions": [
+    {
+      "ticker": "DELL",
+      "status": "cycle_failed",
+      "error": "BULL-01 round 2 cites doc_id(s) ['sf1:DELL:NETINC:2025-06'] outside the verified-memo evidence set \u2014 uncited/invented evidence voids the argument (fail-closed)."
+    },
+    {
+      "ticker": "CRWD",
+      "fixture": "wp6_20260710_CRWD",
+      "content_hash": "33af5b4b2af4871a",
+      "ballot": {
+        "weighted_score": 0.79,
+        "margin": 0.068627,
+        "dissent_summary": "FUND-TECH voted no_position (conviction 0.60); BULL-01 voted long (conviction 0.65)",
+        "contested": true
+      },
+      "direction": "short",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "no_trade",
+      "no_trade": {
+        "ticker": "CRWD",
+        "reason": "Rejecting the short ballot. Shorting a dominant, GAAP-profitable software business exhibiting sequential FCF acceleration purely on extreme LTM valuation multiples is exceptionally dangerous. Unadjusted stock split artifacts also severely compromise technical risk management.",
+        "what_would_reopen": "A confirmed top-line revenue deceleration in the upcoming earnings report, combined with charting/technical data sets having officially adjusted for the 4:1 stock split to allow proper stop-loss placement."
+      }
+    }
+  ],
+  "replay_check": {
+    "hash": "f38af7aacc56bc06",
+    "payloads": [
+      {
+        "no_trade": {
+          "ticker": "CRWD",
+          "reason": "Rejecting the short ballot. Shorting a dominant, GAAP-profitable software business exhibiting sequential FCF acceleration purely on extreme LTM valuation multiples is exceptionally dangerous. Unadjusted stock split artifacts also severely compromise technical risk management.",
+          "what_would_reopen": "A confirmed top-line revenue deceleration in the upcoming earnings report, combined with charting/technical data sets having officially adjusted for the 4:1 stock split to allow proper stop-loss placement."
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": [
+    {
+      "role": "BULL-01-CAND-DEEPSEEK",
+      "stance": "long"
+    },
+    {
+      "role": "BULL-01-BASELINE-WEST",
+      "stance": "long"
+    }
+  ],
+  "spend": {
+    "day_spent_usd": 0.407109,
+    "shadow_spent_usd": 0.0043,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 0.927619,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
