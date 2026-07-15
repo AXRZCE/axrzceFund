@@ -1,0 +1,109 @@
+{
+  "session_date": "2026-07-14",
+  "cycle_id": "wp6_20260714",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [],
+  "book": {
+    "nav_usd": 999324.38,
+    "positions": [
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 8949.07
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -8289.0
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3930.72
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 7551.115
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.1231
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "DELL",
+      "CRWD"
+    ],
+    "held": [
+      "AVGO",
+      "KLAC",
+      "MU",
+      "ORCL"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6357
+  },
+  "decisions": [
+    {
+      "ticker": "DELL",
+      "status": "cycle_failed",
+      "error": "OpenRouter call for 'z-ai/glm-5.2' failed after 3 attempt(s): transport error: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'z-ai/glm-5.2 is temp"
+    },
+    {
+      "ticker": "CRWD",
+      "status": "cycle_failed",
+      "error": "judge failed to produce a grounded verdict after retry: judge verdict cites a claim not present in the transcript (bear: 'Even under that robust setup, fair value is only $80-$140 versus a recent $194"
+    }
+  ],
+  "replay_check": {
+    "hash": "4f53cda18c2baa0c",
+    "payloads": [],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "spend": {
+    "day_spent_usd": 0.287226,
+    "shadow_spent_usd": 0.0,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 1.375651,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}

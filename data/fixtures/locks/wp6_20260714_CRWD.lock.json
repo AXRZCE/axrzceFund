@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260714_CRWD",
+  "decision_ts": "2026-07-14T20:00:00+00:00",
+  "tickers": [
+    "CRWD"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-07-15T02:16:32.708938+00:00",
+  "content_hash": "7375dc7829a0105d",
+  "payload_summary": {
+    "price_bars": 38,
+    "fundamentals": {
+      "ASSETS": 30,
+      "EPS": 29,
+      "EQUITY": 30,
+      "FCF": 29,
+      "NETINC": 29,
+      "REVENUE": 29
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}

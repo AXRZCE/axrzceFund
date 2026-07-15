@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260714_DELL",
+  "decision_ts": "2026-07-14T20:00:00+00:00",
+  "tickers": [
+    "DELL"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-07-15T02:15:06.786717+00:00",
+  "content_hash": "5a4cc96319972fd5",
+  "payload_summary": {
+    "price_bars": 38,
+    "fundamentals": {
+      "ASSETS": 41,
+      "EPS": 41,
+      "EQUITY": 41,
+      "FCF": 41,
+      "NETINC": 41,
+      "REVENUE": 41
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}
