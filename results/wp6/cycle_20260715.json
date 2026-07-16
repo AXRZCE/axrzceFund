@@ -1,0 +1,250 @@
+{
+  "session_date": "2026-07-15",
+  "cycle_id": "wp6_20260715",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [],
+  "book": {
+    "nav_usd": 1000229.3,
+    "positions": [
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 9064.99
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -8080.56
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3615.36
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 7816.32
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0327
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "DELL",
+      "CRWD"
+    ],
+    "held": [
+      "AVGO",
+      "KLAC",
+      "MU",
+      "ORCL"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6356
+  },
+  "decisions": [
+    {
+      "ticker": "DELL",
+      "fixture": "wp6_20260715_DELL",
+      "content_hash": "4fade4e5fc1a6f03",
+      "ballot": {
+        "weighted_score": 1.25,
+        "margin": 0.28866,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.69)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.84
+      },
+      "order": {
+        "side": "buy",
+        "qty": 20,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "DELL",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 391.87,
+        "ask": 433.04,
+        "mid": 412.45500000000004,
+        "spread_bps": 998.1694972784913,
+        "ts": "2026-07-15T20:00:01.108974+00:00"
+      }
+    },
+    {
+      "ticker": "CRWD",
+      "fixture": "wp6_20260715_CRWD",
+      "content_hash": "c527a82c9caa5bc2",
+      "ballot": {
+        "weighted_score": 1.45,
+        "margin": 0.380952,
+        "dissent_summary": "BULL-01 voted long (conviction 0.65)",
+        "contested": false
+      },
+      "direction": "short",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.91
+      },
+      "order": {
+        "side": "sell",
+        "qty": 44,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "CRWD",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 197.91,
+        "ask": 0.0,
+        "mid": 98.955,
+        "spread_bps": -20000.0,
+        "ts": "2026-07-15T20:00:01.260838+00:00"
+      }
+    }
+  ],
+  "replay_check": {
+    "hash": "7415003f7583f231",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "DELL",
+          "direction": "long",
+          "size_pct_nav": 0.84,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "355.00",
+          "invalidation_conditions": [
+            "Sustained price break below the technical support level of 357.07 on elevated volume",
+            "Q2 2026 revenue prints below $40B, breaking the annualized growth narrative",
+            "Quarterly Free Cash Flow margins dropping below 5%"
+          ],
+          "horizon_days": 60,
+          "thesis": "DELL has experienced explosive revenue and earnings acceleration, with Q1 EPS of $5.30 implying a ~$21 annualized run-rate at an undemanding ~20x multiple. Robust FCF generation of $7B+ in two quarters addresses prior balance sheet leverage. The core bet is that this run-rate reflects a structural AI infrastructure step-up rather than a transient backlog release. Consolidating near the top of its range, the stock is poised for a breakout ahead of or during Q2 earnings as the market validates sustained high-grossing fundamental performance.",
+          "premortem_top_risks": [
+            "Long Thesis Failure: Q2 earnings reveal sequential top-line moderation (high-$30Bs), proving March 2026 was largely a concentrated backlog release. The $21 EPS floor assumption breaks, the market pulls the growth premium, and the stock forcefully rejects 449.45 resistance, breaking down toward the lower range.",
+            "Bear/Neutral Thesis Failure: Q2 perfectly aligns with the Q1 run-rate, printing $43B+ revenue and $5+ EPS. The market immediately accepts the AI structural step-up, triggering institutional FOMO that crushes the 449.45 ceiling and rapidly squeezes the stock into the $465-$550 fair value bounds."
+          ],
+          "expected_edge_bps": 1500,
+          "ballot_summary": {
+            "weighted_score": 1.25,
+            "margin": 0.28866,
+            "dissent_summary": "BEAR-01 voted short (conviction 0.69)",
+            "contested": false
+          }
+        }
+      },
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "CRWD",
+          "direction": "short",
+          "size_pct_nav": 0.91,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "245.00",
+          "invalidation_conditions": [
+            "QoQ revenue growth violently re-accelerates above 8% (implying >35% annualized).",
+            "FCF margins expand significantly past the 40% threshold, fundamentally altering forward FCF multiples.",
+            "Decisive price breakout above recent moving averages on >2x average daily volume."
+          ],
+          "horizon_days": 180,
+          "thesis": "CRWD trades at a mathematically egregious 37x TTM revenue and 132x TTM FCF despite top-line growth structurally decelerating to ~20-25% annualized. At this scale, the valuation leaves zero margin for error, fully pricing in continuous hypergrowth. Multiple compression is highly likely upon any minor earnings miss or macro weakness.",
+          "premortem_top_risks": [
+            "The short thesis fails as CRWD's new AI modules and platform consolidation drive net retention higher, re-accelerating revenue growth >35% and expanding FCF margins past 40%, allowing the fundamental strength to absorb the multiple.",
+            "The long thesis fails due to violent multiple compression triggered by a 'good but not flawless' earnings report that falls short of the exceptional trajectory priced into 37x sales and 132x FCF."
+          ],
+          "expected_edge_bps": 1500,
+          "ballot_summary": {
+            "weighted_score": 1.45,
+            "margin": 0.380952,
+            "dissent_summary": "BULL-01 voted long (conviction 0.65)",
+            "contested": false
+          }
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": [
+    {
+      "role": "BULL-01-CAND-DEEPSEEK",
+      "stance": "long"
+    },
+    {
+      "role": "BULL-01-BASELINE-WEST",
+      "stance": "long"
+    }
+  ],
+  "spend": {
+    "day_spent_usd": 0.632278,
+    "shadow_spent_usd": 0.005941,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 1.662877,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
