@@ -1,0 +1,235 @@
+{
+  "session_date": "2026-07-16",
+  "cycle_id": "wp6_20260716",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [
+    {
+      "symbol": "DELL",
+      "side": "buy",
+      "qty": 20,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 8242.0,
+      "status": "modeled_filled",
+      "modeled_fill_price": 401.560296,
+      "full_fill": true
+    },
+    {
+      "symbol": "CRWD",
+      "side": "sell",
+      "qty": 44,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 9099.2,
+      "status": "modeled_filled",
+      "modeled_fill_price": 207.113569,
+      "full_fill": true
+    }
+  ],
+  "book": {
+    "nav_usd": 999625.79,
+    "positions": [
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 8621.09
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -8966.32
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 7825.700000000001
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -7896.599999999999
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3415.12
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 7331.34
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.093
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "ADBE",
+      "ACN"
+    ],
+    "held": [
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "KLAC",
+      "MU",
+      "ORCL"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6356
+  },
+  "decisions": [
+    {
+      "ticker": "ADBE",
+      "status": "cycle_failed",
+      "error": "'size_inclination'"
+    },
+    {
+      "ticker": "ACN",
+      "fixture": "wp6_20260716_ACN",
+      "content_hash": "70c2a5874bc2f6bb",
+      "ballot": {
+        "weighted_score": 1.55,
+        "margin": 0.365639,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.72)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.945
+      },
+      "order": {
+        "side": "buy",
+        "qty": 65,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "ACN",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 136.0,
+        "ask": 0.0,
+        "mid": 68.0,
+        "spread_bps": -20000.0,
+        "ts": "2026-07-16T20:00:03.622280+00:00"
+      }
+    }
+  ],
+  "replay_check": {
+    "hash": "b7ac1b2ecc7565c1",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "ACN",
+          "direction": "long",
+          "size_pct_nav": 0.945,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "115.00",
+          "invalidation_conditions": [
+            "Trailing twelve-month FCF drops below $9.0 billion.",
+            "Sequential quarterly revenue declines by 10% or more.",
+            "Stock price sustains a weekly close below the critical technical support of $118.15."
+          ],
+          "horizon_days": 365,
+          "thesis": "ACN trades at a severely compressed 11x TTM P/E and a 14.7% FCF yield, reflecting extreme market pessimism regarding AI disruption to headcount-based consulting. With stable $18B quarterly revenues and $12.5B TTM FCF, the valuation implies structural decline that fundamentals do not yet reflect. Even without immediate multiple expansion, aggressive capital returns funded by massive cash generation provide significant asymmetry. The risk/reward is highly skewed to the upside if earnings simply remain durable.",
+          "premortem_top_risks": [
+            "The market has permanently derated labor-based consulting due to generative AI threats, leaving ACN trapped at an 11x multiple despite maintaining solid current earnings and FCF.",
+            "Actual fundamental deterioration takes hold as systemic macroeconomic pressure or literal AI headwinds cause enterprise clients to slash their consulting budgets.",
+            "The bear thesis is invalidated as ACN quickly re-rates closer to historical multiples (16x-20x) either via realization that AI fears were overblown or via an aggressive capital return strategy."
+          ],
+          "expected_edge_bps": 2500,
+          "ballot_summary": {
+            "weighted_score": 1.55,
+            "margin": 0.365639,
+            "dissent_summary": "BEAR-01 voted short (conviction 0.72)",
+            "contested": false
+          }
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": [
+    {
+      "role": "BULL-01-CAND-DEEPSEEK",
+      "stance": "short"
+    },
+    {
+      "role": "BULL-01-BASELINE-WEST",
+      "stance": "long"
+    }
+  ],
+  "spend": {
+    "day_spent_usd": 0.580629,
+    "shadow_spent_usd": 0.004607,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 2.295155,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}

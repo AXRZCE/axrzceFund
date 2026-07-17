@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260716_ACN",
+  "decision_ts": "2026-07-16T20:00:00+00:00",
+  "tickers": [
+    "ACN"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-07-17T02:18:07.499215+00:00",
+  "content_hash": "70c2a5874bc2f6bb",
+  "payload_summary": {
+    "price_bars": 42,
+    "fundamentals": {
+      "ASSETS": 104,
+      "EPS": 101,
+      "EQUITY": 104,
+      "FCF": 101,
+      "NETINC": 102,
+      "REVENUE": 102
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}
