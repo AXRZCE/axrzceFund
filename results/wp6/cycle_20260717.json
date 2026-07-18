@@ -1,0 +1,300 @@
+{
+  "session_date": "2026-07-17",
+  "cycle_id": "wp6_20260717",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [
+    {
+      "symbol": "ACN",
+      "side": "buy",
+      "qty": 65,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 9399.65,
+      "status": "modeled_filled",
+      "modeled_fill_price": 145.109016,
+      "full_fill": true
+    }
+  ],
+  "book": {
+    "nav_usd": 999937.65,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 9328.15
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 8525.87
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -8937.28
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 7928.0
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -7662.24
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3397.84
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 7459.370000000001
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0618
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "ADBE",
+      "GE"
+    ],
+    "held": [
+      "ACN",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "KLAC",
+      "MU",
+      "ORCL"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6358
+  },
+  "decisions": [
+    {
+      "ticker": "ADBE",
+      "fixture": "wp6_20260717_ADBE",
+      "content_hash": "56785a52da4f3d74",
+      "ballot": {
+        "weighted_score": 1.5,
+        "margin": 0.310044,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.79)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.84
+      },
+      "order": {
+        "side": "buy",
+        "qty": 35,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "ADBE",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 227.69,
+        "ask": 252.11,
+        "mid": 239.9,
+        "spread_bps": 1017.9241350562742,
+        "ts": "2026-07-17T20:00:00.001060+00:00"
+      }
+    },
+    {
+      "ticker": "GE",
+      "fixture": "wp6_20260717_GE",
+      "content_hash": "cb6bdc158a0fef97",
+      "ballot": {
+        "weighted_score": 1.27,
+        "margin": 0.358289,
+        "dissent_summary": "BULL-01 voted long (conviction 0.60)",
+        "contested": false
+      },
+      "direction": "short",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 2,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.77
+      },
+      "order": {
+        "side": "sell",
+        "qty": 22,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "GE",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 332.9,
+        "ask": 0.0,
+        "mid": 166.45,
+        "spread_bps": -20000.0,
+        "ts": "2026-07-17T20:00:03.182158+00:00"
+      }
+    }
+  ],
+  "replay_check": {
+    "hash": "3a27128902e29a4a",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "ADBE",
+          "direction": "long",
+          "size_pct_nav": 0.84,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "188.00",
+          "invalidation_conditions": [
+            "Sequential revenue contraction in upcoming quarterly earnings, indicating material AI-driven workflow cannibalization and market share loss.",
+            "TTM Free Cash Flow margin deterioration, signaling an inability to sustain pricing power.",
+            "Decisive technical breakdown and daily close below the key support level of $190.12 on above-average volume."
+          ],
+          "horizon_days": 365,
+          "thesis": "ADBE provides an asymmetric long opportunity driven by an irrationally compressed 12.8x trailing P/E and ~11% FCF yield. While market consensus fears generative AI disruption, four consecutive quarters of sequential revenue growth and $10.28B in TTM FCF demonstrate robust enterprise inertia and elite cash conversion. At these depressed multiples, aggressive share repurchases are highly accretive and provide a strong baseline return even without multiple expansion. We slightly moderate conviction due to the unresolved risk of a permanent multiple de-rating regime (value trap), but the fundamental cash generation establishes a massive margin of safety.",
+          "premortem_top_risks": [
+            "The valuation multiple remains permanently suppressed due to enduring market consensus on AI disruption risks, leaving the stock trapped in a prolonged sideways grind ('dead money') and failing the long thesis despite stable fundamentals.",
+            "Generative AI natively begins to cannibalize workflow moats, leading to actual top-line deceleration, margin decay, and a structural collapse of the assumed EPS foundation, making the stock a value trap.",
+            "Market anxiety regarding AI disruption abruptly dissipates as Adobe maintains enterprise dominance, leading to an aggressive multiple expansion back toward historical norms, augmented by the reduced share count."
+          ],
+          "expected_edge_bps": 2500,
+          "ballot_summary": {
+            "weighted_score": 1.5,
+            "margin": 0.310044,
+            "dissent_summary": "BEAR-01 voted short (conviction 0.79)",
+            "contested": false
+          }
+        }
+      },
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "GE",
+          "direction": "short",
+          "size_pct_nav": 0.77,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "391.00",
+          "invalidation_conditions": [
+            "Daily close above the 382.97 range resistance level.",
+            "Forward guidance explicitly projecting revenue growth accelerating to 20%+ YoY organically.",
+            "Announcement of a major balance sheet deleveraging or massive share buyback funded by excess cash."
+          ],
+          "horizon_days": 90,
+          "thesis": "GE is valued near ~44x trailing P/FCF and ~42x P/E\u2014multiples typically reserved for high-growth software, not capital-intensive industrials. Despite excellent ~95% FCF conversion, a $373B market cap implies flawless execution and rapid forward growth. The stock is priced for perfection and ranging near resistance, leaving it exposed to severe multiple compression if upcoming results or forward guidance fail to explicitly validate a rapid path to $12B+ in normalized FCF. The skewed risk/reward favors a short.",
+          "premortem_top_risks": [
+            "The short thesis fails because GE's aerospace cycle strength materializes rapidly, and management provides forward guidance credibly projecting the leap toward $12B+ in normalized FCF, validating the premium multiple.",
+            "The long thesis fails because the stock is priced for perfection, and a solid but inline Q3 earnings report fails to outline a rapid FCF ramp, triggering a violent multiple contraction."
+          ],
+          "expected_edge_bps": 800,
+          "ballot_summary": {
+            "weighted_score": 1.27,
+            "margin": 0.358289,
+            "dissent_summary": "BULL-01 voted long (conviction 0.60)",
+            "contested": false
+          }
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": [
+    {
+      "role": "BULL-01-CAND-DEEPSEEK",
+      "stance": "long"
+    },
+    {
+      "role": "BULL-01-BASELINE-WEST",
+      "stance": "long"
+    }
+  ],
+  "spend": {
+    "day_spent_usd": 0.692032,
+    "shadow_spent_usd": 0.004141,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 2.875784,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
