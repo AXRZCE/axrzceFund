@@ -1,0 +1,270 @@
+{
+  "session_date": "2026-07-20",
+  "cycle_id": "wp6_20260720",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [
+    {
+      "symbol": "ADBE",
+      "side": "buy",
+      "qty": 35,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 8301.48,
+      "status": "modeled_filled",
+      "modeled_fill_price": 233.156622,
+      "full_fill": true
+    },
+    {
+      "symbol": "GE",
+      "side": "sell",
+      "qty": 22,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 7672.94,
+      "status": "modeled_filled",
+      "modeled_fill_price": 353.724241,
+      "full_fill": true
+    }
+  ],
+  "book": {
+    "nav_usd": 1000252.18,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 9411.025
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 8215.55
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 8693.77
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -8732.9
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 7625.8
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -7507.719999999999
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -7466.400000000001
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3464.32
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 7162.304999999999
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0304
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "NFLX",
+      "PEP"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "KLAC",
+      "MU",
+      "ORCL"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6350
+  },
+  "decisions": [
+    {
+      "ticker": "NFLX",
+      "status": "cycle_failed",
+      "error": "BULL-01 round 1 cites doc_id(s) ['sf1:nflx:netinc:2026-06', 'sf1:nflx:netinc:2026-03', 'sf1:nflx:netinc:2025-12', 'sf1:nflx:netinc:2025-09', 'sf1:nflx:fcf:2026-06', 'sf1:nflx:fcf:2026-03', 'sf1:nflx:f"
+    },
+    {
+      "ticker": "PEP",
+      "fixture": "wp6_20260720_PEP",
+      "content_hash": "7c3c9919d1b4e0d9",
+      "ballot": {
+        "weighted_score": 1.15,
+        "margin": 0.284916,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.64)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.735
+      },
+      "order": {
+        "side": "buy",
+        "qty": 54,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "PEP",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 127.45,
+        "ask": 141.74,
+        "mid": 134.595,
+        "spread_bps": 1061.703629406739,
+        "ts": "2026-07-20T20:00:00.006579+00:00"
+      }
+    }
+  ],
+  "replay_check": {
+    "hash": "e6159cf1449b8f5e",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "PEP",
+          "direction": "long",
+          "size_pct_nav": 0.735,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "133.50",
+          "invalidation_conditions": [
+            "A sustained technical breakdown and close below 134.69 on elevated volume.",
+            "TTM Free Cash Flow falls below $8.5B.",
+            "Quarterly net margins compress below 10%, challenging the pricing power thesis."
+          ],
+          "horizon_days": 180,
+          "thesis": "At 18.1x trailing P/E, PEP offers a compelling value entry for a highly profitable, wide-moat consumer staple. While the stock is technically range-bound and carries structural leverage, its 10.7% net margins and >90% cash conversion provide a sufficient buffer. The setup favors multiple reversion toward 20x+ as market conditions stabilize, outweighing the dead-money concerns.",
+          "premortem_top_risks": [
+            "Valuation Stagnation / Dead Money: PEP maintains adequate operational metrics (profits and FCF hold steady), but the market refuses to grant multiple expansion due to structural leverage or interest rates, leaving the stock stuck in its range over the 180-day horizon.",
+            "Buffer Breach: A combination of modest promotional increases, volume softness (potentially influenced by preference shifts/GLP-1s), and higher financing costs quickly erodes the narrow fundamental cushions, undermining the 'high quality defensive' narrative."
+          ],
+          "expected_edge_bps": 1000,
+          "ballot_summary": {
+            "weighted_score": 1.15,
+            "margin": 0.284916,
+            "dissent_summary": "BEAR-01 voted short (conviction 0.64)",
+            "contested": false
+          }
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": [
+    {
+      "role": "BULL-01-CAND-DEEPSEEK",
+      "stance": "long"
+    },
+    {
+      "role": "BULL-01-BASELINE-WEST",
+      "stance": "long"
+    }
+  ],
+  "spend": {
+    "day_spent_usd": 0.358009,
+    "shadow_spent_usd": 0.002483,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 3.567816,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
