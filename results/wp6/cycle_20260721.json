@@ -1,0 +1,194 @@
+{
+  "session_date": "2026-07-21",
+  "cycle_id": "wp6_20260721",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [
+    {
+      "symbol": "PEP",
+      "side": "buy",
+      "qty": 54,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 7315.38,
+      "status": "modeled_filled",
+      "modeled_fill_price": 134.82696,
+      "full_fill": true
+    }
+  ],
+  "book": {
+    "nav_usd": 1000284.63,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 9161.75
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 7948.674999999999
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 8884.439999999999
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -8409.060000000001
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 8080.0
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -7494.08
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -7830.72
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3879.76
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 7496.54
+      },
+      {
+        "ticker": "PEP",
+        "sector": "?",
+        "notional_usd": 7292.429999999999
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0272
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "PEP",
+      "signed_qty": 54,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "NFLX",
+      "AZO"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "KLAC",
+      "MU",
+      "ORCL",
+      "PEP"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6348
+  },
+  "decisions": [
+    {
+      "ticker": "NFLX",
+      "status": "cycle_failed",
+      "error": "BULL-01 failed to produce a valid round-3 turn after retry: final round must include a closing statement (\u00a74.1)"
+    },
+    {
+      "ticker": "AZO",
+      "status": "cycle_failed",
+      "error": "BEAR-01 round 1 cites doc_id(s) ['sf1:AZO:EQUITY:2026-06', 'sf1:AZO:EQUITY:2026-03', 'sf1:AZO:EQUITY:2025-12', 'sf1:AZO:EQUITY:2025-09', 'sf1:AZO:FCF:2026-06', 'sf1:AZO:FCF:2026-03', 'sf1:AZO:FCF:2025"
+    }
+  ],
+  "replay_check": {
+    "hash": "4f53cda18c2baa0c",
+    "payloads": [],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "spend": {
+    "day_spent_usd": 0.095608,
+    "shadow_spent_usd": 0.0,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 3.925825,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
