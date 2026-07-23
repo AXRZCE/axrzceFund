@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260722_ISRG",
+  "decision_ts": "2026-07-22T20:00:00+00:00",
+  "tickers": [
+    "ISRG"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-07-23T02:17:11.645167+00:00",
+  "content_hash": "c57c087e1c7b575d",
+  "payload_summary": {
+    "price_bars": 50,
+    "fundamentals": {
+      "ASSETS": 107,
+      "EPS": 107,
+      "EQUITY": 107,
+      "FCF": 107,
+      "NETINC": 107,
+      "REVENUE": 107
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}

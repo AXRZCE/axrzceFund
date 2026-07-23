@@ -1,0 +1,217 @@
+{
+  "session_date": "2026-07-22",
+  "cycle_id": "wp6_20260722",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [],
+  "book": {
+    "nav_usd": 1001134.16,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 9103.9
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 7642.6
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 9128.24
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -8293.560000000001
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 8836.8
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -7506.509999999999
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -7730.64
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3837.08
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 7426.035
+      },
+      {
+        "ticker": "PEP",
+        "sector": "?",
+        "notional_usd": 7329.960000000001
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "PEP",
+      "signed_qty": 54,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "NFLX",
+      "ISRG"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "KLAC",
+      "MU",
+      "ORCL",
+      "PEP"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6340
+  },
+  "decisions": [
+    {
+      "ticker": "NFLX",
+      "status": "cycle_failed",
+      "error": "BULL-01 round 2 cites doc_id(s) ['sf1:NFLX:REVENUE:2026-09'] outside the verified-memo evidence set \u2014 uncited/invented evidence voids the argument (fail-closed)."
+    },
+    {
+      "ticker": "ISRG",
+      "fixture": "wp6_20260722_ISRG",
+      "content_hash": "c57c087e1c7b575d",
+      "ballot": {
+        "weighted_score": 0.73,
+        "margin": 0.141414,
+        "dissent_summary": "FUND-TECH voted no_position (conviction 0.80); BULL-01 voted long (conviction 0.45)",
+        "contested": true
+      },
+      "direction": "short",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "no_trade",
+      "no_trade": {
+        "ticker": "ISRG",
+        "reason": "ISRG is a fundamentally elite business with >100% FCF conversion, a fortress balance sheet, and a deep robotic surgery moat. While the ~44x P/E valuation is demanding, the current price ($388.78) lies within the DCF fair value range of $320-$415. Furthermore, the stock is hovering near the lower bound of its established technical range ($378.50). Shorting a high-quality, cash-generating compounder purely on absolute valuation multiples, especially directly into technical support without confirmed fundamental decay, presents structurally poor risk/reward.",
+        "what_would_reopen": "A sustained close outside the current technical range ($378.50-$443.84), or a clear structural deceleration in hospital capital expenditure trends and recurring procedure volumes."
+      }
+    }
+  ],
+  "replay_check": {
+    "hash": "c77f306c38a91161",
+    "payloads": [
+      {
+        "no_trade": {
+          "ticker": "ISRG",
+          "reason": "ISRG is a fundamentally elite business with >100% FCF conversion, a fortress balance sheet, and a deep robotic surgery moat. While the ~44x P/E valuation is demanding, the current price ($388.78) lies within the DCF fair value range of $320-$415. Furthermore, the stock is hovering near the lower bound of its established technical range ($378.50). Shorting a high-quality, cash-generating compounder purely on absolute valuation multiples, especially directly into technical support without confirmed fundamental decay, presents structurally poor risk/reward.",
+          "what_would_reopen": "A sustained close outside the current technical range ($378.50-$443.84), or a clear structural deceleration in hospital capital expenditure trends and recurring procedure volumes."
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": [
+    {
+      "role": "BULL-01-CAND-DEEPSEEK",
+      "stance": "long"
+    },
+    {
+      "role": "BULL-01-BASELINE-WEST",
+      "stance": "long"
+    }
+  ],
+  "spend": {
+    "day_spent_usd": 0.403967,
+    "shadow_spent_usd": 0.003676,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 4.021433,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
