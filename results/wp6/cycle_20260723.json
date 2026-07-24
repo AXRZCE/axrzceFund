@@ -1,0 +1,181 @@
+{
+  "session_date": "2026-07-23",
+  "cycle_id": "wp6_20260723",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [],
+  "book": {
+    "nav_usd": 1000079.34,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 9020.050000000001
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 7425.25
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 9030.03
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -8071.36
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 8782.9
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -7681.19
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -7876.08
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3954.38
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 7082.95
+      },
+      {
+        "ticker": "PEP",
+        "sector": "?",
+        "notional_usd": 7286.76
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.1054
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "PEP",
+      "signed_qty": 54,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "TSLA",
+      "GOOGL"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "KLAC",
+      "MU",
+      "ORCL",
+      "PEP"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6314
+  },
+  "decisions": [
+    {
+      "ticker": "TSLA",
+      "status": "cycle_failed",
+      "error": "BULL-01 round 2 cites doc_id(s) ['...'] outside the verified-memo evidence set \u2014 uncited/invented evidence voids the argument (fail-closed)."
+    },
+    {
+      "ticker": "GOOGL",
+      "status": "cycle_failed",
+      "error": "MOD-01 failed to produce a valid neutral summary after retry: Expecting ',' delimiter: line 31 column 1 (char 3325)"
+    }
+  ],
+  "replay_check": {
+    "hash": "4f53cda18c2baa0c",
+    "payloads": [],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "spend": {
+    "day_spent_usd": 0.080854,
+    "shadow_spent_usd": 0.0,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 4.4254,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
