@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260724_TSLA",
+  "decision_ts": "2026-07-24T20:00:00+00:00",
+  "tickers": [
+    "TSLA"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-07-25T02:15:03.193738+00:00",
+  "content_hash": "b2fe4ab42eb790f7",
+  "payload_summary": {
+    "price_bars": 54,
+    "fundamentals": {
+      "ASSETS": 68,
+      "EPS": 67,
+      "EQUITY": 68,
+      "FCF": 67,
+      "NETINC": 67,
+      "REVENUE": 67
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}

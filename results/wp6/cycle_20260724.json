@@ -1,0 +1,257 @@
+{
+  "session_date": "2026-07-24",
+  "cycle_id": "wp6_20260724",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [],
+  "book": {
+    "nav_usd": 1001056.21,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 9558.25
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 7878.85
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 8782.32
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -8064.759999999999
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 8744.0
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -7782.280000000001
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -7575.3
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3684.22
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 6785.295
+      },
+      {
+        "ticker": "PEP",
+        "sector": "?",
+        "notional_usd": 7379.639999999999
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0078
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "PEP",
+      "signed_qty": 54,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "TSLA",
+      "INTC"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "KLAC",
+      "MU",
+      "ORCL",
+      "PEP"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6309
+  },
+  "decisions": [
+    {
+      "ticker": "TSLA",
+      "fixture": "wp6_20260724_TSLA",
+      "content_hash": "b2fe4ab42eb790f7",
+      "ballot": {
+        "weighted_score": 1.37,
+        "margin": 0.323671,
+        "dissent_summary": "BULL-01 voted long (conviction 0.70)",
+        "contested": false
+      },
+      "direction": "short",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.805
+      },
+      "order": {
+        "side": "sell",
+        "qty": 25,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "TSLA",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 292.21,
+        "ask": 324.26,
+        "mid": 308.235,
+        "spread_bps": 1039.7910685029283,
+        "ts": "2026-07-24T20:00:00.868641+00:00"
+      }
+    },
+    {
+      "ticker": "INTC",
+      "status": "cycle_failed",
+      "error": "Expecting ',' delimiter: line 76 column 4 (char 4173)"
+    }
+  ],
+  "replay_check": {
+    "hash": "3deac0faa8629a37",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "TSLA",
+          "direction": "short",
+          "size_pct_nav": 0.805,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "435.00",
+          "invalidation_conditions": [
+            "Q3 2026 Free Cash Flow cleanly rebounds beyond +$1.5B",
+            "Quarterly EPS expands to >$0.50, invalidating the margin compression narrative",
+            "Sustained technical breakout above 432.86 accompanied by abnormal buying volume"
+          ],
+          "horizon_days": 180,
+          "thesis": "TSLA is trading at an extreme 320x+ TTM P/E while fundamentals deteriorate, evidenced by Q2 2026's severe swing to -$1.09B in Free Cash Flow and an 18.8% YoY net income contraction. This highlights escalating capital intensity that contradicts the market's high-margin software-like valuation premium. The stock is currently testing the 368.60 technical floor; a breakdown here likely triggers a mechanical derating as hyper-growth expectations collide with capital-heavy realities. We are shorting the multiple compression, anchored by defined risk at the upper range boundary.",
+          "premortem_top_risks": [
+            "The short thesis fails because the negative FCF was indeed merely a timing issue within an investment cycle. TSLA quickly rebounds in Q3 2026 by printing FCF >$1.5B and EPS >$0.50, demonstrating early monetization of its AI/Software verticals and re-anchoring the premium multiple.",
+            "The long thesis fails because TSLA cannot quickly convert its heavy capital investments into visible, high-margin software returns. Cash burn persists, FCF remains weak or negative in Q3, and the market capitulates on the 320x+ unproven optionality premium, triggering a drastic multiple compression."
+          ],
+          "expected_edge_bps": 1200,
+          "ballot_summary": {
+            "weighted_score": 1.37,
+            "margin": 0.323671,
+            "dissent_summary": "BULL-01 voted long (conviction 0.70)",
+            "contested": false
+          }
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": [
+    {
+      "role": "BULL-01-CAND-DEEPSEEK",
+      "stance": "no_position"
+    },
+    {
+      "role": "BULL-01-BASELINE-WEST",
+      "stance": "long"
+    }
+  ],
+  "spend": {
+    "day_spent_usd": 0.316467,
+    "shadow_spent_usd": 0.006151,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 4.506254,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
