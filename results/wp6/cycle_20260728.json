@@ -1,0 +1,333 @@
+{
+  "session_date": "2026-07-28",
+  "cycle_id": "wp6_20260728",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [],
+  "book": {
+    "nav_usd": 1003841.1,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 10701.599999999999
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 8722.35
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 8750.58
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -8000.08
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 7842.6
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -8001.4
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -6871.14
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3282.04
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 7077.05
+      },
+      {
+        "ticker": "PEP",
+        "sector": "?",
+        "notional_usd": 7713.360000000001
+      },
+      {
+        "ticker": "TSLA",
+        "sector": "?",
+        "notional_usd": -7682.5
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "PEP",
+      "signed_qty": 54,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "TSLA",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "INTC",
+      "GOOGL"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "KLAC",
+      "MU",
+      "ORCL",
+      "PEP",
+      "TSLA"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6297
+  },
+  "decisions": [
+    {
+      "ticker": "INTC",
+      "fixture": "wp6_20260728_INTC",
+      "content_hash": "07a927f8e4b2a743",
+      "ballot": {
+        "weighted_score": 0.75,
+        "margin": 0.013216,
+        "dissent_summary": "FUND-TECH voted no_position (conviction 0.80); BEAR-01 voted short (conviction 0.72)",
+        "contested": true
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.455
+      },
+      "order": {
+        "side": "buy",
+        "qty": 52,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "INTC",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 82.21,
+        "ask": 91.02,
+        "mid": 86.615,
+        "spread_bps": 1017.1448363447442,
+        "ts": "2026-07-28T20:00:00.008643+00:00"
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "fixture": "wp6_20260728_GOOGL",
+      "content_hash": "fcf4acdb9bcd4685",
+      "ballot": {
+        "weighted_score": 1.44,
+        "margin": 0.447236,
+        "dissent_summary": "BULL-01 voted long (conviction 0.55)",
+        "contested": false
+      },
+      "direction": "short",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.84
+      },
+      "order": {
+        "side": "sell",
+        "qty": 25,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "GOOGL",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 317.69,
+        "ask": 350.86,
+        "mid": 334.275,
+        "spread_bps": 992.296761648344,
+        "ts": "2026-07-28T20:00:00.018980+00:00"
+      }
+    }
+  ],
+  "replay_check": {
+    "hash": "81fdcce9c2d715ae",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "INTC",
+          "direction": "long",
+          "size_pct_nav": 0.455,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "89.00",
+          "invalidation_conditions": [
+            "Q3 2026 revenue falls back below $14.5B.",
+            "Quarterly FCF drops below $2B, indicating the Q2 spike was a one-off subsidy or working capital anomaly.",
+            "Decisive technical close below the 89.59 range support on elevated volume."
+          ],
+          "horizon_days": 180,
+          "thesis": "The recent $24B non-cash impairment is a classic 'kitchen-sink' event that resets the baseline, while the material revenue acceleration to $16.1B and strong Q2 FCF of $4.45B prove a durable operational turnaround. Annualizing the Q2 FCF yields a reasonable ~30x forward FCF multiple, nullifying the trailing 190x bear thesis. Entering near the 89.59 range support provides an asymmetric upside launchpoint.",
+          "premortem_top_risks": [
+            "The short thesis fails because the Q2 'kitchen-sink' impairment successfully cleared the deck, allowing the $16.1B revenue base to durably convert into sustained FCF >$5B per quarter, thereby rapidly compressing the trailing 190x multiple into a reasonable forward valuation.",
+            "The long thesis fails because the Q2 $4.45B FCF surge was a one-off working capital or subsidy release; subsequent quarters revert to trailing lower cash generation alongside persistent unprofitability, proving the $24B equity destruction was merely step one of ongoing fundamental deterioration."
+          ],
+          "expected_edge_bps": 1500,
+          "ballot_summary": {
+            "weighted_score": 0.75,
+            "margin": 0.013216,
+            "dissent_summary": "FUND-TECH voted no_position (conviction 0.80); BEAR-01 voted short (conviction 0.72)",
+            "contested": true
+          }
+        }
+      },
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "GOOGL",
+          "direction": "short",
+          "size_pct_nav": 0.84,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "382.50",
+          "invalidation_conditions": [
+            "Q3 2026 Free Cash Flow recovers to >$15B",
+            "Decisive technical breakout above $375.85 resistance on expanding volume"
+          ],
+          "horizon_days": 180,
+          "thesis": "GOOGL's headline EPS is heavily distorted by a massive, non-recurring $112B net income gain, masking a sharp collapse in Free Cash Flow to -$5.8B. An unprecedented $326B asset expansion indicates surging AI infrastructure CapEx, structurally elevating capital intensity. The market is valuing the stock on inflated earnings rather than deteriorating cash generation. As accounting illusions fade in Q3 and secular cash flow drag becomes apparent, we expect a notable de-rating. Range-bound technicals provide a well-defined risk level with resistance near $376. Falling operating cash flow failing to outpace recurring CapEx establishes a compelling short setup targeting normalized multiple valuations.",
+          "premortem_top_risks": [
+            "Bear thesis dies because the massive AI asset build rapidly monetizes, proving the Q2 negative cash flow was merely a brief, highly accretive trough rather than a secular decline.",
+            "Bull thesis dies because the business's capital intensity has permanently elevated, meaning operating cash flow cannot keep pace with recurring CapEx requirements, leading to a permanent structural de-rating of the stock."
+          ],
+          "expected_edge_bps": 1500,
+          "ballot_summary": {
+            "weighted_score": 1.44,
+            "margin": 0.447236,
+            "dissent_summary": "BULL-01 voted long (conviction 0.55)",
+            "contested": false
+          }
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": [
+    {
+      "role": "BULL-01-CAND-DEEPSEEK",
+      "stance": "long"
+    },
+    {
+      "role": "BULL-01-BASELINE-WEST",
+      "stance": "long"
+    }
+  ],
+  "spend": {
+    "day_spent_usd": 0.633678,
+    "shadow_spent_usd": 0.007645,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 4.925962,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}

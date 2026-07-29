@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260728_INTC",
+  "decision_ts": "2026-07-28T20:00:00+00:00",
+  "tickers": [
+    "INTC"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-07-29T02:15:07.007120+00:00",
+  "content_hash": "07a927f8e4b2a743",
+  "payload_summary": {
+    "price_bars": 58,
+    "fundamentals": {
+      "ASSETS": 132,
+      "EPS": 131,
+      "EQUITY": 132,
+      "FCF": 131,
+      "NETINC": 131,
+      "REVENUE": 131
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}
