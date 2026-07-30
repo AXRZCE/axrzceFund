@@ -1,0 +1,242 @@
+{
+  "session_date": "2026-07-29",
+  "cycle_id": "wp6_20260729",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [
+    {
+      "symbol": "INTC",
+      "side": "buy",
+      "qty": 52,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 4484.48,
+      "status": "modeled_filled",
+      "modeled_fill_price": 86.847366,
+      "full_fill": true
+    },
+    {
+      "symbol": "GOOGL",
+      "side": "sell",
+      "qty": 25,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 8344.5,
+      "status": "modeled_filled",
+      "modeled_fill_price": 334.598067,
+      "full_fill": true
+    }
+  ],
+  "book": {
+    "nav_usd": 1005513.53,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 11261.25
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 9220.574999999999
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 8517.59
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -7898.0
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 7393.099999999999
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -7716.94
+      },
+      {
+        "ticker": "GOOGL",
+        "sector": "?",
+        "notional_usd": -8412.25
+      },
+      {
+        "ticker": "INTC",
+        "sector": "?",
+        "notional_usd": 4259.58
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -6129.36
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -2955.04
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 6953.15
+      },
+      {
+        "ticker": "PEP",
+        "sector": "?",
+        "notional_usd": 7756.0199999999995
+      },
+      {
+        "ticker": "TSLA",
+        "sector": "?",
+        "notional_usd": -7455.75
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GOOGL",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "INTC",
+      "signed_qty": 52,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "PEP",
+      "signed_qty": 54,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "TSLA",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "MSFT",
+      "NFLX"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "GOOGL",
+      "INTC",
+      "KLAC",
+      "MU",
+      "ORCL",
+      "PEP",
+      "TSLA"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6237
+  },
+  "decisions": [
+    {
+      "ticker": "MSFT",
+      "status": "cycle_failed",
+      "error": "'size_inclination'"
+    },
+    {
+      "ticker": "NFLX",
+      "status": "cycle_failed",
+      "error": "BULL-01 round 1 cites doc_id(s) ['sf1:nflx:revenue:2025-09', 'sf1:nflx:revenue:2025-12', 'sf1:nflx:revenue:2026-03', 'sf1:nflx:revenue:2026-06', 'sf1:nflx:eps:2025-09', 'sf1:nflx:eps:2025-12', 'sf1:nf"
+    }
+  ],
+  "replay_check": {
+    "hash": "4f53cda18c2baa0c",
+    "payloads": [],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "spend": {
+    "day_spent_usd": 0.360687,
+    "shadow_spent_usd": 0.0,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 5.55964,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}

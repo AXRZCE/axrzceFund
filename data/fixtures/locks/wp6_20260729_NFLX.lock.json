@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260729_NFLX",
+  "decision_ts": "2026-07-29T20:00:00+00:00",
+  "tickers": [
+    "NFLX"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-07-30T02:20:35.214657+00:00",
+  "content_hash": "9e5a7481fd8c9fac",
+  "payload_summary": {
+    "price_bars": 60,
+    "fundamentals": {
+      "ASSETS": 100,
+      "EPS": 100,
+      "EQUITY": 100,
+      "FCF": 100,
+      "NETINC": 100,
+      "REVENUE": 100
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}
