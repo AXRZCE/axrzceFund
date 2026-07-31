@@ -1,0 +1,313 @@
+{
+  "session_date": "2026-07-30",
+  "cycle_id": "wp6_20260730",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [],
+  "book": {
+    "nav_usd": 1004870.83,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 10616.45
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 8673.525
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 8926.76
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -8145.5
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 8104.700000000001
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -7813.52
+      },
+      {
+        "ticker": "GOOGL",
+        "sector": "?",
+        "notional_usd": -8341.0
+      },
+      {
+        "ticker": "INTC",
+        "sector": "?",
+        "notional_usd": 4740.32
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -6495.12
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3499.2
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 7526.925
+      },
+      {
+        "ticker": "PEP",
+        "sector": "?",
+        "notional_usd": 7571.88
+      },
+      {
+        "ticker": "TSLA",
+        "sector": "?",
+        "notional_usd": -7715.000000000001
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0639
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GOOGL",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "INTC",
+      "signed_qty": 52,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "PEP",
+      "signed_qty": 54,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "TSLA",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "MSFT",
+      "META"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "GOOGL",
+      "INTC",
+      "KLAC",
+      "MU",
+      "ORCL",
+      "PEP",
+      "TSLA"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6225
+  },
+  "decisions": [
+    {
+      "ticker": "MSFT",
+      "fixture": "wp6_20260730_MSFT",
+      "content_hash": "43b6cb2f4e6d598d",
+      "ballot": {
+        "weighted_score": 1.5,
+        "margin": 0.345291,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.73)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.805
+      },
+      "order": {
+        "side": "buy",
+        "qty": 17,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "MSFT",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 435.32,
+        "ask": 479.18,
+        "mid": 457.25,
+        "spread_bps": 959.2126845270643,
+        "ts": "2026-07-30T20:00:00.453026+00:00"
+      }
+    },
+    {
+      "ticker": "META",
+      "fixture": "wp6_20260730_META",
+      "content_hash": "e1659685abb835f0",
+      "ballot": {
+        "weighted_score": 0.72,
+        "margin": 0.144385,
+        "dissent_summary": "FUND-TECH voted no_position (conviction 0.70); BULL-01 voted long (conviction 0.45)",
+        "contested": true
+      },
+      "direction": "short",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "no_trade",
+      "no_trade": {
+        "ticker": "META",
+        "reason": "Despite a concerning one-quarter FCF collapse from accelerated CapEx, META's record P&L health and strictly range-bound technicals make a directional short premature.",
+        "what_would_reopen": "A sustained technical breakdown below the 540.20 support level accompanied by Q3 earnings formally confirming elevated capital intensity and FCF remaining below $5B."
+      }
+    }
+  ],
+  "replay_check": {
+    "hash": "220c80905e9cb1f9",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "MSFT",
+          "direction": "long",
+          "size_pct_nav": 0.805,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "345.00",
+          "invalidation_conditions": [
+            "Sequential quarterly revenue prints below $85B",
+            "TTM EPS compresses below $16.00",
+            "FCF-to-Net-Income conversion drops below 40% over a TTM basis",
+            "Daily close reliably breaks technical support at 349.20"
+          ],
+          "horizon_days": 180,
+          "thesis": "MSFT trades at a compelling 21.2x trailing P/E based on $18.00 EPS despite robust revenue acceleration to $90B/quarter. The $122B asset expansion indicates aggressive AI/Cloud CapEx, temporarily depressing FCF conversion to ~50%. Current valuation provides substantial asymmetry; if operating leverage materializes and the multiple reverts to the historical 25x-30x range, upside is significant.",
+          "premortem_top_risks": [
+            "The investment thesis holds fundamentally but fails on valuation, as the market permanently lowers MSFT's multiple due to persistent capital intensity.",
+            "The massive $122B infrastructure buildout leads to overcapacity and stranded assets if AI or Cloud demand stalls.",
+            "Depreciation and operating costs from the new asset base drag down operating margins."
+          ],
+          "expected_edge_bps": 1200,
+          "ballot_summary": {
+            "weighted_score": 1.5,
+            "margin": 0.345291,
+            "dissent_summary": "BEAR-01 voted short (conviction 0.73)",
+            "contested": false
+          }
+        }
+      },
+      {
+        "no_trade": {
+          "ticker": "META",
+          "reason": "Despite a concerning one-quarter FCF collapse from accelerated CapEx, META's record P&L health and strictly range-bound technicals make a directional short premature.",
+          "what_would_reopen": "A sustained technical breakdown below the 540.20 support level accompanied by Q3 earnings formally confirming elevated capital intensity and FCF remaining below $5B."
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": {
+    "skipped": "OpenRouter call for 'deepseek/deepseek-v4-pro' failed after 3 attempt(s): transport error: Error code: 429 - {'error': {"
+  },
+  "spend": {
+    "day_spent_usd": 0.604678,
+    "shadow_spent_usd": 0.0,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 5.920327,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
