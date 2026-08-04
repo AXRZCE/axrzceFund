@@ -1,0 +1,324 @@
+{
+  "session_date": "2026-08-03",
+  "cycle_id": "wp6_20260803",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [
+    {
+      "symbol": "META",
+      "side": "sell",
+      "qty": 15,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 8349.0,
+      "status": "modeled_filled",
+      "modeled_fill_price": 562.68744,
+      "full_fill": true
+    }
+  ],
+  "book": {
+    "nav_usd": 1004447.1,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 10776.35
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 8798.475
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 9023.36
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -8913.08
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 8582.4
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -8117.89
+      },
+      {
+        "ticker": "GOOGL",
+        "sector": "?",
+        "notional_usd": -9337.75
+      },
+      {
+        "ticker": "INTC",
+        "sector": "?",
+        "notional_usd": 4731.48
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -6578.460000000001
+      },
+      {
+        "ticker": "META",
+        "sector": "?",
+        "notional_usd": -8852.25
+      },
+      {
+        "ticker": "MSFT",
+        "sector": "?",
+        "notional_usd": 8288.775
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3316.04
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 8368.56
+      },
+      {
+        "ticker": "PEP",
+        "sector": "?",
+        "notional_usd": 7538.4
+      },
+      {
+        "ticker": "TSLA",
+        "sector": "?",
+        "notional_usd": -8052.0
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.1061
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GOOGL",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "INTC",
+      "signed_qty": 52,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "META",
+      "signed_qty": -15,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MSFT",
+      "signed_qty": 17,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "PEP",
+      "signed_qty": 54,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "TSLA",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "NFLX",
+      "GEV"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "GOOGL",
+      "INTC",
+      "KLAC",
+      "META",
+      "MSFT",
+      "MU",
+      "ORCL",
+      "PEP",
+      "TSLA"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6222
+  },
+  "decisions": [
+    {
+      "ticker": "NFLX",
+      "fixture": "wp6_20260803_NFLX",
+      "content_hash": "f7dd14a3f7895045",
+      "ballot": {
+        "weighted_score": 1.3,
+        "margin": 0.319797,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.67)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.77
+      },
+      "order": {
+        "side": "buy",
+        "qty": 105,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "NFLX",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 69.04,
+        "ask": 76.5,
+        "mid": 72.77000000000001,
+        "spread_bps": 1025.1477257111437,
+        "ts": "2026-08-03T20:00:01.095531+00:00"
+      }
+    },
+    {
+      "ticker": "GEV",
+      "status": "cycle_failed",
+      "error": "BULL-01 round 2 cites doc_id(s) ['sf1:GEV:FCF:2026-12', 'sf1:GEV:FCF:2026-09'] outside the verified-memo evidence set \u2014 uncited/invented evidence voids the argument (fail-closed)."
+    }
+  ],
+  "replay_check": {
+    "hash": "db31ddd9b293a63c",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "NFLX",
+          "direction": "long",
+          "size_pct_nav": 0.77,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "61.50",
+          "invalidation_conditions": [
+            "Trailing twelve-month FCF drops below $9.0B.",
+            "Sequential revenue growth turns negative for two consecutive quarters.",
+            "Stock closes below the 65.095 support level with above-average volume."
+          ],
+          "horizon_days": 365,
+          "thesis": "NFLX presents an asymmetric long opportunity over a 12-month horizon, trading at an undemanding ~21.8x P/E relative to its robust ~$11.1B TTM FCF and ~45% ROE. While short-term technicals remain range-bound and lack momentum, the fundamental margin of safety provided by its cash compounding, pristine balance sheet, and persistent sequential revenue growth outweighs near-term cyclical fears.",
+          "premortem_top_risks": [
+            "Escalating content production costs and competitive spending compress free cash flow margins, invalidating the cash-compounding thesis.",
+            "The market treats current cash generation as peak-ish and refuses to expand the multiple, resulting in range-bound dead money despite stable business operations.",
+            "Subscriber fatigue and price-hike exhaustion cause top-line growth to stall, refuting the assumption of durable pricing power."
+          ],
+          "expected_edge_bps": 1500,
+          "ballot_summary": {
+            "weighted_score": 1.3,
+            "margin": 0.319797,
+            "dissent_summary": "BEAR-01 voted short (conviction 0.67)",
+            "contested": false
+          }
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": {
+    "skipped": "OpenRouter call for 'deepseek/deepseek-v4-pro' failed after 3 attempt(s): transport error: Error code: 429 - {'error': {"
+  },
+  "spend": {
+    "day_spent_usd": 0.375648,
+    "shadow_spent_usd": 0.0,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 7.090485,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
