@@ -1,0 +1,362 @@
+{
+  "session_date": "2026-08-04",
+  "cycle_id": "wp6_20260804",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [
+    {
+      "symbol": "NFLX",
+      "side": "buy",
+      "qty": 105,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 7697.55,
+      "status": "modeled_filled",
+      "modeled_fill_price": 72.534504,
+      "full_fill": true
+    }
+  ],
+  "book": {
+    "nav_usd": 1005761.01,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 11077.95
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 9011.800000000001
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 9615.38
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -9291.48
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 9342.7
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -8297.3
+      },
+      {
+        "ticker": "GOOGL",
+        "sector": "?",
+        "notional_usd": -9441.875
+      },
+      {
+        "ticker": "INTC",
+        "sector": "?",
+        "notional_usd": 5247.32
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -7034.58
+      },
+      {
+        "ticker": "META",
+        "sector": "?",
+        "notional_usd": -8817.45
+      },
+      {
+        "ticker": "MSFT",
+        "sector": "?",
+        "notional_usd": 8378.11
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3567.36
+      },
+      {
+        "ticker": "NFLX",
+        "sector": "?",
+        "notional_usd": 7721.700000000001
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 8597.48
+      },
+      {
+        "ticker": "PEP",
+        "sector": "?",
+        "notional_usd": 7512.210000000001
+      },
+      {
+        "ticker": "TSLA",
+        "sector": "?",
+        "notional_usd": -8184.25
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GOOGL",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "INTC",
+      "signed_qty": 52,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "META",
+      "signed_qty": -15,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MSFT",
+      "signed_qty": 17,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "NFLX",
+      "signed_qty": 105,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "PEP",
+      "signed_qty": 54,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "TSLA",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "GEV",
+      "V"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "GOOGL",
+      "INTC",
+      "KLAC",
+      "META",
+      "MSFT",
+      "MU",
+      "NFLX",
+      "ORCL",
+      "PEP",
+      "TSLA"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6219
+  },
+  "decisions": [
+    {
+      "ticker": "GEV",
+      "fixture": "wp6_20260804_GEV",
+      "content_hash": "ffeff28b489f2d89",
+      "ballot": {
+        "weighted_score": 1.25,
+        "margin": 0.28866,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.69)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.805
+      },
+      "order": {
+        "side": "buy",
+        "qty": 7,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "GEV",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 951.99,
+        "ask": 1064.25,
+        "mid": 1008.12,
+        "spread_bps": 1113.557909772646,
+        "ts": "2026-08-04T20:00:00.009364+00:00"
+      }
+    },
+    {
+      "ticker": "V",
+      "fixture": "wp6_20260804_V",
+      "content_hash": "4108d8d13b57e0f9",
+      "ballot": {
+        "weighted_score": 1.2,
+        "margin": 0.318681,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.62)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "no_trade",
+      "no_trade": {
+        "ticker": "V",
+        "reason": "Visa is a phenomenal business with >50% net margins and >60% ROE. However, trading at a 31x P/E multiple right beneath technical range resistance ($371.16) with fundamental fair value starting at $385 offers insufficient risk/reward to initiate a new position today.",
+        "what_would_reopen": "A confirmed, high-volume breakout above the $371.16 resistance level, or a meaningful pullback toward moving average support at $344 or range support at $317 to improve the margin of safety."
+      }
+    }
+  ],
+  "replay_check": {
+    "hash": "1e799b7353a8ffa9",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "GEV",
+          "direction": "long",
+          "size_pct_nav": 0.805,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "855.00",
+          "invalidation_conditions": [
+            "Sustained price breakdown below the 856.05 structural support level on abnormal volume.",
+            "Trailing twelve-month FCF drops below $8B, indicating a severe reversal of customer advances.",
+            "Continued sequential equity declines in Q3 2026 without formal announcements of shareholder return programs."
+          ],
+          "horizon_days": 90,
+          "thesis": "GEV presents a compelling valuation dislocation, trading at ~20x TTM FCF on the back of $12.64B in TTM free cash flow. While GAAP EPS volatility and short-term technical weakness have clouded the narrative, this massive cash generation likely stems from structural working-capital advantages. However, unresolved concerns surrounding an unexplained $1.96B equity contraction in Q2 2026 and the risk of a working-capital reversal require conservative sizing. We go long near structural support, anticipating that upcoming earnings will confirm the durability of FCF and clarify capital return programs.",
+          "premortem_top_risks": [
+            "The recent FCF surge proves to be a temporary working-capital pull-forward, leading to severe valuation multiple compression as the FCF denominator collapses.",
+            "The unexplained Q2 equity contraction was masking actual balance-sheet deterioration or hidden OCI losses rather than capital returns.",
+            "The technical setup breaks down as the market rejects the fundamental cash flow narrative and stop-loss selling cascades.",
+            "The bear thesis fails because the cash flow model is structurally durable, and the market re-rates the stock upward on undeniable cash yields."
+          ],
+          "expected_edge_bps": 350,
+          "ballot_summary": {
+            "weighted_score": 1.25,
+            "margin": 0.28866,
+            "dissent_summary": "BEAR-01 voted short (conviction 0.69)",
+            "contested": false
+          }
+        }
+      },
+      {
+        "no_trade": {
+          "ticker": "V",
+          "reason": "Visa is a phenomenal business with >50% net margins and >60% ROE. However, trading at a 31x P/E multiple right beneath technical range resistance ($371.16) with fundamental fair value starting at $385 offers insufficient risk/reward to initiate a new position today.",
+          "what_would_reopen": "A confirmed, high-volume breakout above the $371.16 resistance level, or a meaningful pullback toward moving average support at $344 or range support at $317 to improve the margin of safety."
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": {
+    "skipped": "OpenRouter call for 'deepseek/deepseek-v4-pro' failed after 3 attempt(s): transport error: Error code: 429 - {'error': {"
+  },
+  "spend": {
+    "day_spent_usd": 0.697102,
+    "shadow_spent_usd": 0.0,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 7.466133,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}

@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260804_GEV",
+  "decision_ts": "2026-08-04T20:00:00+00:00",
+  "tickers": [
+    "GEV"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-08-05T02:15:07.429369+00:00",
+  "content_hash": "ffeff28b489f2d89",
+  "payload_summary": {
+    "price_bars": 68,
+    "fundamentals": {
+      "ASSETS": 13,
+      "EPS": 9,
+      "EQUITY": 13,
+      "FCF": 10,
+      "NETINC": 10,
+      "REVENUE": 10
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}
