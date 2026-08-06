@@ -1,0 +1,347 @@
+{
+  "session_date": "2026-08-05",
+  "cycle_id": "wp6_20260805",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [
+    {
+      "symbol": "GEV",
+      "side": "buy",
+      "qty": 7,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 7127.4,
+      "status": "modeled_filled",
+      "modeled_fill_price": 1017.30342,
+      "full_fill": true
+    }
+  ],
+  "book": {
+    "nav_usd": 1006235.1,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 11087.375
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 9077.25
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 9625.27
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -9223.939999999999
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 9247.6
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -8382.66
+      },
+      {
+        "ticker": "GEV",
+        "sector": "?",
+        "notional_usd": 7128.8
+      },
+      {
+        "ticker": "GOOGL",
+        "sector": "?",
+        "notional_usd": -9059.625
+      },
+      {
+        "ticker": "INTC",
+        "sector": "?",
+        "notional_usd": 5256.16
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -6941.16
+      },
+      {
+        "ticker": "META",
+        "sector": "?",
+        "notional_usd": -8832.45
+      },
+      {
+        "ticker": "MSFT",
+        "sector": "?",
+        "notional_usd": 8286.82
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3572.0
+      },
+      {
+        "ticker": "NFLX",
+        "sector": "?",
+        "notional_usd": 7790.474999999999
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 8518.42
+      },
+      {
+        "ticker": "PEP",
+        "sector": "?",
+        "notional_usd": 7495.74
+      },
+      {
+        "ticker": "TSLA",
+        "sector": "?",
+        "notional_usd": -8036.499999999999
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GEV",
+      "signed_qty": 7,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GOOGL",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "INTC",
+      "signed_qty": 52,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "META",
+      "signed_qty": -15,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MSFT",
+      "signed_qty": 17,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "NFLX",
+      "signed_qty": 105,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "PEP",
+      "signed_qty": 54,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "TSLA",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "V",
+      "IBM"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "GEV",
+      "GOOGL",
+      "INTC",
+      "KLAC",
+      "META",
+      "MSFT",
+      "MU",
+      "NFLX",
+      "ORCL",
+      "PEP",
+      "TSLA"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6219
+  },
+  "decisions": [
+    {
+      "ticker": "V",
+      "status": "cycle_failed",
+      "error": "BULL-01 round 1 cites doc_id(s) ['[sep:V:2026-06-09]'] outside the verified-memo evidence set \u2014 uncited/invented evidence voids the argument (fail-closed)."
+    },
+    {
+      "ticker": "IBM",
+      "fixture": "wp6_20260805_IBM",
+      "content_hash": "2c5e1c31bee5f14a",
+      "ballot": {
+        "weighted_score": 1.25,
+        "margin": 0.322751,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.64)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.805
+      },
+      "order": {
+        "side": "buy",
+        "qty": 34,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "IBM",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 224.29,
+        "ask": 249.12,
+        "mid": 236.70499999999998,
+        "spread_bps": 1048.9850235525237,
+        "ts": "2026-08-05T20:00:00.003520+00:00"
+      }
+    }
+  ],
+  "replay_check": {
+    "hash": "9b78589f4716ca42",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "IBM",
+          "direction": "long",
+          "size_pct_nav": 0.805,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "194.50",
+          "invalidation_conditions": [
+            "Trailing 12-month Free Cash Flow drops below $11.0 billion.",
+            "A decisive daily close below the $195.00 support level on volume exceeding the 26.3M ADV."
+          ],
+          "horizon_days": 180,
+          "thesis": "IBM offers a compelling ~6.2% free cash flow yield and progressive equity expansion, providing a strong fundamental margin of safety. Trading near the lower end of its established $199-$311 range, the technical setup presents an asymmetric risk/reward opportunity for mean reversion toward its $246-$255 moving averages.",
+          "premortem_top_risks": [
+            "Macroeconomic headwinds cause enterprise clients to defer spending, driving TTM FCF down toward the $11B invalidation threshold and triggering multiple compression.",
+            "Persistent downward momentum causes the stock to break below the lower boundary of its trading range, invalidating the technical mean-reversion setup.",
+            "Value buyers step in to capture the >6% FCF yield, defending the support floor and driving a mean-reversion rally toward the DCF fair value range of $235-$275."
+          ],
+          "expected_edge_bps": 1200,
+          "ballot_summary": {
+            "weighted_score": 1.25,
+            "margin": 0.322751,
+            "dissent_summary": "BEAR-01 voted short (conviction 0.64)",
+            "contested": false
+          }
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": {
+    "skipped": "OpenRouter call for 'deepseek/deepseek-v4-pro' failed after 3 attempt(s): transport error: Error code: 429 - {'error': {"
+  },
+  "spend": {
+    "day_spent_usd": 0.372564,
+    "shadow_spent_usd": 0.0,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 8.163235,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}

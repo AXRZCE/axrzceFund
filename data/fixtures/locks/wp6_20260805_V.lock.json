@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260805_V",
+  "decision_ts": "2026-08-05T20:00:00+00:00",
+  "tickers": [
+    "V"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-08-06T02:15:05.916637+00:00",
+  "content_hash": "fc694bc098c656a3",
+  "payload_summary": {
+    "price_bars": 70,
+    "fundamentals": {
+      "ASSETS": 77,
+      "EPS": 76,
+      "EQUITY": 77,
+      "FCF": 76,
+      "NETINC": 76,
+      "REVENUE": 76
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}

@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260805_IBM",
+  "decision_ts": "2026-08-05T20:00:00+00:00",
+  "tickers": [
+    "IBM"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-08-06T02:16:57.114683+00:00",
+  "content_hash": "2c5e1c31bee5f14a",
+  "payload_summary": {
+    "price_bars": 70,
+    "fundamentals": {
+      "ASSETS": 132,
+      "EPS": 128,
+      "EQUITY": 132,
+      "FCF": 131,
+      "NETINC": 131,
+      "REVENUE": 131
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}
