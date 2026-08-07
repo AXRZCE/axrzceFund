@@ -1,0 +1,360 @@
+{
+  "session_date": "2026-08-06",
+  "cycle_id": "wp6_20260806",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [
+    {
+      "symbol": "IBM",
+      "side": "buy",
+      "qty": 34,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 8019.58,
+      "status": "modeled_filled",
+      "modeled_fill_price": 230.656122,
+      "full_fill": true
+    }
+  ],
+  "book": {
+    "nav_usd": 1006275.06,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 11121.175
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 9108.4
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 9675.64
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -9125.16
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 8751.6
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -8236.03
+      },
+      {
+        "ticker": "GEV",
+        "sector": "?",
+        "notional_usd": 6991.075
+      },
+      {
+        "ticker": "GOOGL",
+        "sector": "?",
+        "notional_usd": -8947.125
+      },
+      {
+        "ticker": "IBM",
+        "sector": "?",
+        "notional_usd": 7936.96
+      },
+      {
+        "ticker": "INTC",
+        "sector": "?",
+        "notional_usd": 5193.24
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -6933.599999999999
+      },
+      {
+        "ticker": "META",
+        "sector": "?",
+        "notional_usd": -8849.925
+      },
+      {
+        "ticker": "MSFT",
+        "sector": "?",
+        "notional_usd": 8500.595000000001
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3525.8
+      },
+      {
+        "ticker": "NFLX",
+        "sector": "?",
+        "notional_usd": 7736.400000000001
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 8462.665
+      },
+      {
+        "ticker": "PEP",
+        "sector": "?",
+        "notional_usd": 7477.110000000001
+      },
+      {
+        "ticker": "TSLA",
+        "sector": "?",
+        "notional_usd": -7989.375
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GEV",
+      "signed_qty": 7,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GOOGL",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "IBM",
+      "signed_qty": 34,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "INTC",
+      "signed_qty": 52,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "META",
+      "signed_qty": -15,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MSFT",
+      "signed_qty": 17,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "NFLX",
+      "signed_qty": 105,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "PEP",
+      "signed_qty": 54,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "TSLA",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "V",
+      "NOW"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "GEV",
+      "GOOGL",
+      "IBM",
+      "INTC",
+      "KLAC",
+      "META",
+      "MSFT",
+      "MU",
+      "NFLX",
+      "ORCL",
+      "PEP",
+      "TSLA"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6218
+  },
+  "decisions": [
+    {
+      "ticker": "V",
+      "fixture": "wp6_20260806_V",
+      "content_hash": "ff0384be5e29d667",
+      "ballot": {
+        "weighted_score": 1.35,
+        "margin": 0.323529,
+        "dissent_summary": "BEAR-01 voted short (conviction 0.69)",
+        "contested": false
+      },
+      "direction": "long",
+      "judge": {
+        "family": "google",
+        "bull_evidence": 4,
+        "bear_evidence": 4
+      },
+      "pm_action": "trade",
+      "gate": {
+        "approved": true,
+        "clamped": false,
+        "rule": "ok",
+        "final_size_pct_nav": 0.805
+      },
+      "order": {
+        "side": "buy",
+        "qty": 21,
+        "status": "pending_next_open"
+      },
+      "quote_at_decision": {
+        "ticker": "V",
+        "moment": "decision",
+        "log_quote_ok": true,
+        "bid": 351.5,
+        "ask": 389.83,
+        "mid": 370.66499999999996,
+        "spread_bps": 1034.0873834864362,
+        "ts": "2026-08-06T20:00:00.020625+00:00"
+      }
+    },
+    {
+      "ticker": "NOW",
+      "status": "cycle_failed",
+      "error": "OpenRouter call for 'google/gemini-3.1-pro-preview' failed after 3 attempt(s): transport error: Error code: 402 - {'error': {'message': \"This request requires more credits, or fewer max_tokens. You re"
+    }
+  ],
+  "replay_check": {
+    "hash": "b600cd2d73a4e1ba",
+    "payloads": [
+      {
+        "proposal": {
+          "agent_id": "PM-01",
+          "ticker": "V",
+          "direction": "long",
+          "size_pct_nav": 0.805,
+          "entry_plan": {
+            "type": "market_open",
+            "params": {}
+          },
+          "stop_loss": "315.50",
+          "invalidation_conditions": [
+            "Trailing-twelve-month revenue growth drops below 6% year-over-year.",
+            "Net income margin compresses persistently below 45%.",
+            "Sustained daily close below technical support at 317.00."
+          ],
+          "horizon_days": 365,
+          "thesis": "Visa's durable ~50% net income margins and $21B in TTM FCF fuel aggressive share repurchases, steadily shrinking the equity base. Despite a premium 31x trailing multiple, its deeply entrenched moat and sequential revenue growth justify the valuation for a long-term hold.",
+          "premortem_top_risks": [
+            "Visa's revenue growth normalizes toward the 6% YoY invalidation threshold without strictly crossing it, prompting the market to compress the forward multiple from 30x-35x down to the high-20s, resulting in flat or negative returns despite business health.",
+            "The stock faces a hard technical rejection at the 373.97 resistance level due to a lack of buyer conviction, causing a reversion to the mid-or-lower end of its trading range and trapping new buyers in a significant near-term drawdown.",
+            "Structural threats such as definitive regulatory caps on interchange fees or rapid adoption of alternative closed-loop networks begin to impair Visa's pricing power and margin profile."
+          ],
+          "expected_edge_bps": 1000,
+          "ballot_summary": {
+            "weighted_score": 1.35,
+            "margin": 0.323529,
+            "dissent_summary": "BEAR-01 voted short (conviction 0.69)",
+            "contested": false
+          }
+        }
+      }
+    ],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "shadows": {
+    "skipped": "OpenRouter call for 'deepseek/deepseek-v4-pro' failed after 3 attempt(s): transport error: Error code: 429 - {'error': {"
+  },
+  "spend": {
+    "day_spent_usd": 0.343423,
+    "shadow_spent_usd": 0.0,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 8.535799,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
