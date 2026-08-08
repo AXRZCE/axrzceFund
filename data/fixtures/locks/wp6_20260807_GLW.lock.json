@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260807_GLW",
+  "decision_ts": "2026-08-07T20:00:00+00:00",
+  "tickers": [
+    "GLW"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-08-08T02:15:13.010016+00:00",
+  "content_hash": "b1c51697a74f7ffb",
+  "payload_summary": {
+    "price_bars": 74,
+    "fundamentals": {
+      "ASSETS": 135,
+      "EPS": 132,
+      "EQUITY": 135,
+      "FCF": 134,
+      "NETINC": 134,
+      "REVENUE": 134
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}

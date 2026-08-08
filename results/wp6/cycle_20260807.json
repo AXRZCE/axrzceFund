@@ -1,0 +1,302 @@
+{
+  "session_date": "2026-08-07",
+  "cycle_id": "wp6_20260807",
+  "manifest_version": "9131bf3a7647",
+  "config_version": "80c6d2bf6227",
+  "wall_attestation": {
+    "wall": "attested",
+    "detail": "submit_live raised LiveSubmissionBlocked",
+    "broker_write_calls": 0
+  },
+  "settlements": [
+    {
+      "symbol": "V",
+      "side": "buy",
+      "qty": 21,
+      "order_type": "market_open",
+      "tif": "day",
+      "limit_price": null,
+      "notional_usd": 7779.55,
+      "status": "modeled_filled",
+      "modeled_fill_price": 368.568699,
+      "full_fill": true
+    }
+  ],
+  "book": {
+    "nav_usd": 1006976.21,
+    "positions": [
+      {
+        "ticker": "ACN",
+        "sector": "?",
+        "notional_usd": 11422.125
+      },
+      {
+        "ticker": "ADBE",
+        "sector": "?",
+        "notional_usd": 9280.775000000001
+      },
+      {
+        "ticker": "AVGO",
+        "sector": "?",
+        "notional_usd": 9834.11
+      },
+      {
+        "ticker": "CRWD",
+        "sector": "?",
+        "notional_usd": -9432.939999999999
+      },
+      {
+        "ticker": "DELL",
+        "sector": "?",
+        "notional_usd": 9069.199999999999
+      },
+      {
+        "ticker": "GE",
+        "sector": "?",
+        "notional_usd": -8144.73
+      },
+      {
+        "ticker": "GEV",
+        "sector": "?",
+        "notional_usd": 6932.31
+      },
+      {
+        "ticker": "GOOGL",
+        "sector": "?",
+        "notional_usd": -8858.75
+      },
+      {
+        "ticker": "IBM",
+        "sector": "?",
+        "notional_usd": 8064.46
+      },
+      {
+        "ticker": "INTC",
+        "sector": "?",
+        "notional_usd": 5285.54
+      },
+      {
+        "ticker": "KLAC",
+        "sector": "?",
+        "notional_usd": -7130.5199999999995
+      },
+      {
+        "ticker": "META",
+        "sector": "?",
+        "notional_usd": -8877.45
+      },
+      {
+        "ticker": "MSFT",
+        "sector": "?",
+        "notional_usd": 8497.875
+      },
+      {
+        "ticker": "MU",
+        "sector": "?",
+        "notional_usd": -3513.64
+      },
+      {
+        "ticker": "NFLX",
+        "sector": "?",
+        "notional_usd": 7782.6
+      },
+      {
+        "ticker": "ORCL",
+        "sector": "?",
+        "notional_usd": 8669.165
+      },
+      {
+        "ticker": "PEP",
+        "sector": "?",
+        "notional_usd": 7506.539999999999
+      },
+      {
+        "ticker": "TSLA",
+        "sector": "?",
+        "notional_usd": -8212.125
+      },
+      {
+        "ticker": "V",
+        "sector": "?",
+        "notional_usd": 7614.389999999999
+      }
+    ]
+  },
+  "monitor": {
+    "actions": [],
+    "breaker_state": "normal",
+    "drawdown_pct": 0.0
+  },
+  "held_reapprovals": [
+    {
+      "ticker": "ACN",
+      "signed_qty": 65,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ADBE",
+      "signed_qty": 35,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "AVGO",
+      "signed_qty": 23,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "CRWD",
+      "signed_qty": -44,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "DELL",
+      "signed_qty": 20,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GE",
+      "signed_qty": -22,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GEV",
+      "signed_qty": 7,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "GOOGL",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "IBM",
+      "signed_qty": 34,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "INTC",
+      "signed_qty": 52,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "KLAC",
+      "signed_qty": -36,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "META",
+      "signed_qty": -15,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MSFT",
+      "signed_qty": 17,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "MU",
+      "signed_qty": -4,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "NFLX",
+      "signed_qty": 105,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "ORCL",
+      "signed_qty": 59,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "PEP",
+      "signed_qty": 54,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "TSLA",
+      "signed_qty": -25,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    },
+    {
+      "ticker": "V",
+      "signed_qty": 21,
+      "action": "reapproved_at_size",
+      "basis": "P3: no new info, no trigger"
+    }
+  ],
+  "screen": {
+    "new_candidates": [
+      "NOW",
+      "GLW"
+    ],
+    "held": [
+      "ACN",
+      "ADBE",
+      "AVGO",
+      "CRWD",
+      "DELL",
+      "GE",
+      "GEV",
+      "GOOGL",
+      "IBM",
+      "INTC",
+      "KLAC",
+      "META",
+      "MSFT",
+      "MU",
+      "NFLX",
+      "ORCL",
+      "PEP",
+      "TSLA",
+      "V"
+    ],
+    "waiver": "WP6 R4 waiver active: 2-memo cycle (FUND-TECH + TECH-01); min_memos_required=3 waived by ruling \u2014 SENT-01 deferred (logged), MACRO/QUANT are Phase 2.",
+    "excluded_count": 6218
+  },
+  "decisions": [
+    {
+      "ticker": "NOW",
+      "status": "cycle_failed",
+      "error": "OpenRouter call for 'google/gemini-3.1-pro-preview' failed after 3 attempt(s): transport error: Error code: 402 - {'error': {'message': \"This request requires more credits, or fewer max_tokens. You re"
+    },
+    {
+      "ticker": "GLW",
+      "status": "cycle_failed",
+      "error": "OpenRouter call for 'google/gemini-3.1-pro-preview' failed after 3 attempt(s): transport error: Error code: 402 - {'error': {'message': \"This request requires more credits, or fewer max_tokens. You re"
+    }
+  ],
+  "replay_check": {
+    "hash": "4f53cda18c2baa0c",
+    "payloads": [],
+    "note": "audit recomputes the hash from these payloads (R5.2)"
+  },
+  "spend": {
+    "day_spent_usd": 0.0,
+    "shadow_spent_usd": 0.0,
+    "daily_cap_usd": 1.5,
+    "week_cap_usd": 10.0,
+    "prior_week_spend_usd": 8.879222,
+    "stopped": false,
+    "degrade_log": []
+  },
+  "status": "complete"
+}
