@@ -1,0 +1,72 @@
+{
+  "run_id": "ingest_20260811_95400e",
+  "started": "2026-08-11T01:30:04.465211+00:00",
+  "finished": "2026-08-11T01:41:13.171829+00:00",
+  "jobs": [
+    {
+      "job": "sep_daily_bars",
+      "source": "sep",
+      "rows": 31129,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "job": "sf1_fundamentals",
+      "source": "sharadar_sf1",
+      "rows": 0,
+      "status": "error",
+      "error": "available_at (1996-08-08T00:00:00.000000+00:00) < as_of (1996-12-31T00:00:00.000000+00:00) for ticker VECO \u2014 impossible."
+    },
+    {
+      "job": "sp500_universe",
+      "source": "sharadar_sp500",
+      "rows": 59669,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "job": "corporate_actions",
+      "source": "sharadar_actions",
+      "rows": 4770,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "job": "iex_daily_bars",
+      "source": "iex",
+      "rows": 2521,
+      "status": "ok",
+      "error": null
+    }
+  ],
+  "pit_audit_violations": [],
+  "staleness": {
+    "price_bars": {
+      "table": "price_bars",
+      "latest_available_at": "2026-08-11T01:40:55.068052+00:00",
+      "age_hours": 0.0,
+      "is_stale": false
+    },
+    "fundamentals": {
+      "table": "fundamentals",
+      "latest_available_at": "2026-07-30T00:00:00.000000+00:00",
+      "age_hours": 289.7,
+      "is_stale": true
+    },
+    "universe_membership": {
+      "table": "universe_membership",
+      "latest_available_at": "2026-08-10T00:00:00.000000+00:00",
+      "age_hours": 25.7,
+      "is_stale": false
+    },
+    "corporate_actions": {
+      "table": "corporate_actions",
+      "latest_available_at": "2026-08-11T01:40:23.270439+00:00",
+      "age_hours": 0.0,
+      "is_stale": false
+    }
+  },
+  "raw_archive": "var/raw_archive/ingest_20260811_95400e",
+  "all_ok": false,
+  "reconciliation_flags": []
+}
