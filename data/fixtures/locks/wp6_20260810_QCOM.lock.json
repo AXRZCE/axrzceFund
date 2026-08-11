@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260810_QCOM",
+  "decision_ts": "2026-08-10T20:00:00+00:00",
+  "tickers": [
+    "QCOM"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-08-11T02:15:08.905931+00:00",
+  "content_hash": "a785a5b5c6a1d7fc",
+  "payload_summary": {
+    "price_bars": 76,
+    "fundamentals": {
+      "ASSETS": 122,
+      "EPS": 122,
+      "EQUITY": 122,
+      "FCF": 121,
+      "NETINC": 122,
+      "REVENUE": 122
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}
