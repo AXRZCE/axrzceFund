@@ -1,0 +1,22 @@
+{
+  "fixture_id": "wp6_20260814_LRCX",
+  "decision_ts": "2026-08-14T20:00:00+00:00",
+  "tickers": [
+    "LRCX"
+  ],
+  "source": "pit_store",
+  "recorded_at": "2026-08-15T02:15:07.355676+00:00",
+  "content_hash": "5deca2ff53d465d4",
+  "payload_summary": {
+    "price_bars": 84,
+    "fundamentals": {
+      "ASSETS": 125,
+      "EPS": 125,
+      "EQUITY": 125,
+      "FCF": 124,
+      "NETINC": 125,
+      "REVENUE": 125
+    }
+  },
+  "note": "Vendor (Sharadar) data is NOT committed. Re-record from the canonical pit_store with these params; content_hash must match for replay/reproducibility."
+}
